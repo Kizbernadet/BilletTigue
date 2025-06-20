@@ -1,0 +1,27 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/",
+    "dist/",
+    "coverage/",
+    "logs/",
+    "*.test.js",
+    "*.spec.js"
+  ],
+  "watch": [
+    "*.js",
+    "routes/**/*.js",
+    "controllers/**/*.js",
+    "models/**/*.js",
+    "middlewares/**/*.js",
+    "config/**/*.js"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js,json",
+  "exec": "node server.js",
+  "verbose": true,
+  "delay": "1000"
+} 

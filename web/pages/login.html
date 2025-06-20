@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - BilletTigue</title>
+    <!-- Les liens CSS doivent pointer vers la racine du site -->
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-custom">
+    <header>
+        <!-- Container pour centrer la topbar -->
+        <div class="w-full flex justify-center p-4">
+            <!-- Topbar avec 95% de largeur -->
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
+                    <a href="../index.html" class="flex items-center">
+                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                        <span class="logo-text">BilletTigue</span>
+                    </a>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <!-- Les liens de navigation doivent être relatifs à la racine -->
+                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <!-- Le menu de langue reste identique -->
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span id="current-lang-text">Français</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="lang-options" tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
+                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Bouton pour s'inscrire -->
+                    <a href="./register.html" class="btn-login">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="auth-main">
+        <div class="auth-card">
+            <h2 class="auth-title">Connectez-vous</h2>
+            <p class="auth-subtitle">Accédez à votre espace pour gérer vos réservations.</p>
+            <form id="loginForm" class="auth-form">
+                <div class="form-field">
+                    <input type="email" id="email" placeholder="Adresse e-mail" required>
+                </div>
+                <div class="form-field">
+                    <input type="password" id="password" placeholder="Mot de passe" required>
+                </div>
+                <div class="form-options">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Se souvenir de moi</label>
+                    </div>
+                    <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
+                </div>
+                <button type="submit" class="auth-button">Se connecter</button>
+            </form>
+            <p class="auth-footer-link">
+                Pas encore de compte ? <a href="./register.html">Inscrivez-vous ici</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
+    </footer>
+
+    <!-- Le script JS doit pointer vers la racine du site -->
+    <script src="../src/js/main.js"></script>
+    <script type="module" src="../src/js/auth.js"></script>
+</body>
+</html> 

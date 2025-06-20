@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilletTigue - Votre plateforme de billetterie</title>
+    <link href="./public/assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-custom">
+    <header>
+        <!-- Container pour centrer la topbar -->
+        <div class="w-full flex justify-center p-4">
+            <!-- Topbar avec 95% de largeur -->
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <img src="./public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <!-- Language Button -->
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span id="current-lang-text">Français</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="lang-options" tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
+                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Login Dropdown -->
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span>Se connecter</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul tabindex="0" class="lang-options-list">
+                            <li><a href="./pages/login.html?role=user" class="lang-option text-sm">Utilisateur</a></li>
+                            <li><a href="./pages/login.html?role=transporter" class="lang-option text-sm">Transporteur</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero-container">
+            <h1 class="hero-title">Voyagez en toute sérénité à travers le Mali<br>grâce à notre plateforme de réservation</h1>
+        </div>
+
+        <section class="booking-section">
+            <div class="booking-form-container">
+                <form class="booking-form">
+                    <div class="form-group">
+                        <label for="departure">Départ</label>
+                        <input type="text" id="departure" placeholder="Départ de..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="arrival">Arrivée</label>
+                        <input type="text" id="arrival" placeholder="Destination..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="return-date">Date de retour</label>
+                        <input type="date" id="return-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="passengers">Passagers</label>
+                        <div class="number-input-container">
+                            <button type="button" class="control-btn" id="decrement-btn" aria-label="Diminuer le nombre de passagers">-</button>
+                            <input type="number" id="passengers" value="1" min="1" required>
+                            <button type="button" class="control-btn" id="increment-btn" aria-label="Augmenter le nombre de passagers">+</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                        <span>Rechercher</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-bg">
+                        <i class="fas fa-users feature-icon"></i>
+                    </div>
+                    <p class="feature-text">
+                        <strong>Rejoignez plus de 75 millions</strong> de voyageurs réservant plus de 2 millions de trajets dans plus de 85 pays.
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-bg">
+                        <i class="fas fa-headset feature-icon"></i>
+                    </div>
+                    <p class="feature-text">
+                        <strong>Profitez de notre service client</strong> disponible 24h/24 et 7j/7 pour vous aider à chaque étape.
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-bg">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                    </div>
+                    <p class="feature-text">
+                        <strong>Annulez à tout moment</strong> et recevez un remboursement intégral, sans avoir à fournir de raison.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="./src/js/main.js"></script>
+</body>
+</html> 
