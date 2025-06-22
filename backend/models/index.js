@@ -18,56 +18,65 @@
  * À importer dans server.js pour initialiser toutes les associations.
  */
 
-const Role = require('./Role');
-const Compte = require('./Compte');
-const Administrateur = require('./Administrateur');
-const Transporteur = require('./Transporteur');
-const Utilisateur = require('./Utilisateur');
+const Role = require('./role');
+const Compte = require('./compte');
+const Administrateur = require('./administrateur');
+const Transporteur = require('./transporteur');
+const Utilisateur = require('./utilisateur');
 const PointDepot = require('./PointDepot');
-const Trajet = require('./Trajet');
-const Envoi = require('./Envoi');
-const Paiement = require('./Paiement');
-const Reservation = require('./Reservation');
+const Trajet = require('./trajet');
+const Envoi = require('./envoi');
+const Paiement = require('./paiement');
+const Reservation = require('./reservation');
+const Colis = require('./colis');
 
 // Role 1,N Compte
-Role.hasMany(Compte, { foreignKey: 'idRole', as: 'comptes' });
-Compte.belongsTo(Role, { foreignKey: 'idRole', as: 'role' });
+Role.hasMany(Compte, { foreignKey: 'role_id', as: 'comptes' });
+Compte.belongsTo(Role, { foreignKey: 'role_id', as: 'role' });
 
 // Compte 1,1 Utilisateur/Transporteur/Administrateur
-Compte.hasOne(Utilisateur, { foreignKey: 'idCompte', as: 'utilisateur' });
-Utilisateur.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
-Compte.hasOne(Transporteur, { foreignKey: 'idCompte', as: 'transporteur' });
-Transporteur.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
-Compte.hasOne(Administrateur, { foreignKey: 'idCompte', as: 'administrateur' });
-Administrateur.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
+Compte.hasOne(Utilisateur, { foreignKey: 'compte_id', as: 'utilisateur' });
+Utilisateur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
+Compte.hasOne(Transporteur, { foreignKey: 'compte_id', as: 'transporteur' });
+Transporteur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
+Compte.hasOne(Administrateur, { foreignKey: 'compte_id', as: 'administrateur' });
+Administrateur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
 
 // Transporteur 1,N PointDepot
-Transporteur.hasMany(PointDepot, { foreignKey: 'idTransporteur', as: 'pointsDepot' });
-PointDepot.belongsTo(Transporteur, { foreignKey: 'idTransporteur', as: 'transporteur' });
+Transporteur.hasMany(PointDepot, { foreignKey: 'transporteur_id', as: 'pointsDepot' });
+PointDepot.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
 // Transporteur 1,N Trajet
-Transporteur.hasMany(Trajet, { foreignKey: 'idTransporteur', as: 'trajets' });
-Trajet.belongsTo(Transporteur, { foreignKey: 'idTransporteur', as: 'transporteur' });
+Transporteur.hasMany(Trajet, { foreignKey: 'transporteur_id', as: 'trajets' });
+Trajet.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
 // Utilisateur 1,N Envoi
-Utilisateur.hasMany(Envoi, { foreignKey: 'idExpediteur', as: 'envois' });
-Envoi.belongsTo(Utilisateur, { foreignKey: 'idExpediteur', as: 'expediteur' });
+Utilisateur.hasMany(Envoi, { foreignKey: 'expediteur_id', as: 'envois' });
+Envoi.belongsTo(Utilisateur, { foreignKey: 'expediteur_id', as: 'expediteur' });
 
 // Transporteur 1,N Envoi
-Transporteur.hasMany(Envoi, { foreignKey: 'idTransporteur', as: 'envoisTransporteur' });
-Envoi.belongsTo(Transporteur, { foreignKey: 'idTransporteur', as: 'transporteur' });
+Transporteur.hasMany(Envoi, { foreignKey: 'transporteur_id', as: 'envoisTransporteur' });
+Envoi.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
 // Compte 1,N Envoi
-Compte.hasMany(Envoi, { foreignKey: 'idCompte', as: 'envoisCompte' });
-Envoi.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
+Compte.hasMany(Envoi, { foreignKey: 'compte_id', as: 'envoisCompte' });
+Envoi.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
 
 // Envoi 1,1 Paiement
-Envoi.hasOne(Paiement, { foreignKey: 'idEnvoi', as: 'paiement' });
-Paiement.belongsTo(Envoi, { foreignKey: 'idEnvoi', as: 'envoi' });
+Envoi.hasOne(Paiement, { foreignKey: 'envoi_id', as: 'paiement' });
+Paiement.belongsTo(Envoi, { foreignKey: 'envoi_id', as: 'envoi' });
 
 // Compte 1,N Reservation
-Compte.hasMany(Reservation, { foreignKey: 'idCompte', as: 'reservations' });
-Reservation.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
+Compte.hasMany(Reservation, { foreignKey: 'compte_id', as: 'reservations' });
+Reservation.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
+
+// Trajet 1,N Reservation
+Trajet.hasMany(Reservation, { foreignKey: 'trajet_id', as: 'reservations' });
+Reservation.belongsTo(Trajet, { foreignKey: 'trajet_id', as: 'trajet' });
+
+// Envoi 1,N Colis
+Envoi.hasMany(Colis, { foreignKey: 'envoi_id', as: 'colis' });
+Colis.belongsTo(Envoi, { foreignKey: 'envoi_id', as: 'envoi' });
 
 module.exports = {
   Role,
@@ -79,5 +88,6 @@ module.exports = {
   Trajet,
   Envoi,
   Paiement,
-  Reservation
+  Reservation,
+  Colis
 }; 

@@ -1,38 +1,50 @@
 /**
  * Modèle Paiement - Gestion des paiements
- * Table : paiement
+ * Table : paiements
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Paiement = sequelize.define('Paiement', {
-    idPaiement: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    montant: {
+    amount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
-    statut: {
+    status: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'pending'
     },
-    dateHeure: {
+    payment_date: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
-    idCompte: {
+    envoi_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'envois',
+            key: 'id'
+        }
     },
-    idTransporteur: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'paiement',
+    tableName: 'paiements',
     timestamps: false
 });
 

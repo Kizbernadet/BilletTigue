@@ -5,6 +5,7 @@
 📅 Date de création : 2024-06-20
 🔧 Environnement : Développement
 📋 Version : 1.0.0
+🔄 Dernière mise à jour : 2024-12-14 (Nettoyage du projet)
 
 ================================================================================
                             🔐 COMPTE ADMINISTRATEUR
@@ -32,9 +33,9 @@
 🔑 Mot de passe : your_password
 
 📋 Tables principales :
-- role (idRole, nomRole)
-- compte (idCompte, email, motDePasse, statut, idRole, createdAt, updatedAt)
-- administrateur (idAdmin, nom, prenom, idCompte, createdAt, updatedAt)
+- roles (id, name, description, createdAt, updatedAt)
+- comptes (id, email, motDePasse, statut, roleId, createdAt, updatedAt)
+- administrateurs (id, nom, prenom, compteId, createdAt, updatedAt)
 
 ================================================================================
                             🚀 SERVEUR BACKEND
@@ -49,6 +50,8 @@
 - POST /api/auth/register - Inscription
 - POST /api/auth/login - Connexion
 - POST /api/auth/logout - Déconnexion
+- GET /api/profile - Profil utilisateur
+- PUT /api/profile - Mise à jour profil
 
 ================================================================================
                             🛠️  COMMANDES UTILES
@@ -57,18 +60,13 @@
 # Démarrer le serveur
 npm start
 npm run dev
+npm run dev:debug
 
 # Créer l'administrateur
 npm run setup-admin
 
-# Exécuter le seeder
-npm run seed-admin
-
-# Ajouter les timestamps
-npm run add-timestamps
-
-# Démarrer avec debug
-npm run dev:debug
+# Démarrer en production
+npm run prod
 
 ================================================================================
                             📁 STRUCTURE DES FICHIERS
@@ -79,24 +77,39 @@ backend/
 │   ├── database.js          # Configuration DB
 │   └── connection.js        # Connexion DB
 ├── controllers/
-│   └── authController.js    # Contrôleur auth
+│   ├── authController.js    # Contrôleur auth
+│   ├── profileController.js # Contrôleur profil
+│   └── notificationController.js # Contrôleur notifications
 ├── models/
 │   ├── role.js             # Modèle Role
 │   ├── compte.js           # Modèle Compte
-│   └── administrateur.js   # Modèle Admin
+│   ├── administrateur.js   # Modèle Admin
+│   └── [autres modèles]    # Autres modèles de données
 ├── routes/
-│   └── authRoutes.js       # Routes auth
+│   ├── authRoutes.js       # Routes auth
+│   ├── profileRoutes.js    # Routes profil
+│   └── notificationRoutes.js # Routes notifications
 ├── services/
-│   └── authService.js      # Service auth
+│   ├── authService.js      # Service auth
+│   ├── profileService.js   # Service profil
+│   └── notificationService.js # Service notifications
+├── middlewares/
+│   ├── authMiddleware.js   # Middleware auth
+│   └── roleMiddleware.js   # Middleware rôles
 ├── seeders/
 │   └── 20240620-create-admin.js  # Seeder admin
 ├── scripts/
-│   ├── setup-admin.js      # Script setup complet
-│   ├── run-seed.js         # Script seeder
-│   └── add-timestamps.js   # Script timestamps
+│   └── setup-admin.js      # Script setup admin
+├── tests/
+│   ├── README.md           # Guide des tests
+│   ├── tests_effectues/    # Guides de test utiles
+│   └── tests_rapports/     # Rapports de test récents
 ├── .env                    # Variables d'environnement
 ├── server.js               # Serveur principal
-└── package.json            # Dépendances
+├── package.json            # Dépendances
+├── DEV_INFO.txt            # Ce fichier
+├── QUICK_START_ADMIN.md    # Guide rapide admin
+└── SEEDER_README.md        # Documentation seeder
 
 ================================================================================
                             🔧 CONFIGURATION ENV
@@ -133,11 +146,11 @@ curl -X POST http://localhost:5000/api/auth/login \
 psql -h localhost -U your_username -d billettigue_db
 
 # Requête pour vérifier l'admin
-SELECT c.email, c.statut, r.nomRole, a.nom, a.prenom 
-FROM compte c 
-INNER JOIN administrateur a ON c.idCompte = a.idCompte 
-INNER JOIN role r ON c.idRole = r.idRole 
-WHERE r.nomRole = 'admin';
+SELECT c.email, c.statut, r.name as role, a.nom, a.prenom 
+FROM comptes c 
+INNER JOIN administrateurs a ON c.id = a.compteId 
+INNER JOIN roles r ON c.roleId = r.id 
+WHERE r.name = 'admin';
 
 ================================================================================
                             🔍 DÉPANNAGE
@@ -167,7 +180,7 @@ WHERE r.nomRole = 'admin';
 - /index.html - Page d'accueil
 - /pages/login.html - Connexion
 - /pages/register.html - Inscription
-- /test-api.html - Test de l'API
+- /pages/admin-dashboard.html - Dashboard admin
 
 🔧 Configuration API frontend :
 - URL de base : http://localhost:5000/api
@@ -198,28 +211,29 @@ WHERE r.nomRole = 'admin';
 
 📖 Documentation :
 - SEEDER_README.md - Documentation complète du seeder
-- QUICK_START_ADMIN.md - Guide de démarrage rapide
-- API_README.md - Documentation de l'API frontend
+- QUICK_START_ADMIN.md - Guide rapide pour l'admin
+- tests/README.md - Guide des tests
+- tests/tests_effectues/ - Guides de test pratiques
 
-🔗 Liens utiles :
-- Sequelize : https://sequelize.org/
-- PostgreSQL : https://www.postgresql.org/docs/
-- bcrypt : https://github.com/dcodeIO/bcrypt.js
-- JWT : https://jwt.io/
+🎯 Scripts disponibles :
+- setup-admin.js - Configuration automatique de l'admin
 
 ================================================================================
-                            📞 CONTACT
+                            🧹 NETTOYAGE RÉCENT
 ================================================================================
 
-👨‍💻 Développeur : [Votre nom]
-📧 Email : [Votre email]
-📱 Téléphone : [Votre téléphone]
+✅ Fichiers supprimés (obsolètes) :
+- Scripts de test temporaires
+- Rapports de test anciens
+- Scripts de restructuration DB obsolètes
+- Fichiers de configuration redondants
 
-🆘 En cas de problème :
-1. Vérifier les logs de la console
-2. Consulter la documentation
-3. Tester avec les scripts fournis
-4. Vérifier la configuration
+✅ Fichiers conservés (essentiels) :
+- Configuration principale
+- Modèles et contrôleurs
+- Services et middlewares
+- Documentation utile
+- Scripts de setup essentiels
 
 ================================================================================
                             📝 NOTES DE DÉVELOPPEMENT

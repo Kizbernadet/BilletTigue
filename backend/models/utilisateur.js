@@ -1,38 +1,48 @@
 /**
  * Modèle Utilisateur - Gestion des utilisateurs finaux
- * Table : utilisateur
+ * Table : utilisateurs
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Utilisateur = sequelize.define('Utilisateur', {
-    idUtilisateur: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    nom: {
+    last_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    prenom: {
+    first_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    telephone: {
+    phone_number: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idCompte: {
+    compte_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'compte',
-            key: 'idCompte'
+            model: 'comptes',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'utilisateur',
+    tableName: 'utilisateurs',
     timestamps: false
 });
 

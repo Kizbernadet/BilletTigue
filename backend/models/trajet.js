@@ -1,42 +1,52 @@
 /**
  * Modèle Trajet - Gestion des trajets de transport
- * Table : trajet
+ * Table : trajets
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Trajet = sequelize.define('Trajet', {
-    idTrajet: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    villeDepart: {
+    departure_city: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    villeArrivee: {
+    arrival_city: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    dateHeure: {
+    departure_time: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    prix: {
+    price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
-    idTransporteur: {
+    transporteur_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'transporteur',
-            key: 'idTransporteur'
+            model: 'transporteurs',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'trajet',
+    tableName: 'trajets',
     timestamps: false
 });
 

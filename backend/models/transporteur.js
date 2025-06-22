@@ -1,38 +1,52 @@
 /**
  * Modèle Transporteur - Gestion des transporteurs
- * Table : transporteur
+ * Table : transporteurs
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Transporteur = sequelize.define('Transporteur', {
-    idTransporteur: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    nom: {
+    last_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    prenom: {
+    first_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    telephone: {
+    phone_number: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idCompte: {
+    company_name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    compte_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'compte',
-            key: 'idCompte'
+            model: 'comptes',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'transporteur',
+    tableName: 'transporteurs',
     timestamps: false
 });
 

@@ -46,53 +46,53 @@ async function setupAdmin() {
     // Étape 1: Ajouter les timestamps
     console.log('\n🔧 Étape 1: Préparation des timestamps...');
     
-    // Vérifier et ajouter les timestamps à la table compte
-    const compteColumns = await sequelize.query(
+    // Vérifier et ajouter les timestamps à la table comptes
+    const comptesColumns = await sequelize.query(
       `SELECT column_name 
        FROM information_schema.columns 
-       WHERE table_name = 'compte' AND column_name IN ('createdAt', 'updatedAt')`,
+       WHERE table_name = 'comptes' AND column_name IN ('created_at', 'updated_at')`,
       { type: Sequelize.QueryTypes.SELECT, transaction }
     );
     
-    if (compteColumns.length === 0) {
-      console.log('➕ Ajout des timestamps à la table compte...');
+    if (comptesColumns.length === 0) {
+      console.log('➕ Ajout des timestamps à la table comptes...');
       await sequelize.query(
-        `ALTER TABLE compte 
-         ADD COLUMN "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-         ADD COLUMN "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP`,
+        `ALTER TABLE comptes 
+         ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+         ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`,
         { transaction }
       );
-      console.log('✅ Timestamps ajoutés à la table compte');
+      console.log('✅ Timestamps ajoutés à la table comptes');
     } else {
-      console.log('✅ Timestamps déjà présents dans la table compte');
+      console.log('✅ Timestamps déjà présents dans la table comptes');
     }
     
-    // Vérifier et ajouter les timestamps à la table administrateur
+    // Vérifier et ajouter les timestamps à la table administrateurs
     const adminColumns = await sequelize.query(
       `SELECT column_name 
        FROM information_schema.columns 
-       WHERE table_name = 'administrateur' AND column_name IN ('createdAt', 'updatedAt')`,
+       WHERE table_name = 'administrateurs' AND column_name IN ('created_at', 'updated_at')`,
       { type: Sequelize.QueryTypes.SELECT, transaction }
     );
     
     if (adminColumns.length === 0) {
-      console.log('➕ Ajout des timestamps à la table administrateur...');
+      console.log('➕ Ajout des timestamps à la table administrateurs...');
       await sequelize.query(
-        `ALTER TABLE administrateur 
-         ADD COLUMN "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-         ADD COLUMN "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP`,
+        `ALTER TABLE administrateurs 
+         ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+         ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`,
         { transaction }
       );
-      console.log('✅ Timestamps ajoutés à la table administrateur');
+      console.log('✅ Timestamps ajoutés à la table administrateurs');
     } else {
-      console.log('✅ Timestamps déjà présents dans la table administrateur');
+      console.log('✅ Timestamps déjà présents dans la table administrateurs');
     }
 
     // Étape 2: Créer le rôle admin s'il n'existe pas
     console.log('\n👑 Étape 2: Vérification du rôle admin...');
     
     const adminRole = await sequelize.query(
-      'SELECT idRole FROM role WHERE nomRole = :roleName',
+      'SELECT id_role FROM roles WHERE name = :roleName',
       {
         replacements: { roleName: 'admin' },
         type: Sequelize.QueryTypes.SELECT,
@@ -104,17 +104,17 @@ async function setupAdmin() {
     if (adminRole.length === 0) {
       console.log('➕ Création du rôle admin...');
       const [newRole] = await sequelize.query(
-        'INSERT INTO role (nomRole) VALUES (:roleName) RETURNING idRole',
+        'INSERT INTO roles (name, description) VALUES (:roleName, :description) RETURNING id_role',
         {
-          replacements: { roleName: 'admin' },
+          replacements: { roleName: 'admin', description: 'Administrateur du système' },
           type: Sequelize.QueryTypes.INSERT,
           transaction
         }
       );
-      roleId = newRole[0].idRole;
+      roleId = newRole[0].id_role;
       console.log('✅ Rôle admin créé avec l\'ID:', roleId);
     } else {
-      roleId = adminRole[0].idRole;
+      roleId = adminRole[0].id_role;
       console.log('✅ Rôle admin trouvé avec l\'ID:', roleId);
     }
 
@@ -122,11 +122,11 @@ async function setupAdmin() {
     console.log('\n🔍 Étape 3: Vérification de l\'existence d\'un administrateur...');
     
     const existingAdmin = await sequelize.query(
-      `SELECT c.idCompte, c.email, a.idAdmin, a.nom, a.prenom 
-       FROM compte c 
-       INNER JOIN administrateur a ON c.idCompte = a.idCompte 
-       INNER JOIN role r ON c.idRole = r.idRole 
-       WHERE r.nomRole = 'admin'`,
+      `SELECT c.id_compte, c.email, a.id_admin, a.last_name, a.first_name 
+       FROM comptes c 
+       INNER JOIN administrateurs a ON c.id_compte = a.id_compte 
+       INNER JOIN roles r ON c.id_role = r.id_role 
+       WHERE r.name = 'admin'`,
       { type: Sequelize.QueryTypes.SELECT, transaction }
     );
     
@@ -155,7 +155,7 @@ async function setupAdmin() {
     console.log('\n📧 Étape 5: Vérification de l\'unicité de l\'email...');
     
     const existingEmail = await sequelize.query(
-      'SELECT idCompte FROM compte WHERE email = :email',
+      'SELECT id_compte FROM comptes WHERE email = :email',
       {
         replacements: { email: adminEmail },
         type: Sequelize.QueryTypes.SELECT,
@@ -179,17 +179,18 @@ async function setupAdmin() {
     const now = new Date();
     const compteData = {
       email: adminEmail,
-      motDePasse: hashedPassword,
-      statut: 'actif',
-      idRole: roleId,
-      createdAt: now,
-      updatedAt: now
+      password_hash: hashedPassword,
+      status: 'active',
+      id_role: roleId,
+      role_id: roleId,
+      created_at: now,
+      updated_at: now
     };
     
     const [compteResult] = await sequelize.query(
-      `INSERT INTO compte (email, "motDePasse", statut, "idRole", "createdAt", "updatedAt") 
-       VALUES (:email, :motDePasse, :statut, :idRole, :createdAt, :updatedAt) 
-       RETURNING "idCompte"`,
+      `INSERT INTO comptes (email, password_hash, status, id_role, role_id, created_at, updated_at) 
+       VALUES (:email, :password_hash, :status, :id_role, :role_id, :created_at, :updated_at) 
+       RETURNING id_compte`,
       {
         replacements: compteData,
         type: Sequelize.QueryTypes.INSERT,
@@ -197,24 +198,25 @@ async function setupAdmin() {
       }
     );
     
-    const compteId = compteResult[0].idCompte;
+    const compteId = compteResult[0].id_compte;
     console.log('✅ Compte créé avec l\'ID:', compteId);
 
     // Étape 7: Créer le profil administrateur
     console.log('\n👨‍💼 Étape 7: Création du profil administrateur...');
     
     const adminData = {
-      nom: adminNom,
-      prenom: adminPrenom,
-      idCompte: compteId,
-      createdAt: now,
-      updatedAt: now
+      last_name: adminNom,
+      first_name: adminPrenom,
+      id_compte: compteId,
+      compte_id: compteId,
+      created_at: now,
+      updated_at: now
     };
     
     const [adminResult] = await sequelize.query(
-      `INSERT INTO administrateur (nom, prenom, "idCompte", "createdAt", "updatedAt") 
-       VALUES (:nom, :prenom, :idCompte, :createdAt, :updatedAt) 
-       RETURNING "idAdmin"`,
+      `INSERT INTO administrateurs (last_name, first_name, id_compte, compte_id, created_at, updated_at) 
+       VALUES (:last_name, :first_name, :id_compte, :compte_id, :created_at, :updated_at) 
+       RETURNING id_admin`,
       {
         replacements: adminData,
         type: Sequelize.QueryTypes.INSERT,
@@ -222,17 +224,17 @@ async function setupAdmin() {
       }
     );
     
-    console.log('✅ Administrateur créé avec l\'ID:', adminResult[0].idAdmin);
+    console.log('✅ Administrateur créé avec l\'ID:', adminResult[0].id_admin);
 
     // Étape 8: Validation finale
     console.log('\n🔍 Étape 8: Validation finale...');
     
     const finalCheck = await sequelize.query(
-      `SELECT c.email, c.statut, r.nomRole, a.nom, a.prenom 
-       FROM compte c 
-       INNER JOIN administrateur a ON c.idCompte = a.idCompte 
-       INNER JOIN role r ON c.idRole = r.idRole 
-       WHERE c.idCompte = :compteId`,
+      `SELECT c.email, c.status, r.name as role_name, a.last_name, a.first_name 
+       FROM comptes c 
+       INNER JOIN administrateurs a ON c.id_compte = a.id_compte 
+       INNER JOIN roles r ON c.id_role = r.id_role 
+       WHERE c.id_compte = :compteId`,
       {
         replacements: { compteId },
         type: Sequelize.QueryTypes.SELECT,

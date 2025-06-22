@@ -13,13 +13,12 @@
 
 const bcrypt = require('bcrypt'); // Pour le hashage des mots de passe
 const jwt = require('jsonwebtoken'); // Pour la génération de tokens JWT
-const Compte = require('../models/compte'); // Modèle Compte Sequelize
-const Utilisateur = require('../models/utilisateur'); // Modèle Utilisateur Sequelize
+const { Compte, Utilisateur, Role } = require('../models/index'); // Modèles avec associations
 
 // ========== Fonction : register ========== 
 // Description : Inscrit un nouvel utilisateur dans la base
 // Paramètres :
-// - data (object) : { email, motDePasse, nom, prenom, telephone }
+// - data (object) : { email, password, role, profile }
 // Retour : (Promise<object>) Un objet contenant le token JWT et les infos utilisateur
 async function register(data) {
   // Vérifier si l'email existe déjà
@@ -29,40 +28,57 @@ async function register(data) {
   }
 
   // Hasher le mot de passe
-  const hashedPassword = await bcrypt.hash(data.motDePasse, 10);
+  const hashedPassword = await bcrypt.hash(data.password, 10);
 
-  // Créer le compte (rôle par défaut : utilisateur, idRole = 1 à adapter selon ta table role)
+  // Déterminer le rôle (par défaut: user)
+  const roleName = data.role || 'user';
+  const role = await Role.findOne({ where: { name: roleName } });
+  if (!role) {
+    throw new Error(`Le rôle '${roleName}' n'existe pas.`);
+  }
+
+  // Créer le compte
   const compte = await Compte.create({
     email: data.email,
-    motDePasse: hashedPassword,
-    statut: 'actif',
-    idRole: 1 // À adapter selon la logique de ton projet
+    password_hash: hashedPassword,
+    status: 'active',
+    role_id: role.id,
+    created_at: new Date(),
+    updated_at: new Date()
   });
 
   // Créer l'utilisateur lié au compte
   const utilisateur = await Utilisateur.create({
-    nom: data.nom,
-    prenom: data.prenom,
-    telephone: data.telephone,
-    idCompte: compte.idCompte
+    last_name: data.profile?.lastName || data.profile?.nom || '',
+    first_name: data.profile?.firstName || data.profile?.prenom || '',
+    phone_number: data.profile?.phoneNumber || data.profile?.telephone || '',
+    compte_id: compte.id,
+    created_at: new Date(),
+    updated_at: new Date()
   });
 
   // Générer un token JWT
   const token = jwt.sign(
-    { idCompte: compte.idCompte, idUtilisateur: utilisateur.idUtilisateur, email: compte.email },
-    process.env.JWT_SECRET,
+    { 
+      id: compte.id, 
+      userId: utilisateur.id, 
+      email: compte.email,
+      role: role.name
+    },
+    process.env.JWT_SECRET || 'billettigue_secret_key_2024',
     { expiresIn: process.env.JWT_EXPIRE || '24h' }
   );
 
   // Retourner le token et les infos utilisateur
   return {
     token,
-    utilisateur: {
-      id: utilisateur.idUtilisateur,
-      nom: utilisateur.nom,
-      prenom: utilisateur.prenom,
+    user: {
+      id: utilisateur.id,
+      firstName: utilisateur.first_name,
+      lastName: utilisateur.last_name,
       email: compte.email,
-      telephone: utilisateur.telephone
+      phoneNumber: utilisateur.phone_number,
+      role: role.name
     }
   };
 }
@@ -70,40 +86,50 @@ async function register(data) {
 // ========== Fonction : login ========== 
 // Description : Authentifie un utilisateur existant
 // Paramètres :
-// - credentials (object) : { email, motDePasse }
+// - credentials (object) : { email, password }
 // Retour : (Promise<object>) Un objet contenant le token JWT et les infos utilisateur
 async function login(credentials) {
-  // Chercher le compte par email
-  const compte = await Compte.findOne({ where: { email: credentials.email } });
+  // Chercher le compte par email avec le rôle
+  const compte = await Compte.findOne({ 
+    where: { email: credentials.email },
+    include: [{ model: Role, as: 'role' }]
+  });
+  
   if (!compte) {
     throw new Error('Email ou mot de passe incorrect.');
   }
 
   // Vérifier le mot de passe
-  const isMatch = await bcrypt.compare(credentials.motDePasse, compte.motDePasse);
+  const isMatch = await bcrypt.compare(credentials.password, compte.password_hash);
   if (!isMatch) {
     throw new Error('Email ou mot de passe incorrect.');
   }
 
   // Récupérer l'utilisateur lié
-  const utilisateur = await Utilisateur.findOne({ where: { idCompte: compte.idCompte } });
+  const utilisateur = await Utilisateur.findOne({ where: { compte_id: compte.id } });
 
   // Générer un token JWT
   const token = jwt.sign(
-    { idCompte: compte.idCompte, idUtilisateur: utilisateur.idUtilisateur, email: compte.email },
-    process.env.JWT_SECRET,
+    { 
+      id: compte.id, 
+      userId: utilisateur?.id, 
+      email: compte.email,
+      role: compte.role.name
+    },
+    process.env.JWT_SECRET || 'billettigue_secret_key_2024',
     { expiresIn: process.env.JWT_EXPIRE || '24h' }
   );
 
   // Retourner le token et les infos utilisateur
   return {
     token,
-    utilisateur: {
-      id: utilisateur.idUtilisateur,
-      nom: utilisateur.nom,
-      prenom: utilisateur.prenom,
+    user: {
+      id: utilisateur?.id,
+      firstName: utilisateur?.first_name,
+      lastName: utilisateur?.last_name,
       email: compte.email,
-      telephone: utilisateur.telephone
+      phoneNumber: utilisateur?.phone_number,
+      role: compte.role.name
     }
   };
 }

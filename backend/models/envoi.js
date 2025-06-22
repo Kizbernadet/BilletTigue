@@ -1,12 +1,12 @@
 /**
  * Modèle Envoi - Gestion des envois de colis
- * Table : envoi
+ * Table : envois
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Envoi = sequelize.define('Envoi', {
-    idEnvoi: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -15,32 +15,55 @@ const Envoi = sequelize.define('Envoi', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    statut: {
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pending'
+    },
+    expediteur_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'utilisateurs',
+            key: 'id'
+        }
+    },
+    recipient_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idExpediteur: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    destinataireNom: {
+    recipient_phone: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    destinataireTelephone: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    idTransporteur: {
+    transporteur_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'transporteurs',
+            key: 'id'
+        }
     },
-    idCompte: {
+    compte_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: 'comptes',
+            key: 'id'
+        }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'envoi',
+    tableName: 'envois',
     timestamps: false
 });
 

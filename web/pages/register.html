@@ -67,36 +67,36 @@
                 <!-- User fields -->
                 <div data-role="user" class="flex flex-col gap-6">
                     <div class="form-field">
-                        <input type="text" id="last-name" placeholder="Nom" required>
+                        <input type="text" id="last-name" name="last-name" placeholder="Nom" required>
                     </div>
                     <div class="form-field">
-                        <input type="text" id="first-name" placeholder="Prénom" required>
+                        <input type="text" id="first-name" name="first-name" placeholder="Prénom" required>
                     </div>
                 </div>
 
                 <!-- Transporter fields -->
                 <div class="hidden flex-col gap-6" data-role="transporter">
                     <div class="form-field">
-                        <input type="text" id="company-name" placeholder="Nom de la compagnie">
+                        <input type="text" id="company-name" name="company-name" placeholder="Nom de la compagnie">
                     </div>
                     <div class="form-field">
-                        <input type="tel" id="phone-number" placeholder="Numéro de téléphone">
+                        <input type="tel" id="phone-number" name="phone-number" placeholder="Numéro de téléphone">
+                    </div>
+                    <div class="form-field">
+                        <select id="services" name="services">
+                            <option value="">Sélectionnez un service</option>
+                            <option value="passengers">Transport des passagers</option>
+                            <option value="packages">Transport des colis</option>
+                        </select>
                     </div>
                 </div>
                 
                 <!-- Common fields -->
                 <div class="form-field">
-                    <input type="email" id="email" placeholder="Adresse e-mail" required>
+                    <input type="email" id="email" name="email" placeholder="Adresse e-mail" required>
                 </div>
                 <div class="form-field">
-                    <select id="services" required>
-                        <option value="">Sélectionnez un service</option>
-                        <option value="passengers">Transport des passagers</option>
-                        <option value="packages">Transport des colis</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <input type="password" id="password" placeholder="Mot de passe" required>
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required>
                     <div id="password-strength" style="font-size: 0.875rem; margin-top: 0.25rem;"></div>
                     <div class="password-strength-bar" style="margin-top: 0.5rem;">
                         <div class="strength-bar-container" style="width: 100%; height: 4px; background-color: #e5e7eb; border-radius: 2px; overflow: hidden;">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="form-field">
-                    <input type="password" id="confirm-password" placeholder="Confirmez le mot de passe" required>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirmez le mot de passe" required>
                     <div id="password-confirmation" style="font-size: 0.875rem; margin-top: 0.25rem; transition: all 0.3s ease;"></div>
                 </div>
                 <button type="submit" class="auth-button">S'inscrire</button>

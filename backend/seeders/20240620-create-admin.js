@@ -152,11 +152,11 @@ module.exports = {
       console.log('🔍 Validation finale...');
       
       const finalCheck = await queryInterface.sequelize.query(
-        `SELECT c.email, c.statut, r.nomRole, a.nom, a.prenom 
+        `SELECT c.email, c.statut, r.nom_role, a.nom, a.prenom 
          FROM compte c 
-         INNER JOIN administrateur a ON c.idCompte = a.idCompte 
-         INNER JOIN role r ON c.idRole = r.idRole 
-         WHERE c.idCompte = :compteId`,
+         INNER JOIN administrateur a ON c.id_compte = a.id_compte
+         INNER JOIN role r ON c.id_role = r.id_role 
+         WHERE c.id_compte = :compteId`,
         {
           replacements: { compteId },
           type: Sequelize.QueryTypes.SELECT,

@@ -1,12 +1,12 @@
 /**
  * Modèle Compte - Gestion des comptes utilisateurs
- * Table : compte
+ * Table : comptes
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Compte = sequelize.define('Compte', {
-    idCompte: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -16,24 +16,35 @@ const Compte = sequelize.define('Compte', {
         allowNull: false,
         unique: true
     },
-    motDePasse: {
+    password_hash: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    statut: {
+    status: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'active'
     },
-    idRole: {
+    role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'role',
-            key: 'idRole'
+            model: 'roles',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'compte',
+    tableName: 'comptes',
     timestamps: false
 });
 

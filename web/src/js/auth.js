@@ -58,6 +58,7 @@ class AuthManager {
     setupRoleSelector() {
         const roleUserRadio = document.getElementById('role-user');
         const roleTransporterRadio = document.getElementById('role-transporter');
+        const servicesSelect = document.getElementById('services');
         
         if (!roleUserRadio || !roleTransporterRadio) return;
 
@@ -65,12 +66,61 @@ class AuthManager {
             const userFields = document.querySelector('[data-role="user"]');
             const transporterFields = document.querySelector('[data-role="transporter"]');
             
+            // Champs utilisateur
+            const firstNameInput = document.getElementById('first-name');
+            const lastNameInput = document.getElementById('last-name');
+            
+            // Champs transporteur
+            const companyNameInput = document.getElementById('company-name');
+            const phoneNumberInput = document.getElementById('phone-number');
+            
             if (selectedRole === 'transporter') {
+                // Afficher les champs transporteur, cacher les champs utilisateur
                 userFields.classList.add('hidden');
                 transporterFields.classList.remove('hidden');
+                
+                // Rendre les champs transporteur required
+                if (servicesSelect) {
+                    servicesSelect.setAttribute('required', 'required');
+                }
+                if (companyNameInput) {
+                    companyNameInput.setAttribute('required', 'required');
+                }
+                if (phoneNumberInput) {
+                    phoneNumberInput.setAttribute('required', 'required');
+                }
+                
+                // Retirer required des champs utilisateur
+                if (firstNameInput) {
+                    firstNameInput.removeAttribute('required');
+                }
+                if (lastNameInput) {
+                    lastNameInput.removeAttribute('required');
+                }
+                
             } else {
+                // Afficher les champs utilisateur, cacher les champs transporteur
                 userFields.classList.remove('hidden');
                 transporterFields.classList.add('hidden');
+                
+                // Rendre les champs utilisateur required
+                if (firstNameInput) {
+                    firstNameInput.setAttribute('required', 'required');
+                }
+                if (lastNameInput) {
+                    lastNameInput.setAttribute('required', 'required');
+                }
+                
+                // Retirer required des champs transporteur
+                if (servicesSelect) {
+                    servicesSelect.removeAttribute('required');
+                }
+                if (companyNameInput) {
+                    companyNameInput.removeAttribute('required');
+                }
+                if (phoneNumberInput) {
+                    phoneNumberInput.removeAttribute('required');
+                }
             }
         };
 
@@ -104,9 +154,20 @@ class AuthManager {
             
             if (result.success) {
                 this.showMessage(result.message, 'success');
-                // Rediriger vers la page d'accueil ou le tableau de bord
+                
+                // Rediriger selon le rôle de l'utilisateur
                 setTimeout(() => {
-                    window.location.href = '../index.html';
+                    const user = AuthAPI.getCurrentUser();
+                    if (user && user.role === 'admin') {
+                        // Rediriger l'admin vers son tableau de bord
+                        window.location.href = './admin-dashboard.html';
+                    } else if (user && user.role === 'transporter') {
+                        // Rediriger les transporteurs vers leur tableau de bord
+                        window.location.href = './transporter-dashboard.html';
+                    } else {
+                        // Rediriger les autres utilisateurs vers le tableau de bord utilisateur
+                        window.location.href = './user-dashboard.html';
+                    }
                 }, 1500);
             } else {
                 this.showMessage(result.message, 'error');
@@ -170,7 +231,7 @@ class AuthManager {
         const service = form.querySelector('#services').value;
 
         // Validation de base
-        if (!email || !password || !confirmPassword || !service) {
+        if (!email || !password || !confirmPassword) {
             this.showMessage('Veuillez remplir tous les champs obligatoires', 'error');
             return null;
         }
@@ -187,8 +248,8 @@ class AuthManager {
         const userData = {
             email,
             password,
+            confirmPassword,
             role,
-            service,
             profile: {}
         };
 
@@ -206,11 +267,12 @@ class AuthManager {
                 firstName
             };
         } else {
+            // Validation spécifique aux transporteurs
             const companyName = form.querySelector('#company-name').value;
             const phoneNumber = form.querySelector('#phone-number').value;
             
-            if (!companyName || !phoneNumber) {
-                this.showMessage('Veuillez remplir le nom de la compagnie et le numéro de téléphone', 'error');
+            if (!companyName || !phoneNumber || !service) {
+                this.showMessage('Veuillez remplir le nom de la compagnie, le numéro de téléphone et sélectionner un service', 'error');
                 return null;
             }
             
@@ -218,6 +280,7 @@ class AuthManager {
                 companyName,
                 phoneNumber
             };
+            userData.service = service;
         }
 
         return userData;
@@ -227,14 +290,25 @@ class AuthManager {
      * Vérifie le statut d'authentification
      */
     checkAuthenticationStatus() {
+        // Ne vérifier l'authentification que sur les pages de login et register
+        const isOnAuthPage = window.location.pathname.includes('login.html') || 
+                            window.location.pathname.includes('register.html');
+        
+        if (!isOnAuthPage) {
+            return; // Ne rien faire si on n'est pas sur une page d'auth
+        }
+
         if (AuthAPI.isAuthenticated()) {
             const user = AuthAPI.getCurrentUser();
             console.log('Utilisateur connecté:', user);
             
-            // Si l'utilisateur est connecté et sur une page d'auth, le rediriger
-            if (window.location.pathname.includes('login.html') || 
-                window.location.pathname.includes('register.html')) {
-                window.location.href = '../index.html';
+            // Rediriger selon le rôle de l'utilisateur
+            if (user && user.role === 'admin') {
+                window.location.href = './admin-dashboard.html';
+            } else if (user && user.role === 'transporter') {
+                window.location.href = './transporter-dashboard.html';
+            } else {
+                window.location.href = './user-dashboard.html';
             }
         }
     }

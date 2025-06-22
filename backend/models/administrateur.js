@@ -1,34 +1,44 @@
 /**
  * Modèle Administrateur - Gestion des administrateurs
- * Table : administrateur
+ * Table : administrateurs
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Administrateur = sequelize.define('Administrateur', {
-    idAdmin: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    nom: {
+    last_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    prenom: {
+    first_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idCompte: {
+    compte_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'compte',
-            key: 'idCompte'
+            model: 'comptes',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'administrateur',
+    tableName: 'administrateurs',
     timestamps: false
 });
 

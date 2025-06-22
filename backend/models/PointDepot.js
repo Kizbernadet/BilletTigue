@@ -1,12 +1,12 @@
 /**
  * Modèle PointDepot - Gestion des points de dépôt
- * Table : pointDepot
+ * Table : point_depot
  */
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const PointDepot = sequelize.define('PointDepot', {
-    idPointDepot: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -15,16 +15,26 @@ const PointDepot = sequelize.define('PointDepot', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    idTransporteur: {
+    transporteur_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'transporteur',
-            key: 'idTransporteur'
+            model: 'transporteurs',
+            key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'pointDepot',
+    tableName: 'point_depot',
     timestamps: false
 });
 
