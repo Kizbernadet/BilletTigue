@@ -1,6 +1,6 @@
 /**
  * Nom du fichier : authService.js
- * Description : Service métier pour l'authentification (inscription, connexion)
+ * Description : Service métier pour l'authentification (inscription, connexion, déconnexion)
  * Rôle : service (logique métier)
  */
 
@@ -8,12 +8,14 @@
  * Logique du script :
  * 1. Inscription d'un nouvel utilisateur (register)
  * 2. Connexion d'un utilisateur existant (login)
- * 3. Hashage du mot de passe et génération de JWT
+ * 3. Déconnexion d'un utilisateur (logout)
+ * 4. Vérification des tokens révoqués (isTokenRevoked)
+ * 5. Hashage du mot de passe et génération de JWT
  */
 
 const bcrypt = require('bcrypt'); // Pour le hashage des mots de passe
 const jwt = require('jsonwebtoken'); // Pour la génération de tokens JWT
-const { Compte, Utilisateur, Role } = require('../models/index'); // Modèles avec associations
+const { Compte, Utilisateur, Role, RevokedToken } = require('../models/index'); // Modèles avec associations
 
 // ========== Fonction : register ========== 
 // Description : Inscrit un nouvel utilisateur dans la base
@@ -134,7 +136,83 @@ async function login(credentials) {
   };
 }
 
+// ========== Fonction : logout ========== 
+// Description : Déconnecte un utilisateur en révoquant son token
+// Paramètres :
+// - token (string) : Le token JWT à révoquer
+// - userId (number) : L'ID de l'utilisateur
+// Retour : (Promise<object>) Confirmation de la déconnexion
+async function logout(token, userId) {
+  try {
+    // Décoder le token pour obtenir l'expiration
+    const decoded = jwt.decode(token);
+    if (!decoded) {
+      throw new Error('Token invalide.');
+    }
+
+    // Calculer la date d'expiration
+    const expiresAt = new Date(decoded.exp * 1000);
+
+    // Vérifier si le token n'est pas déjà révoqué
+    const existingRevoked = await RevokedToken.findOne({ where: { token } });
+    if (existingRevoked) {
+      return { message: 'Token déjà révoqué.' };
+    }
+
+    // Ajouter le token à la liste des tokens révoqués
+    await RevokedToken.create({
+      token,
+      user_id: userId,
+      revoked_at: new Date(),
+      expires_at: expiresAt,
+      reason: 'logout'
+    });
+
+    return { message: 'Déconnexion réussie.' };
+  } catch (error) {
+    throw new Error(`Erreur lors de la déconnexion: ${error.message}`);
+  }
+}
+
+// ========== Fonction : isTokenRevoked ========== 
+// Description : Vérifie si un token est révoqué
+// Paramètres :
+// - token (string) : Le token JWT à vérifier
+// Retour : (Promise<boolean>) True si le token est révoqué, false sinon
+async function isTokenRevoked(token) {
+  try {
+    const revokedToken = await RevokedToken.findOne({ where: { token } });
+    return !!revokedToken;
+  } catch (error) {
+    console.error('Erreur lors de la vérification du token révoqué:', error);
+    return false;
+  }
+}
+
+// ========== Fonction : cleanupExpiredTokens ========== 
+// Description : Nettoie les tokens expirés de la base de données
+// Paramètres : Aucun
+// Retour : (Promise<number>) Nombre de tokens supprimés
+async function cleanupExpiredTokens() {
+  try {
+    const result = await RevokedToken.destroy({
+      where: {
+        expires_at: {
+          [require('sequelize').Op.lt]: new Date()
+        }
+      }
+    });
+    return result;
+  } catch (error) {
+    console.error('Erreur lors du nettoyage des tokens expirés:', error);
+    return 0;
+  }
+}
+
 module.exports = {
   register,
-  login
+  login,
+  logout,
+  isTokenRevoked,
+  cleanupExpiredTokens
 }; 

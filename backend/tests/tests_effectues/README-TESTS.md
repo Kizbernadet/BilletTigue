@@ -123,6 +123,10 @@ Utilisateur :
 Transporteur :
 - Email: transporter@test.com
 - Mot de passe: transporter123
+
+Transporteur : 
+- konoha@exemple.com
+- Mot de passe : konoha@123
 ```
 
 ### **Outils nécessaires**

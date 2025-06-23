@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const morgan = require('morgan');
 const { testConnection, sequelize } = require('./config/database');
+const authService = require('./services/authService');
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -61,6 +62,22 @@ app.use((err, req, res, next) => {
 // Port
 const PORT = process.env.PORT || 5000;
 
+// ========== Fonction de nettoyage des tokens expirés ==========
+// Nettoie automatiquement les tokens expirés toutes les heures
+const cleanupExpiredTokens = async () => {
+    try {
+        const deletedCount = await authService.cleanupExpiredTokens();
+        if (deletedCount > 0) {
+            console.log(`🧹 ${deletedCount} tokens expirés supprimés`);
+        }
+    } catch (error) {
+        console.error('❌ Erreur lors du nettoyage des tokens:', error);
+    }
+};
+
+// Démarrer le nettoyage automatique (toutes les heures)
+setInterval(cleanupExpiredTokens, 60 * 60 * 1000); // 1 heure
+
 // Synchroniser la base de données et démarrer le serveur
 const startServer = async () => {
     try {
@@ -68,9 +85,13 @@ const startServer = async () => {
         await sequelize.sync({ alter: true });
         console.log('✅ Modèles synchronisés avec la base de données');
         
+        // Nettoyer les tokens expirés au démarrage
+        await cleanupExpiredTokens();
+        
         // Démarrer le serveur
-        app.listen(PORT, () => {
-            console.log(`🚀 Serveur en cours d'exécution sur le port ${PORT}`);
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`🚀 Serveur en cours d'exécution sur http://0.0.0.0:${PORT}`);
+            console.log(`🧹 Nettoyage automatique des tokens configuré (toutes les heures)`);
         });
     } catch (error) {
         console.error('❌ Erreur lors du démarrage du serveur:', error);

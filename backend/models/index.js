@@ -14,6 +14,7 @@
  * - Compte 1,N Envoi
  * - Envoi 1,1 Paiement
  * - Compte 1,N Reservation
+ * - Compte 1,N RevokedToken (pour la déconnexion)
  *
  * À importer dans server.js pour initialiser toutes les associations.
  */
@@ -29,6 +30,7 @@ const Envoi = require('./envoi');
 const Paiement = require('./paiement');
 const Reservation = require('./reservation');
 const Colis = require('./colis');
+const RevokedToken = require('./revokedToken');
 
 // Role 1,N Compte
 Role.hasMany(Compte, { foreignKey: 'role_id', as: 'comptes' });
@@ -41,6 +43,10 @@ Compte.hasOne(Transporteur, { foreignKey: 'compte_id', as: 'transporteur' });
 Transporteur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
 Compte.hasOne(Administrateur, { foreignKey: 'compte_id', as: 'administrateur' });
 Administrateur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
+
+// Compte 1,N RevokedToken (pour la déconnexion)
+Compte.hasMany(RevokedToken, { foreignKey: 'user_id', as: 'revokedTokens' });
+RevokedToken.belongsTo(Compte, { foreignKey: 'user_id', as: 'compte' });
 
 // Transporteur 1,N PointDepot
 Transporteur.hasMany(PointDepot, { foreignKey: 'transporteur_id', as: 'pointsDepot' });
@@ -89,5 +95,6 @@ module.exports = {
   Envoi,
   Paiement,
   Reservation,
-  Colis
+  Colis,
+  RevokedToken
 }; 

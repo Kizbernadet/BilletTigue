@@ -1,10 +1,35 @@
+/**
+ * FICHIER: main.dart
+ * 
+ * RÔLE: Point d'entrée principal de l'application mobile Billettigue
+ * 
+ * LOGIQUE:
+ * - Configure le thème global de l'application avec les couleurs de la charte graphique
+ * - Définit les styles des composants (boutons, champs de saisie, cartes)
+ * - Lance l'écran de démarrage (SplashScreen) qui gère le flux d'initialisation
+ * - Utilise Material 3 pour une interface moderne et cohérente
+ * 
+ * ARCHITECTURE:
+ * - MyApp: Widget racine qui configure le MaterialApp
+ * - Thème personnalisé basé sur AppColors pour la cohérence visuelle
+ * - Navigation automatique vers SplashScreen au démarrage
+ * 
+ * FLUX D'EXÉCUTION:
+ * 1. Application démarre → MyApp
+ * 2. Configuration du thème et des styles
+ * 3. Lancement de SplashScreen
+ * 4. SplashScreen détermine l'écran suivant selon l'état de l'utilisateur
+ */
+
 import 'package:flutter/material.dart';
+import 'package:billettigue/screens/splash_screen.dart';
 import 'package:billettigue/screens/auth/login_screen.dart';
 import 'package:billettigue/screens/tickets_screen.dart';
 import 'package:billettigue/screens/parcels_screen.dart';
 import 'package:billettigue/screens/history_screen.dart';
 import 'package:billettigue/screens/profile_screen.dart';
 import 'package:billettigue/screens/auth/register_screen.dart';
+import 'package:billettigue/utils/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,42 +42,52 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Billettigue',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, // Masque la bannière de debug
+      // Configuration du thème global de l'application
       theme: ThemeData(
+        // Schéma de couleurs basé sur la charte graphique
         colorScheme: ColorScheme(
           brightness: Brightness.light,
-          primary: const Color(0xFF6C4DFF), // violet principal
-          onPrimary: Colors.white,
-          secondary: const Color(0xFFEDEBFB), // violet très clair
-          onSecondary: const Color(0xFF6C4DFF),
-          error: Colors.red,
-          onError: Colors.white,
-          background: const Color(0xFFF8F8FF), // fond très clair
-          onBackground: const Color(0xFF2D2D2D),
-          surface: Colors.white,
-          onSurface: const Color(0xFF2D2D2D),
+          primary: AppColors.primary, // Bleu marine (couleur primaire)
+          onPrimary: AppColors.textLight,
+          secondary: AppColors.accent, // Orange (couleur d'accent)
+          onSecondary: AppColors.textLight,
+          error: AppColors.error,
+          onError: AppColors.textLight,
+          surface: AppColors.surface,
+          onSurface: AppColors.textBase, // Gris foncé (couleur de texte)
         ),
-        scaffoldBackgroundColor: const Color(0xFFF8F8FF),
+
+        // Couleur de fond par défaut
+        scaffoldBackgroundColor: AppColors.background,
+
+        // Utilisation de Material 3 pour un design moderne
         useMaterial3: true,
+
+        // Police par défaut
         fontFamily: 'Roboto',
+
+        // Configuration des boutons élevés (ElevatedButton)
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF6C4DFF),
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.primary, // Bleu marine
+            foregroundColor: AppColors.textLight,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(30), // Coins arrondis
             ),
             textStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
-            elevation: 0,
+            elevation: 0, // Pas d'ombre pour un look moderne
           ),
         ),
+
+        // Configuration des boutons avec contour (OutlinedButton)
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-            foregroundColor: const Color(0xFF6C4DFF),
-            side: const BorderSide(color: Color(0xFF6C4DFF)),
+            foregroundColor: AppColors.primary, // Bleu marine
+            side: const BorderSide(color: AppColors.primary),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -62,27 +97,39 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+
+        // Configuration des champs de saisie (TextField)
         inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFFEDEBFB),
+          filled: true, // Fond rempli
+          fillColor: AppColors.inputBackground, // Gris très clair
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
+            borderSide: const BorderSide(color: AppColors.border), // Gris clair
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: AppColors.borderFocused,
+            ), // Orange
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
             vertical: 16,
           ),
         ),
+
+        // Configuration des cartes (Card)
         cardTheme: CardTheme(
-          color: Colors.white,
-          elevation: 2,
+          color: AppColors.surface,
+          elevation: 2, // Ombre légère
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24), // Coins très arrondis
           ),
         ),
       ),
-      home: const WelcomeScreen(),
+
+      // Écran de démarrage - gère le flux d'initialisation
+      home: const SplashScreen(),
     );
   }
 }
