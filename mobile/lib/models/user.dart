@@ -21,7 +21,6 @@
 /// - Compatible avec AuthResponse
 library;
 
-import 'dart:convert';
 
 /// Modèle représentant un utilisateur de l'application
 ///

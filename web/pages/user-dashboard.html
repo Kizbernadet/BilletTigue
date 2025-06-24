@@ -200,8 +200,24 @@
                         </ul>
                     </div>
 
-                    <!-- Bouton de déconnexion -->
-                    <button id="logoutBtn" class="btn-login">Se déconnecter</button>
+                    <!-- Bouton profil avec icône et flèche -->
+                    <div class="profile-dropdown-wrapper" style="position: relative; display: inline-block;">
+                        <button id="profileBtn" style="margin-left: 0.5rem;">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <i class="fa-solid fa-caret-down"></i>
+                        </button>
+                        <ul id="profileDropdown" class="profile-dropdown-menu">
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-user"></i> Voir mon profil</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-user-pen"></i> Modifier mon profil</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-key"></i> Changer mon mot de passe</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-ticket"></i> Mes réservations</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-box"></i> Mes colis</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-gear"></i> Paramètres</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-circle-question"></i> Support / Aide</a></li>
+                            <li><a href="#" class="profile-dropdown-link logout-link"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -257,5 +273,191 @@
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
     <script type="module" src="../src/js/dashboard.js"></script>
+    <script>
+      // Gestionnaire du menu dropdown profil
+      document.addEventListener('DOMContentLoaded', function() {
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileWrapper = document.querySelector('.profile-dropdown-wrapper');
+        
+        if (!profileBtn || !profileDropdown || !profileWrapper) {
+          console.error('Éléments du menu profil non trouvés');
+          return;
+        }
+
+        let isMenuOpen = false;
+
+        // Fonction pour ouvrir le menu
+        function openMenu() {
+          profileDropdown.style.display = 'block';
+          isMenuOpen = true;
+          console.log('Menu ouvert');
+        }
+
+        // Fonction pour fermer le menu
+        function closeMenu() {
+          profileDropdown.style.display = 'none';
+          isMenuOpen = false;
+          console.log('Menu fermé');
+        }
+
+        // Fonction pour basculer le menu
+        function toggleMenu() {
+          if (isMenuOpen) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        }
+
+        // Clic sur le bouton profil
+        profileBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Clic sur le bouton profil');
+          toggleMenu();
+        });
+
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener('click', function(e) {
+          if (isMenuOpen && !profileWrapper.contains(e.target)) {
+            console.log('Clic en dehors du menu');
+            closeMenu();
+          }
+        });
+
+        // Gestionnaire pour le bouton de déconnexion
+        document.querySelectorAll('.logout-link').forEach(logoutLink => {
+          logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Logique de déconnexion
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            closeMenu();
+            window.location.href = '../index.html';
+          });
+        });
+
+        // Gestionnaires pour les autres liens du menu (optionnel)
+        const menuLinks = document.querySelectorAll('.profile-dropdown-link:not(.logout-link)');
+        menuLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Clic sur:', this.textContent.trim());
+            // Ici tu peux ajouter la logique pour chaque option
+            closeMenu();
+          });
+        });
+
+        console.log('Menu profil initialisé');
+      });
+    </script>
+    <style>
+      .profile-dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 110%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        min-width: 200px;
+        z-index: 1000;
+        padding: 0;
+        list-style: none;
+        margin: 0;
+      }
+      .profile-dropdown-menu li {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display: block;
+        background: transparent;
+      }
+      .profile-dropdown-menu .profile-dropdown-link {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.5rem 1.2rem;
+        color: #333;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .profile-dropdown-menu .profile-dropdown-link:last-child {
+        border-bottom: none;
+      }
+      .profile-dropdown-menu .profile-dropdown-link:hover {
+        background: var(--accent-color);
+        color: white;
+        transform: translateX(2px);
+      }
+      .profile-dropdown-menu .profile-dropdown-link.logout-link {
+        background-color: #dc3545;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .profile-dropdown-menu .profile-dropdown-link.logout-link:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: translateX(2px);
+      }
+      #profileBtn {
+        background-color: transparent;
+        border: 1px solid var(--primary-color);
+        padding: 0.625rem 1rem;
+        border-radius: 9999px !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        color: var(--primary-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 44px;
+        min-height: 44px;
+      }
+      #profileBtn:hover, #profileBtn:focus {
+        background-color: rgba(76, 175, 80, 0.10); /* vert pâle, cohérent avec la couleur primaire */
+        border-color: #388e3c; /* vert plus foncé */
+        color: #388e3c;
+        outline: none;
+      }
+      #profileBtn .fa-circle-user {
+        font-size: 1.7em;
+      }
+      @media (max-width: 768px) {
+        .btn-lang #current-lang-text,
+        .btn-lang .fa-chevron-down {
+          display: none !important;
+        }
+        .btn-lang::before {
+          content: "";
+        }
+        .btn-lang::after {
+          content: "";
+        }
+        .btn-lang {
+          padding-left: 0.7em;
+          padding-right: 0.7em;
+        }
+        .btn-lang::before {
+          content: "\f0ac";
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          font-size: 1.2em;
+          margin-right: 0;
+          color: var(--primary-color);
+          display: inline-block;
+        }
+      }
+    </style>
 </body>
 </html> 

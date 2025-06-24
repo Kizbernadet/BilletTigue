@@ -21,7 +21,6 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/models/user.dart';
-import 'package:billettigue/models/auth_response.dart';
 import 'package:billettigue/services/auth_service.dart';
 
 /// Contrôleur d'authentification (ChangeNotifier)

@@ -18,7 +18,6 @@
 /// - Fournit une interface type-safe pour les données d'authentification
 library;
 
-import 'dart:convert';
 import 'package:billettigue/models/user.dart';
 
 /// Modèle pour les réponses d'authentification du backend
