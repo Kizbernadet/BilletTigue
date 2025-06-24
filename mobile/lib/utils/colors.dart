@@ -1,24 +1,23 @@
-/**
- * FICHIER: colors.dart
- * 
- * RÔLE: Définition de la palette de couleurs de l'application mobile Billettigue
- * 
- * LOGIQUE:
- * - Centralise toutes les couleurs utilisées dans l'application
- * - Assure la cohérence visuelle avec l'interface web
- * - Fournit des couleurs sémantiques (success, error, warning, info)
- * - Inclut des gradients prédéfinis pour les éléments décoratifs
- * 
- * ARCHITECTURE:
- * - Classe statique AppColors pour un accès global
- * - Organisation par catégories (principales, texte, fond, etc.)
- * - Couleurs inspirées de la charte graphique web
- * 
- * UTILISATION:
- * - Import dans tous les fichiers qui nécessitent des couleurs
- * - Exemple: AppColors.primary, AppColors.textBase
- * - Gradients: AppColors.primaryGradient, AppColors.accentGradient
- */
+/// FICHIER: colors.dart
+/// 
+/// RÔLE: Définition de la palette de couleurs de l'application mobile Billettigue
+/// 
+/// LOGIQUE:
+/// - Centralise toutes les couleurs utilisées dans l'application
+/// - Assure la cohérence visuelle avec l'interface web
+/// - Fournit des couleurs sémantiques (success, error, warning, info)
+/// - Inclut des gradients prédéfinis pour les éléments décoratifs
+/// 
+/// ARCHITECTURE:
+/// - Classe statique AppColors pour un accès global
+/// - Organisation par catégories (principales, texte, fond, etc.)
+/// - Couleurs inspirées de la charte graphique web
+/// 
+/// UTILISATION:
+/// - Import dans tous les fichiers qui nécessitent des couleurs
+/// - Exemple: AppColors.primary, AppColors.textBase
+/// - Gradients: AppColors.primaryGradient, AppColors.accentGradient
+library;
 
 import 'package:flutter/material.dart';
 

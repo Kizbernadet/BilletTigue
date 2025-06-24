@@ -1,24 +1,23 @@
-/**
- * FICHIER: auth_controller.dart
- * 
- * RÔLE: Contrôleur d'authentification (MVC) pour la gestion de l'état utilisateur
- * 
- * LOGIQUE:
- * - Gère l'état d'authentification (chargement, erreur, utilisateur courant, token)
- * - Fait le lien entre AuthService et l'UI (Provider/Consumer)
- * - Fournit des méthodes pour login, register, logout
- * - Notifie l'UI lors des changements d'état
- * 
- * ARCHITECTURE:
- * - Hérite de ChangeNotifier pour la réactivité
- * - Stocke l'utilisateur courant, le token, l'état de chargement et les erreurs
- * - Utilise AuthService pour les appels réseau
- * - Peut être utilisé avec Provider ou Riverpod
- * 
- * UTILISATION:
- * - Fournir ce controller via un Provider dans main.dart
- * - Consommer dans les vues pour afficher l'état et déclencher les actions
- */
+/// FICHIER: auth_controller.dart
+/// 
+/// RÔLE: Contrôleur d'authentification (MVC) pour la gestion de l'état utilisateur
+/// 
+/// LOGIQUE:
+/// - Gère l'état d'authentification (chargement, erreur, utilisateur courant, token)
+/// - Fait le lien entre AuthService et l'UI (Provider/Consumer)
+/// - Fournit des méthodes pour login, register, logout
+/// - Notifie l'UI lors des changements d'état
+/// 
+/// ARCHITECTURE:
+/// - Hérite de ChangeNotifier pour la réactivité
+/// - Stocke l'utilisateur courant, le token, l'état de chargement et les erreurs
+/// - Utilise AuthService pour les appels réseau
+/// - Peut être utilisé avec Provider ou Riverpod
+/// 
+/// UTILISATION:
+/// - Fournir ce controller via un Provider dans main.dart
+/// - Consommer dans les vues pour afficher l'état et déclencher les actions
+library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/models/user.dart';

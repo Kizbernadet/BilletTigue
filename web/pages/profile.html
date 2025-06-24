@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - BilletTigue</title>
+    <!-- Les liens CSS doivent pointer vers la racine du site -->
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-custom">
+    <header>
+        <!-- Container pour centrer la topbar -->
+        <div class="w-full flex justify-center p-4">
+            <!-- Topbar avec 95% de largeur -->
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
+                    <a href="../index.html" class="flex items-center">
+                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                        <span class="logo-text">BilletTigue</span>
+                    </a>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <!-- Les liens de navigation doivent être relatifs à la racine -->
+                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <!-- Menu utilisateur -->
+                    <div class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-user">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="user-name">Utilisateur</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="user-options" tabindex="0" class="user-options-list">
+                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Bouton burger menu -->
+                    <div id="burger-menu" class="burger-menu">
+                        <button class="burger-btn" id="burger-btn">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="burger-dropdown" id="burger-dropdown">
+                            <!-- En-tête du menu burger -->
+                            <div class="burger-header">
+                                <div class="user-info">
+                                    <div class="user-avatar" id="burger-user-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-name" id="burger-user-name">Nom Utilisateur</div>
+                                        <div class="user-email" id="burger-user-email">email@example.com</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Options du menu burger -->
+                            <a class="burger-option" href="./profile.html">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-cog"></i> Paramètres du compte
+                            </a>
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-bell"></i> Notifications
+                            </a>
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-ticket-alt"></i> Mes Réservations
+                            </a>
+                            
+                            <div class="burger-separator"></div>
+                            
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-credit-card"></i> Méthodes de paiement
+                            </a>
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-shield-alt"></i> Sécurité
+                            </a>
+                            <a class="burger-option" href="#">
+                                <i class="fas fa-question-circle"></i> Aide & Support
+                            </a>
+                            
+                            <div class="burger-separator"></div>
+                            
+                            <button class="burger-option logout" id="burger-logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <!-- En-tête du profil -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                    <h1 class="profile-title">Mon Profil</h1>
+                    <p class="profile-subtitle">Gérez vos informations personnelles</p>
+                </div>
+            </div>
+
+            <!-- Formulaire de profil -->
+            <form id="profileForm" class="profile-form">
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Informations personnelles
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="firstName">Prénom</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="lastName">Nom</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="email">Adresse e-mail</label>
+                            <input type="email" id="email" name="email" required readonly>
+                            <small class="field-note">L'email ne peut pas être modifié</small>
+                        </div>
+                        <div class="form-field">
+                            <label for="phone">Numéro de téléphone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        <div class="form-field full-width">
+                            <label for="address">Adresse</label>
+                            <textarea id="address" name="address" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-lock"></i>
+                        Sécurité
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="currentPassword">Mot de passe actuel</label>
+                            <input type="password" id="currentPassword" name="currentPassword">
+                        </div>
+                        <div class="form-field">
+                            <label for="newPassword">Nouveau mot de passe</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                        </div>
+                        <div class="form-field">
+                            <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Sauvegarder les modifications
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i>
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
+    </footer>
+
+    <!-- Le script JS doit pointer vers la racine du site -->
+    <script src="../src/js/main.js"></script>
+    <script type="module" src="../src/js/profile.js"></script>
+</body>
+</html> 

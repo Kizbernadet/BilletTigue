@@ -1,30 +1,29 @@
-/**
- * FICHIER: data_service.dart
- * 
- * RÔLE: Service de données simulées pour le développement de l'application
- * 
- * LOGIQUE:
- * - Fournit des données fictives pour simuler une API backend
- * - Gère les utilisateurs, événements et catégories
- * - Simule les délais réseau pour un comportement réaliste
- * - Permet le développement de l'interface sans backend fonctionnel
- * 
- * ARCHITECTURE:
- * - Classe singleton avec données statiques
- * - Méthodes asynchrones pour simuler les appels API
- * - Données organisées par type (utilisateurs, événements, catégories)
- * - Délais artificiels pour simuler la latence réseau
- * 
- * UTILISATION:
- * - Remplacer par de vrais appels API lors de l'intégration backend
- * - Utilisé par les écrans pour charger les données
- * - Fournit des données cohérentes pour les tests
- */
+/// FICHIER: data_service.dart
+/// 
+/// RÔLE: Service de données simulées pour le développement de l'application
+/// 
+/// LOGIQUE:
+/// - Fournit des données fictives pour simuler une API backend
+/// - Gère les utilisateurs, événements et catégories
+/// - Simule les délais réseau pour un comportement réaliste
+/// - Permet le développement de l'interface sans backend fonctionnel
+/// 
+/// ARCHITECTURE:
+/// - Classe singleton avec données statiques
+/// - Méthodes asynchrones pour simuler les appels API
+/// - Données organisées par type (utilisateurs, événements, catégories)
+/// - Délais artificiels pour simuler la latence réseau
+/// 
+/// UTILISATION:
+/// - Remplacer par de vrais appels API lors de l'intégration backend
+/// - Utilisé par les écrans pour charger les données
+/// - Fournit des données cohérentes pour les tests
+library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/models/category_model.dart';
 import 'package:billettigue/models/event_model.dart';
-import 'package:billettigue/models/user_model.dart';
+import 'package:billettigue/models/user.dart';
 
 /// Service de données simulées pour le développement
 class DataService {
@@ -35,9 +34,10 @@ class DataService {
   /// Utilisateur connecté simulé pour les tests
   final User currentUser = User(
     id: '1',
-    firstName: 'John',
-    lastName: 'Doe',
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
+    role: 'user',
     address: '123 Rue de Paris, 75001 Paris',
     phone: '0123456789',
   );

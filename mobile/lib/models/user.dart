@@ -1,26 +1,25 @@
-/**
- * FICHIER: user.dart
- * 
- * RÔLE: Modèle de données pour représenter un utilisateur de l'application
- * 
- * LOGIQUE:
- * - Définit la structure des données d'un utilisateur connecté
- * - Compatible avec les réponses JSON du backend Node/Express
- * - Gère la sérialisation/désérialisation JSON
- * - Fournit des getters calculés pour faciliter l'affichage
- * 
- * ARCHITECTURE:
- * - Classe immutable avec des propriétés finales
- * - Constructeur avec tous les paramètres requis
- * - Méthodes fromJson et toJson pour la sérialisation
- * - Getter calculé pour le nom complet
- * 
- * UTILISATION:
- * - Création d'objets User depuis les données d'authentification
- * - Affichage du nom d'utilisateur dans l'interface
- * - Gestion du profil utilisateur
- * - Compatible avec AuthResponse
- */
+/// FICHIER: user.dart
+/// 
+/// RÔLE: Modèle de données pour représenter un utilisateur de l'application
+/// 
+/// LOGIQUE:
+/// - Définit la structure des données d'un utilisateur connecté
+/// - Compatible avec les réponses JSON du backend Node/Express
+/// - Gère la sérialisation/désérialisation JSON
+/// - Fournit des getters calculés pour faciliter l'affichage
+/// 
+/// ARCHITECTURE:
+/// - Classe immutable avec des propriétés finales
+/// - Constructeur avec tous les paramètres requis
+/// - Méthodes fromJson et toJson pour la sérialisation
+/// - Getter calculé pour le nom complet
+/// 
+/// UTILISATION:
+/// - Création d'objets User depuis les données d'authentification
+/// - Affichage du nom d'utilisateur dans l'interface
+/// - Gestion du profil utilisateur
+/// - Compatible avec AuthResponse
+library;
 
 import 'dart:convert';
 
@@ -75,12 +74,12 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id']?.toString() ?? '',
-      nom: json['nom'] ?? '',
-      prenom: json['prenom'] ?? '',
+      nom: json['lastName'] ?? '',
+      prenom: json['firstName'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? 'user',
       address: json['address'],
-      phone: json['phone'],
+      phone: json['phoneNumber'],
     );
   }
 

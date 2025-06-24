@@ -1,23 +1,22 @@
-/**
- * FICHIER: auth_response.dart
- * 
- * RÔLE: Modèle pour les réponses d'authentification du backend
- * 
- * LOGIQUE:
- * - Définit la structure des réponses de succès et d'erreur
- * - Gère la sérialisation/désérialisation JSON
- * - Fournit des méthodes utilitaires pour vérifier le statut
- * - Compatible avec les réponses du backend Node/Express
- * 
- * ARCHITECTURE:
- * - Classe générique pour gérer différents types de réponses
- * - Constructeurs factory pour créer depuis JSON
- * - Méthodes pour vérifier le succès et extraire les données
- * 
- * UTILISATION:
- * - Utilisé par AuthService pour parser les réponses API
- * - Fournit une interface type-safe pour les données d'authentification
- */
+/// FICHIER: auth_response.dart
+/// 
+/// RÔLE: Modèle pour les réponses d'authentification du backend
+/// 
+/// LOGIQUE:
+/// - Définit la structure des réponses de succès et d'erreur
+/// - Gère la sérialisation/désérialisation JSON
+/// - Fournit des méthodes utilitaires pour vérifier le statut
+/// - Compatible avec les réponses du backend Node/Express
+/// 
+/// ARCHITECTURE:
+/// - Classe générique pour gérer différents types de réponses
+/// - Constructeurs factory pour créer depuis JSON
+/// - Méthodes pour vérifier le succès et extraire les données
+/// 
+/// UTILISATION:
+/// - Utilisé par AuthService pour parser les réponses API
+/// - Fournit une interface type-safe pour les données d'authentification
+library;
 
 import 'dart:convert';
 import 'package:billettigue/models/user.dart';

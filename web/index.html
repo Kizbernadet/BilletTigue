@@ -30,8 +30,9 @@
                     <!-- Language Button -->
                     <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
-                            <span id="current-lang-text">Français</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <span id="current-lang-text" class="lang-text">Français</span>
+                            <i class="fas fa-chevron-down text-xs lang-arrow"></i>
+                            <i class="fa-solid fa-globe lang-icon" style="display:none;"></i>
                         </label>
                         <ul id="lang-options" tabindex="0" class="lang-options-list">
                             <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
@@ -39,15 +40,36 @@
                         </ul>
                     </div>
 
-                    <!-- Login Dropdown -->
-                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                    <!-- Login Dropdown (visible si non connecté) -->
+                    <div id="login-menu" class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
-                            <span>Se connecter</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <span class="login-text">Se connecter</span>
+                            <i class="fas fa-chevron-down text-xs login-arrow"></i>
+                            <i class="fa-solid fa-user login-icon" style="display:none;"></i>
                         </label>
                         <ul tabindex="0" class="lang-options-list">
                             <li><a href="./pages/login.html?role=user" class="lang-option text-sm">Utilisateur</a></li>
                             <li><a href="./pages/login.html?role=transporter" class="lang-option text-sm">Transporteur</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Hamburger Button (mobile only) -->
+                    <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                    </button>
+
+                    <!-- Menu utilisateur (visible si connecté) -->
+                    <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
+                        <label tabindex="0" class="btn-user">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="user-name">Utilisateur</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="user-options" tabindex="0" class="user-options-list">
+                            <li><a class="user-option" href="./pages/profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
                         </ul>
                     </div>
                 </div>
@@ -129,5 +151,39 @@
 
     <!-- JavaScript -->
     <script src="./src/js/main.js"></script>
+
+    <!-- Menu mobile (slide) -->
+    <nav id="mobile-menu" class="mobile-menu" style="display:none;">
+        <ul class="nav-list">
+            <li><a href="#" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+        </ul>
+    </nav>
+
+    <script>
+    // Menu mobile hamburger
+    const hamburger = document.getElementById('mobile-hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    function toggleMobileMenu() {
+        hamburger.classList.toggle('is-active');
+        if (hamburger.classList.contains('is-active')) {
+            mobileMenu.style.display = 'block';
+            setTimeout(() => mobileMenu.classList.add('mobile-menu--open'), 10);
+            document.body.style.overflow = 'hidden';
+        } else {
+            mobileMenu.classList.remove('mobile-menu--open');
+            setTimeout(() => { mobileMenu.style.display = 'none'; }, 350);
+            document.body.style.overflow = '';
+        }
+    }
+    hamburger.addEventListener('click', toggleMobileMenu);
+    // Fermer le menu si on clique en dehors
+    mobileMenu.addEventListener('click', function(e) {
+        if (e.target === mobileMenu) toggleMobileMenu();
+    });
+    </script>
 </body>
 </html> 

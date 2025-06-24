@@ -1,25 +1,24 @@
-/**
- * FICHIER: onboarding_service.dart
- * 
- * RÔLE: Service de gestion de l'état de l'application et des données utilisateur
- * 
- * LOGIQUE:
- * - Gère le premier lancement de l'application (onboarding)
- * - Stocke et récupère les données utilisateur (token, email, nom)
- * - Détermine l'état actuel de l'application pour la navigation
- * - Gère l'authentification et la déconnexion
- * 
- * ARCHITECTURE:
- * - Utilise SharedPreferences pour le stockage local persistant
- * - Méthodes statiques pour un accès global
- * - Enum AppState pour représenter les états possibles
- * - Clés de stockage constantes pour éviter les erreurs
- * 
- * UTILISATION:
- * - Appelé par NavigationService pour déterminer l'écran à afficher
- * - Utilisé dans les écrans d'authentification pour sauvegarder les données
- * - Permet la persistance des données entre les sessions
- */
+/// FICHIER: onboarding_service.dart
+/// 
+/// RÔLE: Service de gestion de l'état de l'application et des données utilisateur
+/// 
+/// LOGIQUE:
+/// - Gère le premier lancement de l'application (onboarding)
+/// - Stocke et récupère les données utilisateur (token, email, nom)
+/// - Détermine l'état actuel de l'application pour la navigation
+/// - Gère l'authentification et la déconnexion
+/// 
+/// ARCHITECTURE:
+/// - Utilise SharedPreferences pour le stockage local persistant
+/// - Méthodes statiques pour un accès global
+/// - Enum AppState pour représenter les états possibles
+/// - Clés de stockage constantes pour éviter les erreurs
+/// 
+/// UTILISATION:
+/// - Appelé par NavigationService pour déterminer l'écran à afficher
+/// - Utilisé dans les écrans d'authentification pour sauvegarder les données
+/// - Permet la persistance des données entre les sessions
+library;
 
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -41,6 +41,10 @@ app.use((err, req, res, next) => {
 // Routes pour l'inscription et la connexion
 app.use('/api/auth', require('./routes/authRoutes'));
 
+// ========== Intégration des routes de profil ========== 
+// Routes pour la gestion du profil utilisateur
+app.use('/api', require('./routes/profileRoutes'));
+
 // Autres routes
 app.use('/api/users', require('./routes/userRoutes'));
 

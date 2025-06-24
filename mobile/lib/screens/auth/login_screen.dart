@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:billettigue/screens/auth/register_screen.dart';
+import 'package:billettigue/services/auth_service.dart';
 import 'package:billettigue/services/navigation_service.dart';
 import 'package:billettigue/utils/colors.dart';
 import 'package:billettigue/widgets/custom_button.dart';
@@ -34,33 +35,54 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        await Future.delayed(const Duration(seconds: 2));
-
-        final email = _emailController.text;
-        final token = 'mock_token_${DateTime.now().millisecondsSinceEpoch}';
-        final name = email.split('@')[0];
-
-        await NavigationService.navigateAfterLogin(
-          context,
-          token: token,
-          email: email,
-          name: name,
+        // Appeler le vrai service d'authentification
+        final response = await AuthService.login(
+          email: _emailController.text,
+          password: _passwordController.text,
         );
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Connexion réussie !'),
-              backgroundColor: AppColors.success,
-              duration: const Duration(seconds: 2),
-            ),
-          );
+          if (response.user != null && response.token != null) {
+            // ===============================================
+            // VÉRIFICATION DU RÔLE DE L'UTILISATEUR
+            // ===============================================
+            if (response.user!.role.toLowerCase().trim() == 'user') {
+              // Si le rôle est 'user', procéder à la connexion
+              await NavigationService.navigateAfterLogin(
+                context,
+                token: response.token!,
+                email: response.user!.email,
+                name: response.user!.displayName,
+              );
+            } else {
+              // Si le rôle n'est pas 'user', afficher un message d'erreur
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                    'Ce compte n\'est pas autorisé sur l\'application mobile. Veuillez utiliser le site web.',
+                  ),
+                  backgroundColor: AppColors.error,
+                  duration: const Duration(seconds: 5),
+                ),
+              );
+            }
+          } else {
+            // Afficher le message d'erreur de l'API (ex: identifiants incorrects)
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  response.message ?? 'Erreur lors de la connexion.',
+                ),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Erreur lors de la connexion: $e'),
+              content: Text('Erreur inattendue: ${e.toString()}'),
               backgroundColor: AppColors.error,
             ),
           );
@@ -85,13 +107,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Détermine si le bouton retour doit être affiché
+    final canPop = Navigator.canPop(context);
+
     return Scaffold(
       backgroundColor: AppColors.surface,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textBase),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // Affiche le bouton retour seulement si la navigation arrière est possible
+        leading:
+            canPop
+                ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: AppColors.textBase),
+                  onPressed: () => Navigator.of(context).pop(),
+                )
+                : null,
         title: const Text(
           'Connexion',
           style: TextStyle(

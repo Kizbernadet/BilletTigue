@@ -1,4 +1,127 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // ========== Gestion de l'état d'authentification et du menu utilisateur ==========
+    const userMenu = document.getElementById('user-menu');
+    const loginMenu = document.getElementById('login-menu');
+    const userNameElement = document.getElementById('user-name');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    // Éléments du menu burger
+    const burgerMenu = document.getElementById('burger-menu');
+    const burgerBtn = document.getElementById('burger-btn');
+    const burgerDropdown = document.getElementById('burger-dropdown');
+    const burgerUserName = document.getElementById('burger-user-name');
+    const burgerUserEmail = document.getElementById('burger-user-email');
+    const burgerUserAvatar = document.getElementById('burger-user-avatar');
+    const burgerLogoutBtn = document.getElementById('burger-logout-btn');
+
+    // Fonction pour générer les initiales d'un utilisateur
+    function getUserInitials(firstName, lastName) {
+        const first = firstName ? firstName.charAt(0).toUpperCase() : '';
+        const last = lastName ? lastName.charAt(0).toUpperCase() : '';
+        return first + last;
+    }
+
+    // Fonction pour mettre à jour l'avatar utilisateur
+    function updateUserAvatar(avatarElement, firstName, lastName) {
+        if (avatarElement) {
+            const initials = getUserInitials(firstName, lastName);
+            avatarElement.innerHTML = initials || '<i class="fas fa-user"></i>';
+        }
+    }
+
+    // Fonction pour vérifier si l'utilisateur est connecté
+    function checkAuthState() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        
+        if (token && user) {
+            // Utilisateur connecté - afficher le menu utilisateur et le burger menu
+            if (userMenu) userMenu.style.display = 'flex';
+            if (loginMenu) loginMenu.style.display = 'none';
+            if (burgerMenu) burgerMenu.style.display = 'flex';
+            
+            // Mettre à jour le nom d'utilisateur
+            if (userNameElement) {
+                const displayName = user.firstName || user.prenom || user.email.split('@')[0];
+                userNameElement.textContent = displayName;
+            }
+
+            // Mettre à jour les informations du menu burger
+            const firstName = user.firstName || user.prenom || '';
+            const lastName = user.lastName || user.nom || '';
+            
+            if (burgerUserName) {
+                const fullName = `${firstName} ${lastName}`.trim() || user.email.split('@')[0];
+                burgerUserName.textContent = fullName;
+            }
+
+            if (burgerUserEmail) {
+                burgerUserEmail.textContent = user.email || '';
+            }
+
+            if (burgerUserAvatar) {
+                updateUserAvatar(burgerUserAvatar, firstName, lastName);
+            }
+        } else {
+            // Utilisateur non connecté - afficher le menu de connexion, cacher les autres
+            if (userMenu) userMenu.style.display = 'none';
+            if (loginMenu) loginMenu.style.display = 'flex';
+            if (burgerMenu) burgerMenu.style.display = 'none';
+        }
+    }
+
+    // Gestion du bouton burger
+    if (burgerBtn) {
+        burgerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle de la classe active pour ouvrir/fermer le menu
+            burgerMenu.classList.toggle('active');
+        });
+    }
+
+    // Fermer le menu burger en cliquant ailleurs
+    document.addEventListener('click', function(e) {
+        if (burgerMenu && !burgerMenu.contains(e.target)) {
+            burgerMenu.classList.remove('active');
+        }
+    });
+
+    // Gestion de la déconnexion depuis le menu burger
+    if (burgerLogoutBtn) {
+        burgerLogoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Supprimer les données d'authentification
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            // Fermer le menu burger
+            burgerMenu.classList.remove('active');
+            
+            // Rediriger vers la page d'accueil
+            window.location.href = '/';
+        });
+    }
+
+    // Gestion de la déconnexion
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Supprimer les données d'authentification
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            // Rediriger vers la page d'accueil
+            window.location.href = '/';
+        });
+    }
+
+    // Vérifier l'état d'authentification au chargement
+    checkAuthState();
+
     // Gestion du formulaire de connexion
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {

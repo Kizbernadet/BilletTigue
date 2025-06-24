@@ -1,25 +1,24 @@
-/**
- * FICHIER: main.dart
- * 
- * RÔLE: Point d'entrée principal de l'application mobile Billettigue
- * 
- * LOGIQUE:
- * - Configure le thème global de l'application avec les couleurs de la charte graphique
- * - Définit les styles des composants (boutons, champs de saisie, cartes)
- * - Lance l'écran de démarrage (SplashScreen) qui gère le flux d'initialisation
- * - Utilise Material 3 pour une interface moderne et cohérente
- * 
- * ARCHITECTURE:
- * - MyApp: Widget racine qui configure le MaterialApp
- * - Thème personnalisé basé sur AppColors pour la cohérence visuelle
- * - Navigation automatique vers SplashScreen au démarrage
- * 
- * FLUX D'EXÉCUTION:
- * 1. Application démarre → MyApp
- * 2. Configuration du thème et des styles
- * 3. Lancement de SplashScreen
- * 4. SplashScreen détermine l'écran suivant selon l'état de l'utilisateur
- */
+/// FICHIER: main.dart
+/// 
+/// RÔLE: Point d'entrée principal de l'application mobile Billettigue
+/// 
+/// LOGIQUE:
+/// - Configure le thème global de l'application avec les couleurs de la charte graphique
+/// - Définit les styles des composants (boutons, champs de saisie, cartes)
+/// - Lance l'écran de démarrage (SplashScreen) qui gère le flux d'initialisation
+/// - Utilise Material 3 pour une interface moderne et cohérente
+/// 
+/// ARCHITECTURE:
+/// - MyApp: Widget racine qui configure le MaterialApp
+/// - Thème personnalisé basé sur AppColors pour la cohérence visuelle
+/// - Navigation automatique vers SplashScreen au démarrage
+/// 
+/// FLUX D'EXÉCUTION:
+/// 1. Application démarre → MyApp
+/// 2. Configuration du thème et des styles
+/// 3. Lancement de SplashScreen
+/// 4. SplashScreen détermine l'écran suivant selon l'état de l'utilisateur
+library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/screens/splash_screen.dart';

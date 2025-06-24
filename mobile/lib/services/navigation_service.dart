@@ -1,25 +1,24 @@
-/**
- * FICHIER: navigation_service.dart
- * 
- * RÔLE: Service centralisé pour gérer toute la navigation dans l'application
- * 
- * LOGIQUE:
- * - Centralise toute la logique de navigation pour éviter la duplication
- * - Gère les transitions animées entre les écrans
- * - Détermine l'écran approprié selon l'état de l'utilisateur
- * - Coordonne avec OnboardingService pour la gestion de l'état
- * 
- * ARCHITECTURE:
- * - Pattern Singleton pour un accès global
- * - Méthodes statiques pour faciliter l'utilisation
- * - Transitions personnalisées pour une UX fluide
- * - Gestion automatique de l'état de l'application
- * 
- * UTILISATION:
- * - Remplacer tous les Navigator.push/pop par les méthodes de ce service
- * - Assurer une navigation cohérente dans toute l'application
- * - Gérer automatiquement les transitions et l'état
- */
+/// FICHIER: navigation_service.dart
+/// 
+/// RÔLE: Service centralisé pour gérer toute la navigation dans l'application
+/// 
+/// LOGIQUE:
+/// - Centralise toute la logique de navigation pour éviter la duplication
+/// - Gère les transitions animées entre les écrans
+/// - Détermine l'écran approprié selon l'état de l'utilisateur
+/// - Coordonne avec OnboardingService pour la gestion de l'état
+/// 
+/// ARCHITECTURE:
+/// - Pattern Singleton pour un accès global
+/// - Méthodes statiques pour faciliter l'utilisation
+/// - Transitions personnalisées pour une UX fluide
+/// - Gestion automatique de l'état de l'application
+/// 
+/// UTILISATION:
+/// - Remplacer tous les Navigator.push/pop par les méthodes de ce service
+/// - Assurer une navigation cohérente dans toute l'application
+/// - Gérer automatiquement les transitions et l'état
+library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/screens/onboarding_screen.dart';
@@ -183,7 +182,13 @@ class NavigationService {
 
     // Vérifier que le contexte est toujours valide
     if (context.mounted) {
-      _navigateWithAnimation(context, const LoginScreen());
+      // Utiliser pushAndRemoveUntil pour purger l'historique de navigation
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (Route<dynamic> route) =>
+            false, // Cette condition supprime toutes les routes
+      );
     }
   }
 
@@ -218,16 +223,11 @@ class NavigationService {
 
     // Vérifier que le contexte est toujours valide
     if (context.mounted) {
-      Navigator.push(
+      // Utiliser pushAndRemoveUntil pour purger l'écran d'onboarding de la pile
+      Navigator.pushAndRemoveUntil(
         context,
-        PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 500),
-        ),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (Route<dynamic> route) => false,
       );
     }
   }

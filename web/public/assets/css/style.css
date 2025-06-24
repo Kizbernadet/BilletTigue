@@ -1642,3 +1642,184 @@ body {
   background-color: #f3f4f6;
   /* gray-100 */
 }
+
+/* === BREAKPOINTS RESPONSIVE === */
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+  .booking-form-container {
+    padding: 1.5rem 0.5rem 2rem 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .booking-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    background: none;
+    box-shadow: none;
+  }
+  .form-group {
+    padding: 0.75rem 0.5rem;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    background: transparent;
+  }
+  .form-group:last-of-type {
+    border-bottom: none;
+  }
+  .search-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 1.1rem;
+    padding: 1.1rem 0.5rem;
+    border-radius: 0.75rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.08);
+  }
+  .number-input-container input[type="number"] {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+  }
+  .feature-item {
+    background: #f8fafc;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  .feature-icon-bg {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  .feature-icon {
+    font-size: 2rem;
+  }
+  .feature-text {
+    font-size: 1rem;
+    color: #374151;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .hero-title,
+  .logo-text,
+  .auth-title,
+  .section-title {
+    font-family: 'Comfortaa', cursive !important;
+  }
+  .logo-text {
+    display: none;
+  }
+  .lang-text,
+  .lang-arrow,
+  .login-text,
+  .login-arrow {
+    display: none !important;
+  }
+  .lang-icon,
+  .login-icon {
+    display: inline-block !important;
+    font-size: 1.3em;
+    margin-left: 0;
+    vertical-align: middle;
+  }
+  .nav-container {
+    display: none !important;
+  }
+  .mobile-menu {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+  }
+  .mobile-menu .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+  .mobile-menu .nav-link {
+    font-size: 1.2rem;
+    padding: 0.75rem 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 0.75rem;
+    transition: background 0.2s;
+  }
+  .mobile-menu .nav-link:active,
+  .mobile-menu .nav-link:hover {
+    background: #f3f4f6;
+  }
+  .mobile-hamburger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+    margin-left: 0.5rem;
+  }
+  .hamburger-bar {
+    width: 26px;
+    height: 3px;
+    background: #222;
+    border-radius: 2px;
+    margin: 3px 0;
+    transition: all 0.3s cubic-bezier(.77,0,.18,1);
+    display: block;
+  }
+  .mobile-hamburger.is-active .hamburger-bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+    background: #e53e3e;
+  }
+  .mobile-hamburger.is-active .hamburger-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-hamburger.is-active .hamburger-bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+    background: #e53e3e;
+  }
+  .mobile-menu--open {
+    box-shadow: 2px 0 24px rgba(229,62,62,0.12);
+  }
+}
+
+/* Tablette (768px à 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Styles pour tablette ici */
+}
+
+/* Desktop (1024px à 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    /* Styles pour desktop standard ici */
+}
+
+/* Grand écran (1200px et plus) */
+@media (min-width: 1200px) {
+    /* Styles pour grands écrans ici */
+}

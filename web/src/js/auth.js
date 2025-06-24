@@ -143,11 +143,20 @@ class AuthManager {
             return;
         }
 
-        // Afficher un indicateur de chargement
+        // Afficher un indicateur de chargement amélioré
         const submitButton = form.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
-        submitButton.textContent = 'Connexion en cours...';
+        const originalHTML = submitButton.innerHTML;
+        
+        // Désactiver le bouton et afficher l'indicateur de chargement
         submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Connexion en cours...</span>
+        `;
+        
+        // Ajouter une classe CSS pour le style de chargement
+        submitButton.classList.add('loading');
 
         try {
             const result = await AuthAPI.login({ email, password });
@@ -173,11 +182,20 @@ class AuthManager {
                 this.showMessage(result.message, 'error');
             }
         } catch (error) {
-            this.showMessage('Une erreur est survenue lors de la connexion', 'error');
+            // Gestion spécifique des erreurs réseau
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                this.showMessage('Erreur de connexion réseau. Vérifiez votre connexion internet et réessayez.', 'error');
+            } else if (error.name === 'AbortError') {
+                this.showMessage('La requête a été annulée. Veuillez réessayer.', 'error');
+            } else {
+                this.showMessage('Une erreur inattendue est survenue lors de la connexion. Veuillez réessayer.', 'error');
+            }
+            console.error('Erreur de connexion:', error);
         } finally {
             // Restaurer le bouton
-            submitButton.textContent = originalText;
             submitButton.disabled = false;
+            submitButton.innerHTML = originalHTML;
+            submitButton.classList.remove('loading');
         }
     }
 
@@ -192,11 +210,20 @@ class AuthManager {
             return; // Les erreurs de validation sont déjà affichées
         }
 
-        // Afficher un indicateur de chargement
+        // Afficher un indicateur de chargement amélioré
         const submitButton = form.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
-        submitButton.textContent = 'Inscription en cours...';
+        const originalHTML = submitButton.innerHTML;
+        
+        // Désactiver le bouton et afficher l'indicateur de chargement
         submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Inscription en cours...</span>
+        `;
+        
+        // Ajouter une classe CSS pour le style de chargement
+        submitButton.classList.add('loading');
 
         try {
             const result = await AuthAPI.register(formData);
@@ -211,11 +238,20 @@ class AuthManager {
                 this.showMessage(result.message, 'error');
             }
         } catch (error) {
-            this.showMessage('Une erreur est survenue lors de l\'inscription', 'error');
+            // Gestion spécifique des erreurs réseau
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                this.showMessage('Erreur de connexion réseau. Vérifiez votre connexion internet et réessayez.', 'error');
+            } else if (error.name === 'AbortError') {
+                this.showMessage('La requête a été annulée. Veuillez réessayer.', 'error');
+            } else {
+                this.showMessage('Une erreur inattendue est survenue lors de l\'inscription. Veuillez réessayer.', 'error');
+            }
+            console.error('Erreur d\'inscription:', error);
         } finally {
             // Restaurer le bouton
-            submitButton.textContent = originalText;
             submitButton.disabled = false;
+            submitButton.innerHTML = originalHTML;
+            submitButton.classList.remove('loading');
         }
     }
 
@@ -318,56 +354,38 @@ class AuthManager {
      */
     showMessage(message, type = 'info') {
         // Supprimer les messages existants
-        const existingMessages = document.querySelectorAll('.auth-message');
+        const existingMessages = document.querySelectorAll('.message');
         existingMessages.forEach(msg => msg.remove());
 
-        // Créer le nouveau message
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `auth-message auth-message-${type}`;
-        messageDiv.textContent = message;
-        
-        // Styles pour les messages
-        const styles = {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            padding: '12px 20px',
-            borderRadius: '8px',
-            color: 'white',
-            fontWeight: '500',
-            zIndex: '1000',
-            maxWidth: '400px',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            animation: 'slideIn 0.3s ease-out'
-        };
-
-        // Couleurs selon le type
-        if (type === 'success') {
-            styles.backgroundColor = '#10b981';
-        } else if (type === 'error') {
-            styles.backgroundColor = '#ef4444';
-        } else {
-            styles.backgroundColor = '#3b82f6';
+        // Définir l'icône selon le type
+        let icon = '';
+        switch (type) {
+            case 'success':
+                icon = '<i class="fas fa-check-circle"></i>';
+                break;
+            case 'error':
+                icon = '<i class="fas fa-exclamation-circle"></i>';
+                break;
+            case 'info':
+            default:
+                icon = '<i class="fas fa-info-circle"></i>';
+                break;
         }
 
-        // Appliquer les styles
-        Object.assign(messageDiv.style, styles);
-
-        // Ajouter l'animation CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
+        // Créer le nouveau message avec les nouveaux styles CSS
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.innerHTML = `${icon}<span>${message}</span>`;
+        
+        // Positionner le message en haut à droite
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         `;
-        document.head.appendChild(style);
 
         // Ajouter le message au DOM
         document.body.appendChild(messageDiv);
@@ -375,9 +393,33 @@ class AuthManager {
         // Supprimer le message après 5 secondes
         setTimeout(() => {
             if (messageDiv.parentNode) {
-                messageDiv.remove();
+                messageDiv.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.remove();
+                    }
+                }, 300);
             }
         }, 5000);
+
+        // Ajouter l'animation de sortie si elle n'existe pas déjà
+        if (!document.querySelector('#message-animations')) {
+            const style = document.createElement('style');
+            style.id = 'message-animations';
+            style.textContent = `
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
     }
 }
 

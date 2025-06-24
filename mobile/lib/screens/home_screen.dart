@@ -7,7 +7,7 @@ import 'package:billettigue/utils/colors.dart';
 import 'package:billettigue/services/navigation_service.dart';
 import 'package:billettigue/models/category_model.dart';
 import 'package:billettigue/models/event_model.dart';
-import 'package:billettigue/models/user_model.dart';
+import 'package:billettigue/models/user.dart';
 import 'package:billettigue/services/data_service.dart';
 import 'package:intl/intl.dart';
 
@@ -202,7 +202,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             children: [
               // Welcome Message
               Text(
-                'Bonjour, ${_user?.firstName ?? 'Utilisateur'} !',
+                'Bonjour, ${_user?.prenom ?? 'Utilisateur'} !',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

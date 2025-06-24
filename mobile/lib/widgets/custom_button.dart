@@ -1,25 +1,24 @@
-/**
- * FICHIER: custom_button.dart
- * 
- * RÔLE: Widgets de boutons personnalisés pour l'application
- * 
- * LOGIQUE:
- * - Fournit des boutons cohérents avec le design system
- * - Gère les états de chargement avec des indicateurs
- * - Supporte les boutons avec icônes et texte
- * - Permet la personnalisation des couleurs et dimensions
- * 
- * ARCHITECTURE:
- * - CustomButton: Bouton standard avec variantes outlined/filled
- * - GradientButton: Bouton avec effet de dégradé et ombre
- * - Méthodes privées pour construire le contenu des boutons
- * - Styles cohérents avec la charte graphique
- * 
- * UTILISATION:
- * - Remplacer les ElevatedButton/OutlinedButton standards
- * - Assurer une cohérence visuelle dans toute l'application
- * - Simplifier la création de boutons avec états de chargement
- */
+/// FICHIER: custom_button.dart
+/// 
+/// RÔLE: Widgets de boutons personnalisés pour l'application
+/// 
+/// LOGIQUE:
+/// - Fournit des boutons cohérents avec le design system
+/// - Gère les états de chargement avec des indicateurs
+/// - Supporte les boutons avec icônes et texte
+/// - Permet la personnalisation des couleurs et dimensions
+/// 
+/// ARCHITECTURE:
+/// - CustomButton: Bouton standard avec variantes outlined/filled
+/// - GradientButton: Bouton avec effet de dégradé et ombre
+/// - Méthodes privées pour construire le contenu des boutons
+/// - Styles cohérents avec la charte graphique
+/// 
+/// UTILISATION:
+/// - Remplacer les ElevatedButton/OutlinedButton standards
+/// - Assurer une cohérence visuelle dans toute l'application
+/// - Simplifier la création de boutons avec états de chargement
+library;
 
 import 'package:flutter/material.dart';
 import 'package:billettigue/utils/colors.dart';

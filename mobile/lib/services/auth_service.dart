@@ -1,25 +1,24 @@
-/**
- * FICHIER: auth_service.dart
- * 
- * RÔLE: Service de gestion des appels d'authentification vers le backend
- * 
- * LOGIQUE:
- * - Gère les requêtes HTTP vers l'API d'authentification
- * - Parse les réponses JSON du backend Node/Express
- * - Gère les erreurs réseau et serveur
- * - Fournit une interface type-safe pour l'authentification
- * 
- * ARCHITECTURE:
- * - Méthodes asynchrones pour les appels API
- * - Gestion des timeouts et erreurs réseau
- * - Parsing automatique des réponses JSON
- * - Headers d'authentification automatiques
- * 
- * UTILISATION:
- * - Appelé par AuthController pour les opérations d'authentification
- * - Gère la communication avec le backend de manière transparente
- * - Retourne des AuthResponse pour une gestion unifiée des réponses
- */
+/// FICHIER: auth_service.dart
+/// 
+/// RÔLE: Service de gestion des appels d'authentification vers le backend
+/// 
+/// LOGIQUE:
+/// - Gère les requêtes HTTP vers l'API d'authentification
+/// - Parse les réponses JSON du backend Node/Express
+/// - Gère les erreurs réseau et serveur
+/// - Fournit une interface type-safe pour l'authentification
+/// 
+/// ARCHITECTURE:
+/// - Méthodes asynchrones pour les appels API
+/// - Gestion des timeouts et erreurs réseau
+/// - Parsing automatique des réponses JSON
+/// - Headers d'authentification automatiques
+/// 
+/// UTILISATION:
+/// - Appelé par AuthController pour les opérations d'authentification
+/// - Gère la communication avec le backend de manière transparente
+/// - Retourne des AuthResponse pour une gestion unifiée des réponses
+library;
 
 import 'dart:convert';
 import 'dart:io';

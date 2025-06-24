@@ -3,6 +3,7 @@ import 'package:billettigue/screens/auth/login_screen.dart';
 import 'package:billettigue/services/navigation_service.dart';
 import 'package:billettigue/utils/colors.dart';
 import 'package:billettigue/widgets/custom_button.dart';
+import 'package:billettigue/services/auth_service.dart';
 
 // Écran d'inscription (RegisterScreen)
 class RegisterScreen extends StatefulWidget {
@@ -42,23 +43,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
       });
 
       try {
-        // Simuler un délai d'inscription
-        await Future.delayed(const Duration(seconds: 2));
-
-        // Utiliser le service de navigation pour gérer l'inscription
-        await NavigationService.navigateAfterRegister(context);
+        // Appeler le service d'inscription avec les données du formulaire
+        final response = await AuthService.register(
+          nom: _nomController.text,
+          prenom: _prenomController.text,
+          email: _emailController.text,
+          password: _passwordController.text,
+          address: _adresseController.text,
+          phone: _telephoneController.text,
+        );
 
         if (mounted) {
-          // Afficher un message de succès
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text(
-                'Inscription réussie ! Vous pouvez maintenant vous connecter.',
+          if (response.user != null) {
+            // Afficher un message de succès
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text(
+                  'Inscription réussie ! Vous pouvez maintenant vous connecter.',
+                ),
+                backgroundColor: AppColors.success,
+                duration: const Duration(seconds: 3),
               ),
-              backgroundColor: AppColors.success,
-              duration: const Duration(seconds: 2),
-            ),
-          );
+            );
+            // Naviguer vers l'écran de connexion après un court délai
+            await Future.delayed(const Duration(seconds: 1));
+            if (mounted) {
+              NavigationService.navigateAfterRegister(context);
+            }
+          } else {
+            // Afficher le message d'erreur de l'API
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  response.message ?? 'Une erreur inconnue est survenue.',
+                ),
+                backgroundColor: AppColors.error,
+              ),
+            );
+          }
         }
       } catch (e) {
         if (mounted) {
