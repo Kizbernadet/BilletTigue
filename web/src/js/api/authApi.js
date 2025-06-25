@@ -68,10 +68,19 @@ class AuthAPI {
                 };
             }
 
-            // Sauvegarder le token dans le localStorage
+            // Sauvegarder le token dans le bon storage
             if (data.token) {
-                localStorage.setItem('authToken', data.token);
-                localStorage.setItem('userData', JSON.stringify(data.user));
+                if (credentials.rememberMe) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    sessionStorage.removeItem('authToken');
+                    sessionStorage.removeItem('userData');
+                } else {
+                    sessionStorage.setItem('authToken', data.token);
+                    sessionStorage.setItem('userData', JSON.stringify(data.user));
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                }
             }
 
             return {
@@ -99,6 +108,8 @@ class AuthAPI {
             // Supprimer les données locales même si la requête échoue
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
 
             if (!response.ok) {
                 throw {
@@ -118,6 +129,8 @@ class AuthAPI {
             // Supprimer les données locales même en cas d'erreur
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
             
             return handleApiError(error);
         }
@@ -128,7 +141,7 @@ class AuthAPI {
      * @returns {boolean} True si connecté, false sinon
      */
     static isAuthenticated() {
-        const token = localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
         return !!token;
     }
 
@@ -137,7 +150,7 @@ class AuthAPI {
      * @returns {Object|null} Données de l'utilisateur ou null
      */
     static getCurrentUser() {
-        const userData = localStorage.getItem('userData');
+        const userData = sessionStorage.getItem('userData') || localStorage.getItem('userData');
         return userData ? JSON.parse(userData) : null;
     }
 }

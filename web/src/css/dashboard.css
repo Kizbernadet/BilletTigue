@@ -1,0 +1,644 @@
+/* ==========================================================================
+   Variables CSS pour les dashboards
+   ========================================================================== */
+
+:root {
+    --primary-color: #183C4A;
+    --accent-color: #EF9846;
+    --accent-color-dark: #dc7e26;
+    --main-radius: 1rem;
+    --font-color-base: #374151;
+    --font-color-light: #FFFFFF;
+    --font-color-primary: var(--primary-color);
+    --font-color-accent: var(--accent-color);
+    --color-white: #FFFFFF;
+    
+    /* Variables spécifiques aux dashboards */
+    --dashboard-sidebar-width: 64px;
+    --dashboard-sidebar-expanded-width: 250px;
+    --dashboard-sidebar-bg: var(--color-white);
+    --dashboard-sidebar-shadow: 2px 0 16px rgba(24,60,74,0.06);
+    --dashboard-transition: 0.25s cubic-bezier(.4,0,.2,1);
+    --dashboard-border-radius: 16px;
+    --dashboard-title-bar-height: 60px;
+    --dashboard-title-bar-bg: #22c55e;
+    --dashboard-content-bg: tomato;
+    --dashboard-content-shadow: 0 4px 20px rgba(255, 99, 71, 0.12);
+    --dashboard-logout-color: #dc3545;
+    --dashboard-profile-border: 2px solid var(--accent-color);
+    --dashboard-menu-hover-bg: var(--accent-color);
+    --dashboard-menu-hover-color: var(--font-color-light);
+    --dashboard-menu-hover-shadow: 0 2px 8px rgba(239,152,70,0.08);
+}
+
+/* ==========================================================================
+   Styles spécifiques aux pages de dashboard (user, admin, transporter)
+   ========================================================================== */
+
+/* Styles pour les dropdowns de profil */
+.profile-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+#profileBtn {
+    margin-left: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    padding: 0.625rem 1rem;
+    border-radius: 9999px !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+#profileBtn:hover, #profileBtn:focus {
+    background-color: rgba(76, 175, 80, 0.10);
+    border-color: #388e3c;
+    color: #388e3c;
+    outline: none;
+}
+
+#profileBtn .fa-circle-user {
+    font-size: 1.7em;
+}
+
+/* Styles pour le menu dropdown de profil */
+.profile-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    min-width: 200px;
+    z-index: 1000;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.profile-dropdown-menu li {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: block;
+    background: transparent;
+}
+
+.profile-dropdown-menu .profile-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    color: var(--font-color-base);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-dropdown-menu .profile-dropdown-link:last-child {
+    border-bottom: none;
+}
+
+.profile-dropdown-menu .profile-dropdown-link:hover {
+    background: var(--accent-color);
+    color: var(--font-color-light);
+    transform: translateX(2px);
+}
+
+.profile-dropdown-menu .profile-dropdown-link.logout-link {
+    background-color: var(--dashboard-logout-color);
+    color: var(--font-color-light);
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.profile-dropdown-menu .profile-dropdown-link.logout-link:hover {
+    background-color: var(--dashboard-logout-color);
+    color: var(--font-color-light);
+    transform: translateX(2px);
+}
+
+/* Styles pour les sections de contenu */
+.content-section {
+    margin-top: 1rem;
+}
+
+/* Styles pour les dashboards de transporteur */
+.transporter-dashboard-main {
+    width: 95vw;
+    max-width: 95vw;
+    margin: 0 auto;
+}
+
+.transporter-features {
+    width: 100%;
+    max-width: none;
+    margin: 2.5rem auto 0 auto;
+    padding: 2rem;
+    background: var(--color-white);
+    border-radius: var(--main-radius);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+}
+
+.transporter-features h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.transporter-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+
+.transporter-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.transporter-features li:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.transporter-features i {
+    color: var(--accent-color);
+    font-size: 1.3em;
+}
+
+/* Styles pour les éléments de navigation mobile */
+.mobile-menu {
+    display: none;
+}
+
+.lang-icon {
+    display: none;
+}
+
+.login-icon {
+    display: none;
+}
+
+.user-dropdown {
+    display: none;
+}
+
+/* Styles pour les éléments de navigation conditionnels */
+.mobile-menu.show {
+    display: block;
+}
+
+.lang-icon.show {
+    display: inline-block;
+}
+
+.login-icon.show {
+    display: inline-block;
+}
+
+.user-dropdown.show {
+    display: flex;
+}
+
+/* Responsive design pour les dashboards */
+@media (max-width: 768px) {
+    .transporter-features {
+        padding: 1.5rem;
+        margin: 1.5rem auto 0 auto;
+    }
+    
+    .transporter-features ul {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .transporter-features h2 {
+        font-size: 1.25rem;
+    }
+    
+    .profile-dropdown-menu {
+        right: -50px;
+        min-width: 180px;
+    }
+    
+    .btn-lang #current-lang-text,
+    .btn-lang::before {
+        display: none;
+    }
+    
+    .btn-lang::before {
+        content: "🌐";
+        font-size: 1.2em;
+    }
+    
+    .btn-lang {
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .transporter-dashboard-main {
+        width: 98vw;
+        max-width: 98vw;
+    }
+    
+    .transporter-features {
+        padding: 1rem;
+        margin: 1rem auto 0 auto;
+    }
+    
+    .profile-dropdown-menu {
+        right: -100px;
+        min-width: 160px;
+    }
+}
+
+/* ==========================================================================
+   DASHBOARD-CUSTOM - Styles personnalisés pour les dashboards
+   ========================================================================== */
+
+/* 
+   Cette section contient les styles personnalisés spécifiques aux dashboards
+   qui peuvent être modifiés selon les besoins du projet.
+   
+   Utilisation:
+   - Styles pour les widgets personnalisés
+   - Modifications d'apparence spécifiques
+   - Overrides de styles existants
+   - Animations et transitions personnalisées
+*/
+
+/* ==========================================================================
+   TRANSPORTER-DASHBOARD-CUSTOM - Styles spécifiques au dashboard transporteur
+   ========================================================================== */
+
+/* Layout principal */
+.transporter-dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.transporter-dashboard-wrapper {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar personnalisée */
+.transporter-sidebar {
+    background: var(--dashboard-sidebar-bg);
+    min-height: 100vh;
+    width: var(--dashboard-sidebar-width);
+    box-shadow: var(--dashboard-sidebar-shadow);
+    padding: 20px 0 16px 0;
+    transition: width var(--dashboard-transition);
+    overflow: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.transporter-sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.transporter-sidebar:hover {
+    width: var(--dashboard-sidebar-expanded-width);
+    transition: width var(--dashboard-transition);
+}
+
+/* Logo de la sidebar */
+.transporter-sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+    padding-left: 16px;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    transition: padding 0.25s;
+}
+
+.transporter-sidebar:hover .logo {
+    padding-left: 32px;
+}
+
+.transporter-sidebar .logo span {
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.transporter-sidebar:hover .logo span {
+    opacity: 1;
+}
+
+/* Menu de navigation */
+.transporter-sidebar .menu {
+    flex: 1;
+}
+
+.transporter-sidebar .menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.transporter-sidebar .menu li {
+    margin-bottom: 8px;
+}
+
+.transporter-sidebar .menu a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px;
+    border-radius: var(--dashboard-border-radius) 0 0 var(--dashboard-border-radius);
+    color: var(--font-color-base);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, padding 0.25s;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    letter-spacing: 0.01em;
+    position: relative;
+}
+
+.transporter-sidebar:hover .menu a {
+    padding-left: 32px;
+}
+
+.transporter-sidebar .menu a .menu-label {
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.transporter-sidebar:hover .menu a .menu-label {
+    opacity: 1;
+}
+
+.transporter-sidebar .menu a.active,
+.transporter-sidebar .menu a:hover {
+    background: var(--dashboard-menu-hover-bg);
+    color: var(--dashboard-menu-hover-color);
+    box-shadow: var(--dashboard-menu-hover-shadow);
+}
+
+.transporter-sidebar .menu a i {
+    font-size: 1.1em;
+    color: var(--accent-color);
+    transition: color 0.2s;
+    min-width: 24px;
+    text-align: center;
+}
+
+.transporter-sidebar .menu a.active i,
+.transporter-sidebar .menu a:hover i {
+    color: var(--font-color-light);
+}
+
+/* Bouton de déconnexion */
+.transporter-sidebar .menu a.logout-btn {
+    margin-top: 12px;
+    border-top: 1px solid #e9ecef;
+    padding-top: 12px;
+}
+
+.transporter-sidebar .menu a.logout-btn i {
+    color: var(--dashboard-logout-color) !important;
+}
+
+.transporter-sidebar .menu a.logout-btn:hover {
+    background: var(--dashboard-logout-color) !important;
+    color: var(--font-color-light) !important;
+}
+
+.transporter-sidebar .menu a.logout-btn:hover i {
+    color: var(--font-color-light) !important;
+}
+
+/* Profil utilisateur */
+.transporter-sidebar .profile {
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.transporter-sidebar .profile-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: var(--dashboard-profile-border);
+}
+
+.transporter-sidebar .profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.transporter-sidebar .profile-info .name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary-color);
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+.transporter-sidebar .profile-info .email {
+    font-size: 0.9rem;
+    color: #888;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+/* Contenu principal */
+.transporter-dashboard-main {
+    flex: 1;
+    background: transparent;
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin-left: var(--dashboard-sidebar-width);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Wrapper principal */
+.transporter-main-wrapper {
+    width: 80%;
+    max-width: 1400px;
+    min-width: 320px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin: 0 auto;
+}
+
+/* Barre de titre */
+.transporter-title-bar {
+    background: var(--dashboard-title-bar-bg);
+    color: var(--font-color-light);
+    height: var(--dashboard-title-bar-height);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    font-size: 1.5rem;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.08);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+.transporter-title-bar h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Contenu principal */
+.transporter-main-content {
+    flex: 1;
+    background: var(--dashboard-content-bg);
+    color: var(--font-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    box-shadow: var(--dashboard-content-shadow);
+}
+
+.transporter-main-content p {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* Responsive design pour transporter-dashboard-custom */
+@media (max-width: 768px) {
+    .transporter-sidebar {
+        width: 50px;
+    }
+    
+    .transporter-sidebar:hover {
+        width: 200px;
+    }
+    
+    .transporter-dashboard-main {
+        margin-left: 50px;
+    }
+    
+    .transporter-main-wrapper {
+        width: 95%;
+        height: 90vh;
+    }
+    
+    .transporter-title-bar {
+        padding: 0 1rem;
+        font-size: 1.25rem;
+    }
+    
+    .transporter-title-bar h1 {
+        font-size: 1.25rem;
+    }
+    
+    .transporter-main-content {
+        font-size: 1.1rem;
+    }
+    
+    .transporter-main-content p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .transporter-sidebar {
+        width: 40px;
+    }
+    
+    .transporter-sidebar:hover {
+        width: 180px;
+    }
+    
+    .transporter-dashboard-main {
+        margin-left: 40px;
+    }
+    
+    .transporter-main-wrapper {
+        width: 98%;
+        height: 95vh;
+    }
+    
+    .transporter-title-bar {
+        padding: 0 0.75rem;
+        font-size: 1.1rem;
+        height: 50px;
+    }
+    
+    .transporter-title-bar h1 {
+        font-size: 1.1rem;
+    }
+    
+    .transporter-main-content {
+        font-size: 1rem;
+    }
+    
+    .transporter-main-content p {
+        font-size: 1rem;
+    }
+}
+
+/* ==========================================================================
+   FIN TRANSPORTER-DASHBOARD-CUSTOM
+   ========================================================================== */
+
+/* ==========================================================================
+   FIN DASHBOARD-CUSTOM
+   ========================================================================== */ 

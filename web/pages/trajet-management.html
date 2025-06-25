@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Trajets - BilletTigue</title>
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="../public/assets/css/trajet.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-custom">
+    <!-- HEADER -->
+    <header>
+        <div class="w-full flex justify-center p-4">
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <a href="../index.html" class="flex items-center">
+                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                        <span class="logo-text">BilletTigue</span>
+                    </a>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link active"><i class="fas fa-route"></i><span>Mes Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-chart-line"></i><span>Statistiques</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span id="current-lang-text">Français</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="lang-options" tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
+                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
+                        </ul>
+                    </div>
+                    <div class="profile-dropdown-wrapper">
+                        <button id="profileBtn">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <i class="fa-solid fa-caret-down"></i>
+                        </button>
+                        <ul id="profileDropdown" class="profile-dropdown-menu">
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-user"></i> Mon profil</a></li>
+                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-cog"></i> Paramètres</a></li>
+                            <li><a href="#" class="profile-dropdown-link logout-link"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="trajet-main">
+        <div class="trajet-container">
+            <!-- Section de création de trajet -->
+            <section class="create-trajet-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-plus-circle"></i> Créer un nouveau trajet</h2>
+                    <button id="toggleFormBtn" class="toggle-btn">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                
+                <form id="createTrajetForm" class="trajet-form">
+                    <div class="form-grid">
+                        <!-- Informations de base -->
+                        <div class="form-group">
+                            <label for="villeDepart">Ville de départ *</label>
+                            <input type="text" id="villeDepart" name="villeDepart" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="villeArrivee">Ville d'arrivée *</label>
+                            <input type="text" id="villeArrivee" name="villeArrivee" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dateDepart">Date de départ *</label>
+                            <input type="date" id="dateDepart" name="dateDepart" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="heureDepart">Heure de départ *</label>
+                            <input type="time" id="heureDepart" name="heureDepart" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="prix">Prix par place (FCFA) *</label>
+                            <input type="number" id="prix" name="prix" min="0" step="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nombrePlaces">Nombre de places *</label>
+                            <input type="number" id="nombrePlaces" name="nombrePlaces" min="1" max="50" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="typeVehicule">Type de véhicule *</label>
+                            <select id="typeVehicule" name="typeVehicule" required>
+                                <option value="bus">Bus</option>
+                                <option value="minibus">Minibus</option>
+                                <option value="voiture">Voiture</option>
+                                <option value="camion">Camion</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Points de départ/arrivée -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pointDepart">Point de départ précis</label>
+                            <input type="text" id="pointDepart" name="pointDepart" placeholder="Ex: Gare routière de Dakar">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pointArrivee">Point d'arrivée précis</label>
+                            <input type="text" id="pointArrivee" name="pointArrivee" placeholder="Ex: Gare routière de Thiès">
+                        </div>
+                    </div>
+                    
+                    <!-- Options de colis -->
+                    <div class="colis-section">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="accepteColis" name="accepteColis">
+                            <label for="accepteColis">J'accepte le transport de colis</label>
+                        </div>
+                        
+                        <div id="colisOptions" class="colis-options" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="poidsMaxColis">Poids maximum par colis (kg)</label>
+                                    <input type="number" id="poidsMaxColis" name="poidsMaxColis" min="0" step="0.5">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="prixColis">Prix par colis (FCFA)</label>
+                                    <input type="number" id="prixColis" name="prixColis" min="0" step="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description et conditions -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="description">Description du trajet</label>
+                            <textarea id="description" name="description" rows="3" placeholder="Décrivez votre trajet, les conditions, etc."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="conditions">Conditions spéciales</label>
+                            <textarea id="conditions" name="conditions" rows="3" placeholder="Conditions particulières, bagages autorisés, etc."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Créer le trajet
+                        </button>
+                        <button type="reset" class="btn-secondary">
+                            <i class="fas fa-undo"></i> Réinitialiser
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Section de liste des trajets -->
+            <section class="trajets-list-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Mes trajets</h2>
+                    <div class="filters">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">Tous les statuts</option>
+                            <option value="actif">Actifs</option>
+                            <option value="en_cours">En cours</option>
+                            <option value="terminé">Terminés</option>
+                            <option value="annulé">Annulés</option>
+                        </select>
+                        <button id="refreshBtn" class="btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Actualiser
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="trajetsList" class="trajets-list">
+                    <!-- Les trajets seront chargés ici dynamiquement -->
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Chargement des trajets...
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de confirmation -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmation</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Êtes-vous sûr de vouloir effectuer cette action ?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmYes" class="btn-danger">Oui</button>
+                <button id="confirmNo" class="btn-secondary">Non</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../src/js/main.js"></script>
+    <script src="../src/js/profile-dropdown.js"></script>
+    <script src="../src/js/trajet-management.js"></script>
+</body>
+</html> 

@@ -52,9 +52,9 @@ RevokedToken.belongsTo(Compte, { foreignKey: 'user_id', as: 'compte' });
 Transporteur.hasMany(PointDepot, { foreignKey: 'transporteur_id', as: 'pointsDepot' });
 PointDepot.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
-// Transporteur 1,N Trajet
-Transporteur.hasMany(Trajet, { foreignKey: 'transporteur_id', as: 'trajets' });
-Trajet.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
+// Compte 1,N Trajet (un compte peut créer plusieurs trajets)
+Compte.hasMany(Trajet, { foreignKey: 'idCompte', as: 'trajets' });
+Trajet.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
 
 // Utilisateur 1,N Envoi
 Utilisateur.hasMany(Envoi, { foreignKey: 'expediteur_id', as: 'envois' });

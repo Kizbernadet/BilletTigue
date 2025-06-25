@@ -45,6 +45,10 @@ app.use('/api/auth', require('./routes/authRoutes'));
 // Routes pour la gestion du profil utilisateur
 app.use('/api', require('./routes/profileRoutes'));
 
+// ========== Intégration des routes de trajets ========== 
+// Routes pour la gestion des trajets
+app.use('/api', require('./routes/trajetRoutes'));
+
 // Autres routes
 app.use('/api/users', require('./routes/userRoutes'));
 

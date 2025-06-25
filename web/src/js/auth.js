@@ -137,6 +137,7 @@ class AuthManager {
     async handleLogin(form) {
         const email = form.querySelector('input[type="email"]').value;
         const password = form.querySelector('input[type="password"]').value;
+        const rememberMe = form.querySelector('#remember-me').checked;
         
         if (!email || !password) {
             this.showMessage('Veuillez remplir tous les champs', 'error');
@@ -159,7 +160,7 @@ class AuthManager {
         submitButton.classList.add('loading');
 
         try {
-            const result = await AuthAPI.login({ email, password });
+            const result = await AuthAPI.login({ email, password, rememberMe });
             
             if (result.success) {
                 this.showMessage(result.message, 'success');
@@ -171,8 +172,8 @@ class AuthManager {
                         // Rediriger l'admin vers son tableau de bord
                         window.location.href = './admin-dashboard.html';
                     } else if (user && user.role === 'transporter') {
-                        // Rediriger les transporteurs vers leur tableau de bord
-                        window.location.href = './transporter-dashboard.html';
+                        // Rediriger les transporteurs vers leur dashboard personnalisé
+                        window.location.href = './transporter-dashboard-custom.html';
                     } else {
                         // Rediriger les autres utilisateurs vers le tableau de bord utilisateur
                         window.location.href = './user-dashboard.html';
@@ -342,7 +343,7 @@ class AuthManager {
             if (user && user.role === 'admin') {
                 window.location.href = './admin-dashboard.html';
             } else if (user && user.role === 'transporter') {
-                window.location.href = './transporter-dashboard.html';
+                window.location.href = './transporter-dashboard-custom.html';
             } else {
                 window.location.href = './user-dashboard.html';
             }
@@ -361,65 +362,79 @@ class AuthManager {
         let icon = '';
         switch (type) {
             case 'success':
-                icon = '<i class="fas fa-check-circle"></i>';
+                icon = '<i class="fas fa-check-circle" style="font-size:1.5em;margin-right:0.5em;"></i>';
                 break;
             case 'error':
-                icon = '<i class="fas fa-exclamation-circle"></i>';
+                icon = '<i class="fas fa-exclamation-circle" style="font-size:1.5em;margin-right:0.5em;"></i>';
                 break;
             case 'info':
             default:
-                icon = '<i class="fas fa-info-circle"></i>';
+                icon = '<i class="fas fa-info-circle" style="font-size:1.5em;margin-right:0.5em;"></i>';
                 break;
         }
 
-        // Créer le nouveau message avec les nouveaux styles CSS
+        // Créer le message avec un bouton de fermeture
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
-        messageDiv.innerHTML = `${icon}<span>${message}</span>`;
+        messageDiv.innerHTML = `
+            <span style="display:flex;align-items:center;gap:0.7em;">
+                ${icon}<span style="flex:1;">${message}</span>
+                <button class="close-message-btn" style="background:none;border:none;color:white;font-size:1.3em;cursor:pointer;line-height:1;">&times;</button>
+            </span>
+        `;
         
-        // Positionner le message en haut à droite
+        // Style amélioré
         messageDiv.style.cssText = `
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            max-width: 400px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            top: 24px;
+            right: 24px;
+            z-index: 2000;
+            min-width: 280px;
+            max-width: 420px;
+            padding: 1.3rem 2.2rem 1.3rem 1.5rem;
+            border-radius: 14px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.18rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+            border: 2.5px solid ${type === 'success' ? '#1e7e34' : type === 'error' ? '#b21f2d' : '#117a8b'};
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
         `;
+
+        // Animation d'apparition
+        setTimeout(() => {
+            messageDiv.style.opacity = '1';
+            messageDiv.style.transform = 'translateY(0)';
+        }, 10);
+
+        // Bouton de fermeture
+        const closeBtn = messageDiv.querySelector('.close-message-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transform = 'translateY(-20px)';
+                setTimeout(() => messageDiv.remove(), 400);
+            });
+        }
 
         // Ajouter le message au DOM
         document.body.appendChild(messageDiv);
 
-        // Supprimer le message après 5 secondes
+        // Supprimer le message après 5 secondes avec animation
         setTimeout(() => {
             if (messageDiv.parentNode) {
-                messageDiv.style.animation = 'slideOut 0.3s ease-out';
+                messageDiv.style.opacity = '0';
+                messageDiv.style.transform = 'translateY(-20px)';
                 setTimeout(() => {
                     if (messageDiv.parentNode) {
                         messageDiv.remove();
                     }
-                }, 300);
+                }, 400);
             }
         }, 5000);
-
-        // Ajouter l'animation de sortie si elle n'existe pas déjà
-        if (!document.querySelector('#message-animations')) {
-            const style = document.createElement('style');
-            style.id = 'message-animations';
-            style.textContent = `
-                @keyframes slideOut {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-        }
     }
 }
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Transporteur Personnalisée - BilletTigue</title>
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen">
+  <div class="transporter-dashboard-container">
+    <div class="transporter-dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="transporter-sidebar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" style="height:48px; width:auto;">
+        <span>BilletTiguè</span>
+      </div>
+      <!-- Menu -->
+      <nav class="menu">
+        <ul>
+          <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Clients</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Factures</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
+          <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- Contenu principal -->
+    <main class="transporter-dashboard-main">
+      <div class="transporter-main-wrapper">
+        <div class="transporter-title-bar">
+          <h1>Tableau de bord transporteur</h1>
+        </div>
+        <div class="transporter-main-content">
+          <!-- Divs qui occupent 80% de la largeur du wrapper -->
+          <div class="dashboard-content-section">
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-chart-line"></i> Statistiques</h3>
+              <p>Vos statistiques de transport</p>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-route"></i> Trajets actifs</h3>
+              <p>Gérez vos trajets en cours</p>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-box"></i> Colis en transit</h3>
+              <p>Suivez vos colis</p>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-users"></i> Clients</h3>
+              <p>Gérez vos clients</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    </div>
+  </div>
+</body>
+</html> 

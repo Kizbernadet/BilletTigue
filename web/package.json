@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tailwindcss -i ./src/css/style.css -o ./public/assets/css/style.css",
-    "watch": "tailwindcss -i ./src/css/style.css -o ./public/assets/css/style.css --watch"
+    "build": "tailwindcss -i ./src/css/style.css -o ./public/assets/css/style.css && tailwindcss -i ./src/css/auth.css -o ./public/assets/css/auth.css && tailwindcss -i ./src/css/dashboard.css -o ./public/assets/css/dashboard.css && tailwindcss -i ./src/css/trajet.css -o ./public/assets/css/trajet.css",
+    "watch": "tailwindcss -i ./src/css/style.css -o ./public/assets/css/style.css --watch & tailwindcss -i ./src/css/auth.css -o ./public/assets/css/auth.css --watch & tailwindcss -i ./src/css/dashboard.css -o ./public/assets/css/dashboard.css --watch & tailwindcss -i ./src/css/trajet.css -o ./public/assets/css/trajet.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,7 @@
   "type": "commonjs",
   "devDependencies": {
     "autoprefixer": "^10.4.17",
-    "daisyui": "^latest",
+    "daisyui": "^4.7.2",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1"
   }

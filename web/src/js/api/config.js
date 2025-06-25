@@ -17,7 +17,7 @@ const API_CONFIG = {
 
 // Fonction pour obtenir les headers avec le token d'authentification
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
     return {
         ...API_CONFIG.DEFAULT_HEADERS,
         ...(token && { 'Authorization': `Bearer ${token}` })

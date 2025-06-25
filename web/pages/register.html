@@ -6,6 +6,7 @@
     <title>Inscription - BilletTigue</title>
     <!-- Les liens CSS doivent pointer vers la racine du site -->
     <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/auth.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -97,30 +98,30 @@
                 </div>
                 <div class="form-field">
                     <input type="password" id="password" name="password" placeholder="Mot de passe" required>
-                    <div id="password-strength" style="font-size: 0.875rem; margin-top: 0.25rem;"></div>
-                    <div class="password-strength-bar" style="margin-top: 0.5rem;">
-                        <div class="strength-bar-container" style="width: 100%; height: 4px; background-color: #e5e7eb; border-radius: 2px; overflow: hidden;">
-                            <div id="strength-progress" style="height: 100%; width: 0%; transition: all 0.3s ease; border-radius: 2px;"></div>
+                    <div id="password-strength"></div>
+                    <div class="password-strength-bar">
+                        <div class="strength-bar-container">
+                            <div id="strength-progress"></div>
                         </div>
-                        <div class="strength-criteria" style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
-                            <div class="criteria-item" data-criteria="length" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-                                <span class="criteria-icon" style="margin-right: 0.5rem; font-size: 0.875rem;">○</span>
+                        <div class="strength-criteria">
+                            <div class="criteria-item" data-criteria="length">
+                                <span class="criteria-icon">○</span>
                                 <span>Au moins 8 caractères</span>
                             </div>
-                            <div class="criteria-item" data-criteria="lowercase" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-                                <span class="criteria-icon" style="margin-right: 0.5rem; font-size: 0.875rem;">○</span>
+                            <div class="criteria-item" data-criteria="lowercase">
+                                <span class="criteria-icon">○</span>
                                 <span>Une lettre minuscule</span>
                             </div>
-                            <div class="criteria-item" data-criteria="uppercase" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-                                <span class="criteria-icon" style="margin-right: 0.5rem; font-size: 0.875rem;">○</span>
+                            <div class="criteria-item" data-criteria="uppercase">
+                                <span class="criteria-icon">○</span>
                                 <span>Une lettre majuscule</span>
                             </div>
-                            <div class="criteria-item" data-criteria="number" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-                                <span class="criteria-icon" style="margin-right: 0.5rem; font-size: 0.875rem;">○</span>
+                            <div class="criteria-item" data-criteria="number">
+                                <span class="criteria-icon">○</span>
                                 <span>Un chiffre</span>
                             </div>
-                            <div class="criteria-item" data-criteria="special" style="display: flex; align-items: center; margin-bottom: 0.25rem;">
-                                <span class="criteria-icon" style="margin-right: 0.5rem; font-size: 0.875rem;">○</span>
+                            <div class="criteria-item" data-criteria="special">
+                                <span class="criteria-icon">○</span>
                                 <span>Un caractère spécial (@$!%*?&)</span>
                             </div>
                         </div>
@@ -128,7 +129,7 @@
                 </div>
                 <div class="form-field">
                     <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirmez le mot de passe" required>
-                    <div id="password-confirmation" style="font-size: 0.875rem; margin-top: 0.25rem; transition: all 0.3s ease;"></div>
+                    <div id="password-confirmation"></div>
                 </div>
                 <button type="submit" class="auth-button">S'inscrire</button>
             </form>
