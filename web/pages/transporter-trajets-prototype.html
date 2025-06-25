@@ -7,63 +7,9 @@
     <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
     <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="../public/assets/css/trajets.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-      .trajet-item-mini {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        background: white;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        border: 1px solid #f0f0f0;
-        font-size: 0.95rem;
-      }
-      .status-badge {
-        padding: 0.3rem 0.7rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .trajet-itineraire {
-        font-weight: 600;
-        color: var(--primary-color);
-      }
-      .trajet-date, .trajet-horaire {
-        color: #6b7280;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-      }
-      .trajet-actions {
-        margin-left: auto;
-        display: flex;
-        gap: 0.3rem;
-      }
-      .btn-action {
-        width: 28px;
-        height: 28px;
-        border: none;
-        border-radius: 6px;
-        background: #f8f9fa;
-        color: var(--font-color-base);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.95rem;
-        transition: all 0.2s;
-      }
-      .btn-action:hover {
-        background: var(--accent-color);
-        color: white;
-      }
-    </style>
 </head>
 <body class="min-h-screen overflow-x-hidden">
   <div class="transporter-dashboard-container">
@@ -89,6 +35,7 @@
         </ul>
       </nav>
     </aside>
+    
     <!-- Contenu principal -->
     <main class="transporter-dashboard-main">
       <div class="transporter-main-wrapper">
@@ -173,7 +120,7 @@
               </div>
             <div class="trajets-header">
               <div class="trajets-actions">
-                <button class="btn-ajouter-trajet">
+                <button class="btn-ajouter-trajet" onclick="ouvrirFormulaireTrajet()">
                   <i class="fa-solid fa-plus"></i>
                   Nouveau Trajet
                 </button>
@@ -186,79 +133,79 @@
 
             <!-- Liste des trajets -->
             <div class="trajets-list">
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="1" onclick="afficherProfilTrajet(1)">
                 <span class="status-badge active">En cours</span>
                 <span class="trajet-itineraire">Dakar → Thiès</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 18/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 08:00</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
-                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
-                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                  <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(1)"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(1)"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(1)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="2" onclick="afficherProfilTrajet(2)">
                 <span class="status-badge completed">Terminé</span>
                 <span class="trajet-itineraire">Thiès → Saint-Louis</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 15/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 14:30</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
-                  <button class="btn-action" title="Rapport"><i class="fa-solid fa-file-alt"></i></button>
+                  <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(2)"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Rapport" onclick="event.stopPropagation(); genererRapport(2)"><i class="fa-solid fa-file-alt"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="3" onclick="afficherProfilTrajet(3)">
                 <span class="status-badge pending">En attente</span>
                 <span class="trajet-itineraire">Saint-Louis → Dakar</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 18/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 07:00</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Démarrer"><i class="fa-solid fa-play"></i></button>
-                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
-                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                  <button class="btn-action" title="Démarrer" onclick="event.stopPropagation(); demarrerTrajet(3)"><i class="fa-solid fa-play"></i></button>
+                  <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(3)"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(3)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="4" onclick="afficherProfilTrajet(4)">
                 <span class="status-badge active">En cours</span>
                 <span class="trajet-itineraire">Kaolack → Fatick</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 20/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 09:15</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
-                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
-                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                  <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(4)"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(4)"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(4)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="5" onclick="afficherProfilTrajet(5)">
                 <span class="status-badge completed">Terminé</span>
                 <span class="trajet-itineraire">Fatick → Mbour</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 10/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 11:00</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
-                  <button class="btn-action" title="Rapport"><i class="fa-solid fa-file-alt"></i></button>
+                  <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(5)"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Rapport" onclick="event.stopPropagation(); genererRapport(5)"><i class="fa-solid fa-file-alt"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="6" onclick="afficherProfilTrajet(6)">
                 <span class="status-badge pending">En attente</span>
                 <span class="trajet-itineraire">Mbour → Dakar</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 22/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 06:45</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Démarrer"><i class="fa-solid fa-play"></i></button>
-                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
-                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                  <button class="btn-action" title="Démarrer" onclick="event.stopPropagation(); demarrerTrajet(6)"><i class="fa-solid fa-play"></i></button>
+                  <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(6)"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(6)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
-              <div class="trajet-item-mini">
+              <div class="trajet-item-mini" data-trajet-id="7" onclick="afficherProfilTrajet(7)">
                 <span class="status-badge active">En cours</span>
                 <span class="trajet-itineraire">Dakar → Ziguinchor</span>
                 <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 25/12/2024</span>
                 <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 13:00</span>
                 <div class="trajet-actions">
-                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
-                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
-                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                  <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(7)"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(7)"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(7)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
             </div>
@@ -269,21 +216,238 @@
     </div>
   </div>
 
-  <script>
-    function toggleProfileMenu() {
-      const dropdown = document.getElementById('profileDropdown');
-      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    }
-
-    // Fermer le menu quand on clique ailleurs
-    document.addEventListener('click', function(event) {
-      const profileBtn = document.getElementById('profileBtn');
-      const dropdown = document.getElementById('profileDropdown');
+  <!-- Modal Profil Trajet -->
+  <div id="trajetModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-route"></i>
+          <span id="modalTrajetTitre">Profil du Trajet</span>
+        </h2>
+        <button class="modal-close" onclick="fermerModal()">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
       
-      if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
-        dropdown.style.display = 'none';
-      }
-    });
-  </script>
+      <div class="trajet-details">
+        <div class="detail-section">
+          <h3><i class="fa-solid fa-info-circle"></i> Informations Générales</h3>
+          <div class="detail-items-container">
+            <div class="detail-item">
+              <span class="detail-label">Statut</span>
+              <span class="detail-value" id="modalStatut">En cours</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Itinéraire</span>
+              <span class="detail-value" id="modalItineraire">Dakar → Thiès</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date de départ</span>
+              <span class="detail-value" id="modalDate">18/12/2024</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Heure de départ</span>
+              <span class="detail-value" id="modalHeure">08:00</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Date de validité</span>
+              <span class="detail-value" id="modalValidite">18/12/2024</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <h3><i class="fa-solid fa-bus"></i> Détails du Transport</h3>
+          <div class="detail-items-container">
+            <div class="detail-item">
+              <span class="detail-label">Véhicule</span>
+              <span class="detail-value" id="modalVehicule">Renault Kangoo</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Chauffeur</span>
+              <span class="detail-value" id="modalChauffeur">Jean Dupont</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Places disponibles</span>
+              <span class="detail-value" id="modalPlaces">8/12</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Prix par place</span>
+              <span class="detail-value" id="modalPrix">2,500 FCFA</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Distance</span>
+              <span class="detail-value" id="modalDistance">70 km</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="trajet-actions-modal">
+        <button class="btn-modal btn-secondary" onclick="fermerModal()">
+          <i class="fa-solid fa-times"></i>
+          Fermer
+        </button>
+        <button class="btn-modal btn-primary" id="btnModifier" onclick="modifierTrajetModal()">
+          <i class="fa-solid fa-edit"></i>
+          Modifier
+        </button>
+        <button class="btn-modal btn-success" id="btnDemarrer" onclick="demarrerTrajetModal()" style="display: none;">
+          <i class="fa-solid fa-play"></i>
+          Démarrer
+        </button>
+        <button class="btn-modal btn-success" id="btnTerminer" onclick="terminerTrajetModal()" style="display: none;">
+          <i class="fa-solid fa-check"></i>
+          Terminer
+        </button>
+        <button class="btn-modal btn-secondary" id="btnRapport" onclick="genererRapportModal()" style="display: none;">
+          <i class="fa-solid fa-file-alt"></i>
+          Rapport
+        </button>
+        <button class="btn-modal btn-danger" id="btnSupprimer" onclick="supprimerTrajetModal()">
+          <i class="fa-solid fa-trash"></i>
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Formulaire Ajout Trajet -->
+    <div id="formulaireTrajetModal" class="modal-overlay">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-plus"></i>
+          Nouveau Trajet
+        </h2>
+        <button class="modal-close" onclick="fermerFormulaireTrajet()">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="formNouveauTrajet" onsubmit="soumettreFormulaireTrajet(event)">
+        <!-- Informations Générales -->
+        <div class="form-section">
+          <h3><i class="fa-solid fa-info-circle"></i> Informations Générales</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Lieu de départ <span class="required">*</span></label>
+              <input type="text" class="form-input" id="lieuDepart" name="lieuDepart" required placeholder="Ex: Dakar">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lieu d'arrivée <span class="required">*</span></label>
+              <input type="text" class="form-input" id="lieuArrivee" name="lieuArrivee" required placeholder="Ex: Thiès">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date de départ <span class="required">*</span></label>
+              <input type="date" class="form-input" id="dateDepart" name="dateDepart" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Heure de départ <span class="required">*</span></label>
+              <input type="time" class="form-input" id="heureDepart" name="heureDepart" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date de validité <span class="required">*</span></label>
+              <input type="date" class="form-input" id="dateValidite" name="dateValidite" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Distance (km)</label>
+              <input type="number" class="form-input" id="distance" name="distance" placeholder="Ex: 70" min="1">
+            </div>
+          </div>
+        </div>
+
+        <!-- Détails du Transport -->
+        <div class="form-section">
+          <h3><i class="fa-solid fa-bus"></i> Détails du Transport</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Véhicule <span class="required">*</span></label>
+              <select class="form-select" id="vehicule" name="vehicule" required>
+                <option value="">Sélectionner un véhicule</option>
+                <option value="Renault Kangoo">Renault Kangoo</option>
+                <option value="Mercedes Sprinter">Mercedes Sprinter</option>
+                <option value="Toyota Hiace">Toyota Hiace</option>
+                <option value="Ford Transit">Ford Transit</option>
+                <option value="Nissan Urvan">Nissan Urvan</option>
+                <option value="Peugeot Boxer">Peugeot Boxer</option>
+                <option value="Iveco Daily">Iveco Daily</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chauffeur <span class="required">*</span></label>
+              <select class="form-select" id="chauffeur" name="chauffeur" required>
+                <option value="">Sélectionner un chauffeur</option>
+                <option value="Jean Dupont">Jean Dupont</option>
+                <option value="Marie Diop">Marie Diop</option>
+                <option value="Pierre Sall">Pierre Sall</option>
+                <option value="Fatou Ba">Fatou Ba</option>
+                <option value="Omar Diallo">Omar Diallo</option>
+                <option value="Aissatou Fall">Aissatou Fall</option>
+                <option value="Moussa Cissé">Moussa Cissé</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nombre de places <span class="required">*</span></label>
+              <input type="number" class="form-input" id="nombrePlaces" name="nombrePlaces" required placeholder="Ex: 12" min="1" max="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prix par place (FCFA) <span class="required">*</span></label>
+              <input type="number" class="form-input" id="prixPlace" name="prixPlace" required placeholder="Ex: 2500" min="100">
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations Supplémentaires -->
+        <div class="form-section">
+          <h3><i class="fa-solid fa-notes-medical"></i> Informations Supplémentaires</h3>
+          <div class="form-group full-width">
+            <label class="form-label">Étapes intermédiaires</label>
+            <textarea class="form-textarea" id="etapes" name="etapes" placeholder="Listez les étapes intermédiaires (optionnel)"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type de trajet</label>
+              <select class="form-select" id="typeTrajet" name="typeTrajet">
+                <option value="standard">Standard</option>
+                <option value="express">Express</option>
+                <option value="luxe">Luxe</option>
+                <option value="cargo">Cargo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Statut initial</label>
+              <select class="form-select" id="statutInitial" name="statutInitial">
+                <option value="En attente">En attente</option>
+                <option value="Confirmé">Confirmé</option>
+                <option value="En cours">En cours</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages d'erreur/succès -->
+        <div id="formMessages"></div>
+
+        <!-- Actions du formulaire -->
+        <div class="form-actions">
+          <button type="button" class="btn-modal btn-secondary" onclick="fermerFormulaireTrajet()">
+            <i class="fa-solid fa-times"></i>
+            Annuler
+          </button>
+          <button type="button" class="btn-modal btn-secondary" onclick="reinitialiserFormulaire()">
+            <i class="fa-solid fa-undo"></i>
+            Réinitialiser
+          </button>
+          <button type="submit" class="btn-modal btn-success">
+            <i class="fa-solid fa-save"></i>
+            Créer le Trajet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../src/js/trajets-management.js"></script>
 </body>
 </html> 
