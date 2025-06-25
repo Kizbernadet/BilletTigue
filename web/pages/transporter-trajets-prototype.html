@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trajets - Dashboard Transporteur - BilletTigue</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      .trajet-item-mini {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: white;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid #f0f0f0;
+        font-size: 0.95rem;
+      }
+      .status-badge {
+        padding: 0.3rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .trajet-itineraire {
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+      .trajet-date, .trajet-horaire {
+        color: #6b7280;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .trajet-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 0.3rem;
+      }
+      .btn-action {
+        width: 28px;
+        height: 28px;
+        border: none;
+        border-radius: 6px;
+        background: #f8f9fa;
+        color: var(--font-color-base);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+      }
+      .btn-action:hover {
+        background: var(--accent-color);
+        color: white;
+      }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <div class="transporter-dashboard-container">
+    <div class="transporter-dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="transporter-sidebar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" style="height:48px; width:auto;">
+        <span>BilletTiguè</span>
+      </div>
+      <!-- Menu -->
+      <nav class="menu">
+        <ul>
+          <li><a href="transporter-dashboard-custom.html"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="#" class="active"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Clients</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Factures</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
+          <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- Contenu principal -->
+    <main class="transporter-dashboard-main">
+      <div class="transporter-main-wrapper">
+        <div class="transporter-title-bar">
+          <h1><i class="fa-solid fa-route"></i> Gestion des Trajets</h1>
+          <!-- Section profil -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profileBtn" onclick="toggleProfileMenu()">
+              <i class="fa-solid fa-circle-user"></i>
+              <span>John Doe</span>
+            </button>
+            <ul class="profile-dropdown-menu" id="profileDropdown">
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-user"></i>
+                  Mon Profil
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-cog"></i>
+                  Paramètres
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-bell"></i>
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="../index.html" class="profile-dropdown-link logout-link">
+                  <i class="fa-solid fa-sign-out-alt"></i>
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="transporter-main-content">
+          <!-- Section Trajets -->
+          <div class="trajets-section">
+            <!-- Header des trajets -->
+             <!-- Statistiques rapides -->
+            <div class="trajets-stats">
+                <div class="stat-card">
+                  <div class="stat-icon active">
+                    <i class="fa-solid fa-play"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>En cours</h3>
+                    <p class="stat-number">3</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon completed">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>Terminés</h3>
+                    <p class="stat-number">12</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon pending">
+                    <i class="fa-solid fa-clock"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>En attente</h3>
+                    <p class="stat-number">2</p>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-icon total">
+                    <i class="fa-solid fa-chart-line"></i>
+                  </div>
+                  <div class="stat-info">
+                    <h3>Total</h3>
+                    <p class="stat-number">17</p>
+                  </div>
+                </div>
+              </div>
+            <div class="trajets-header">
+              <div class="trajets-actions">
+                <button class="btn-ajouter-trajet">
+                  <i class="fa-solid fa-plus"></i>
+                  Nouveau Trajet
+                </button>
+                <button class="btn-filtrer">
+                  <i class="fa-solid fa-filter"></i>
+                  Filtrer
+                </button>
+              </div>
+            </div>
+
+            <!-- Liste des trajets -->
+            <div class="trajets-list">
+              <div class="trajet-item-mini">
+                <span class="status-badge active">En cours</span>
+                <span class="trajet-itineraire">Dakar → Thiès</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 18/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 08:00</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge completed">Terminé</span>
+                <span class="trajet-itineraire">Thiès → Saint-Louis</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 15/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 14:30</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Rapport"><i class="fa-solid fa-file-alt"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge pending">En attente</span>
+                <span class="trajet-itineraire">Saint-Louis → Dakar</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 18/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 07:00</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Démarrer"><i class="fa-solid fa-play"></i></button>
+                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge active">En cours</span>
+                <span class="trajet-itineraire">Kaolack → Fatick</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 20/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 09:15</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge completed">Terminé</span>
+                <span class="trajet-itineraire">Fatick → Mbour</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 10/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 11:00</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Rapport"><i class="fa-solid fa-file-alt"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge pending">En attente</span>
+                <span class="trajet-itineraire">Mbour → Dakar</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 22/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 06:45</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Démarrer"><i class="fa-solid fa-play"></i></button>
+                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
+              <div class="trajet-item-mini">
+                <span class="status-badge active">En cours</span>
+                <span class="trajet-itineraire">Dakar → Ziguinchor</span>
+                <span class="trajet-date"><i class="fa-solid fa-calendar"></i> 25/12/2024</span>
+                <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> 13:00</span>
+                <div class="trajet-actions">
+                  <button class="btn-action" title="Voir"><i class="fa-solid fa-eye"></i></button>
+                  <button class="btn-action" title="Modifier"><i class="fa-solid fa-edit"></i></button>
+                  <button class="btn-action" title="Supprimer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    </div>
+  </div>
+
+  <script>
+    function toggleProfileMenu() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Fermer le menu quand on clique ailleurs
+    document.addEventListener('click', function(event) {
+      const profileBtn = document.getElementById('profileBtn');
+      const dropdown = document.getElementById('profileDropdown');
+      
+      if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html> 

@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Transporteur Personnalisée - BilletTigue</title>
+    <title>Dashboard Transporteur - BilletTigue</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
     <link href="../public/assets/css/dashboard.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      .trajets-list {
+        padding-right: 12px;
+      }
+    </style>
 </head>
 <body class="min-h-screen">
   <div class="transporter-dashboard-container">
@@ -23,7 +32,7 @@
       <nav class="menu">
         <ul>
           <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
-          <li><a href="#"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="transporter-trajets-prototype.html"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
           <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
           <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Clients</span></a></li>
           <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Factures</span></a></li>
@@ -38,6 +47,39 @@
       <div class="transporter-main-wrapper">
         <div class="transporter-title-bar">
           <h1>Tableau de bord transporteur</h1>
+          <!-- Section profil -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profileBtn" onclick="toggleProfileMenu()">
+              <i class="fa-solid fa-circle-user"></i>
+              <span>John Doe</span>
+            </button>
+            <ul class="profile-dropdown-menu" id="profileDropdown">
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-user"></i>
+                  Mon Profil
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-cog"></i>
+                  Paramètres
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-bell"></i>
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="../index.html" class="profile-dropdown-link logout-link">
+                  <i class="fa-solid fa-sign-out-alt"></i>
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="transporter-main-content">
           <!-- Divs qui occupent 80% de la largeur du wrapper -->
@@ -67,5 +109,22 @@
     </main>
     </div>
   </div>
+
+  <script>
+    function toggleProfileMenu() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Fermer le menu quand on clique ailleurs
+    document.addEventListener('click', function(event) {
+      const profileBtn = document.getElementById('profileBtn');
+      const dropdown = document.getElementById('profileDropdown');
+      
+      if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html> 

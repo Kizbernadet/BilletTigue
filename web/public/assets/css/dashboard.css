@@ -20,7 +20,7 @@
     --dashboard-sidebar-shadow: 2px 0 16px rgba(24,60,74,0.06);
     --dashboard-transition: 0.25s cubic-bezier(.4,0,.2,1);
     --dashboard-border-radius: 16px;
-    --dashboard-title-bar-height: 60px;
+    --dashboard-title-bar-height: 80px;
     --dashboard-title-bar-bg: white;
     --dashboard-content-bg: tomato;
     --dashboard-content-shadow: 0 4px 20px rgba(255, 99, 71, 0.12);
@@ -44,29 +44,31 @@
 #profileBtn {
     margin-left: 0.5rem;
     background-color: transparent;
-    border: 1px solid var(--primary-color);
-    padding: 0.625rem 1rem;
+    border: 1px solid var(--accent-color);
+    padding: 0.5rem 0.9rem;
     border-radius: 9999px !important;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
     font-weight: 500;
-    color: var(--primary-color);
+    color: var(--accent-color);
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 40px;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    font-size: 0.95rem;
 }
 
 #profileBtn:hover, #profileBtn:focus {
-    background-color: rgba(76, 175, 80, 0.10);
-    border-color: #388e3c;
-    color: #388e3c;
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--font-color-light);
     outline: none;
+    box-shadow: var(--dashboard-menu-hover-shadow);
 }
 
 #profileBtn .fa-circle-user {
-    font-size: 1.7em;
+    font-size: 1.5em;
 }
 
 /* Styles pour le menu dropdown de profil */
@@ -517,45 +519,48 @@
     justify-content: flex-start;
     align-items: stretch;
     margin: 0 auto;
-    gap: 0.2rem;
+    gap: 0.0125rem;
 }
 
 /* Barre de titre */
 .transporter-title-bar {
-    background: var(--dashboard-title-bar-bg);
-    color: var(--font-color-light);
-    height: var(--dashboard-title-bar-height);
+    background: var(--dashboard-sidebar-bg);
+    color: var(--font-color-primary);
+    height: 68px;
+    min-height: 68px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 2rem;
     font-size: 1.5rem;
     font-family: 'Comfortaa', cursive, Arial, sans-serif;
-    box-shadow: 0 2px 8px rgba(34,197,94,0.08);
-    /* border-top-left-radius: 18px;
-    border-top-right-radius: 18px; */
-    /* margin-bottom: 1.5rem; */
+    box-shadow: var(--dashboard-sidebar-shadow);
+    border: 1px solid #e5e7eb;
+    border-radius: var(--dashboard-border-radius);
+    margin-bottom: 1rem;
 }
 
 .transporter-title-bar h1 {
     margin: 0;
-    font-size: 1.5rem;
     font-weight: 600;
+    color: var(--font-color-primary);
+    font-size: 1.5rem;
 }
 
 /* Contenu principal */
 .transporter-main-content {
     flex: 1;
-    background: var(--dashboard-content-bg);
-    color: var(--font-color-light);
+    background: var(--dashboard-sidebar-bg);
+    color: var(--font-color-primary);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     font-size: 1.3rem;
     font-family: 'Comfortaa', cursive, Arial, sans-serif;
-    border-bottom-left-radius: 18px;
-    border-bottom-right-radius: 18px;
-    box-shadow: var(--dashboard-content-shadow);
-    padding: 2rem;
+    border-radius: var(--dashboard-border-radius);
+    box-shadow: var(--dashboard-sidebar-shadow);
+    border: 1px solid #e5e7eb;
+    padding: 1rem;
 }
 
 .transporter-main-content p {
@@ -590,6 +595,7 @@
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: rgba(255, 255, 255, 1);
+    border: 1.5px solid var(--accent-color);
 }
 
 .dashboard-card h3 {
@@ -736,4 +742,371 @@
 
 /* ==========================================================================
    FIN DASHBOARD-CUSTOM
-   ========================================================================== */ 
+   ========================================================================== */
+
+/* ==========================================================================
+   STYLES POUR LA SECTION TRAJETS
+   ========================================================================== */
+
+/* Section trajets */
+.trajets-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Header des trajets */
+.trajets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    margin-top: -0.5rem;
+    gap: 1rem;
+}
+
+.trajets-title h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+.trajets-title h2 i {
+    color: var(--accent-color);
+}
+
+.trajets-title p {
+    color: var(--font-color-base);
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.trajets-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn-ajouter-trajet {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-ajouter-trajet:hover {
+    background: var(--accent-color-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 152, 70, 0.3);
+}
+
+.btn-filtrer {
+    background: transparent;
+    color: var(--font-color-base);
+    border: 1px solid #e5e7eb;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+.btn-filtrer:hover {
+    background: #f8f9fa;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Statistiques des trajets */
+.trajets-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 0.6rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: white;
+}
+
+.stat-icon.active {
+    background: #10b981;
+}
+
+.stat-icon.completed {
+    background: #3b82f6;
+}
+
+.stat-icon.pending {
+    background: #f59e0b;
+}
+
+.stat-icon.total {
+    background: var(--accent-color);
+}
+
+.stat-info h3 {
+    font-size: 0.7rem;
+    color: var(--font-color-base);
+    margin: 0 0 0.1rem 0;
+    font-weight: 500;
+}
+
+.stat-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+/* Liste des trajets */
+.trajets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-right: 14px !important;
+}
+
+.trajet-item {
+    background: white;
+    border-radius: 12px;
+    padding: 0.8rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.trajet-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.trajet-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.completed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.trajet-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0 0 0.3rem 0;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+.trajet-details {
+    font-size: 0.85rem;
+    gap: 0.3rem;
+    margin: 0 0 0.15rem 0;
+}
+
+.trajet-details i {
+    color: var(--accent-color);
+}
+
+.trajet-time {
+    font-size: 0.8rem;
+    gap: 0.3rem;
+}
+
+.trajet-time i {
+    color: #9ca3af;
+}
+
+.trajet-progress {
+    min-width: 60px;
+    gap: 0.3rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.completed {
+    background: #10b981;
+}
+
+.progress-fill.pending {
+    background: #f59e0b;
+}
+
+.progress-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+}
+
+.trajet-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: #f8f9fa;
+    color: var(--font-color-base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.btn-action:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Responsive pour la section trajets */
+@media (max-width: 768px) {
+    .trajets-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .trajets-actions {
+        justify-content: stretch;
+    }
+    
+    .trajets-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .trajet-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .trajet-progress {
+        flex-direction: row;
+        justify-content: space-between;
+        min-width: auto;
+    }
+    
+    .trajet-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .trajets-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .trajet-item {
+        padding: 1rem;
+    }
+    
+    .trajets-title h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ==========================================================================
+   FIN STYLES POUR LA SECTION TRAJETS
+   ========================================================================== */
+
+/* ==========================================================================
+   FIN TRANSPORTER-DASHBOARD-CUSTOM
+   ========================================================================== */
+
+/* ==========================================================================
+   FIN DASHBOARD-CUSTOM
+   ========================================================================== */
