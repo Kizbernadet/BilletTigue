@@ -162,6 +162,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Gestion du formulaire de recherche de trajets (page d'accueil)
+    const bookingForm = document.querySelector('.booking-form');
+    if (bookingForm && !window.location.pathname.includes('search-trajets')) {
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const departure = document.getElementById('departure').value.trim();
+            const arrival = document.getElementById('arrival').value.trim();
+            const date = document.getElementById('date').value;
+            const returnDate = document.getElementById('return-date').value;
+            const passengers = document.getElementById('passengers').value;
+            
+            // Validation des champs obligatoires
+            if (!departure || !arrival || !date) {
+                alert('Veuillez remplir les champs obligatoires : Départ, Arrivée et Date');
+                return;
+            }
+            
+            // Construire l'URL avec les paramètres
+            const params = new URLSearchParams({
+                departure: departure,
+                arrival: arrival,
+                date: date,
+                passengers: passengers
+            });
+            
+            // Ajouter la date de retour si elle est renseignée
+            if (returnDate) {
+                params.append('return-date', returnDate);
+            }
+            
+            // Rediriger vers la page de recherche avec les paramètres
+            const searchUrl = `./pages/search-trajets.html?${params.toString()}`;
+            window.location.href = searchUrl;
+        });
+    }
+
+    // Gestion des contrôles du nombre de passagers (page d'accueil)
+    const decrementBtn = document.getElementById('decrement-btn');
+    const incrementBtn = document.getElementById('increment-btn');
+    const passengersInput = document.getElementById('passengers');
+
+    if (decrementBtn && incrementBtn && passengersInput && !window.location.pathname.includes('search-trajets')) {
+        decrementBtn.addEventListener('click', function() {
+            let value = parseInt(passengersInput.value);
+            if (value > 1) {
+                passengersInput.value = value - 1;
+            }
+        });
+
+        incrementBtn.addEventListener('click', function() {
+            let value = parseInt(passengersInput.value);
+            passengersInput.value = value + 1;
+        });
+    }
+
     // Animation smooth scroll pour les liens d'ancrage
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -307,24 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Contrôles pour le champ des passagers
-    const incrementBtn = document.getElementById('increment-btn');
-    const decrementBtn = document.getElementById('decrement-btn');
-    const passengersInput = document.getElementById('passengers');
 
-    if (incrementBtn && decrementBtn && passengersInput) {
-        incrementBtn.addEventListener('click', () => {
-            let currentValue = parseInt(passengersInput.value, 10) || 0;
-            passengersInput.value = currentValue + 1;
-        });
-
-        decrementBtn.addEventListener('click', () => {
-            let currentValue = parseInt(passengersInput.value, 10) || 1;
-            if (currentValue > 1) { // Empêche de descendre en dessous de 1
-                passengersInput.value = currentValue - 1;
-            }
-        });
-    }
 
     // --- Logique pour les pages d'authentification ---
 

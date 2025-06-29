@@ -274,8 +274,53 @@ class SearchFormManager {
     }
 
     init() {
+        this.loadSearchParams();
         this.setupPassengerControls();
         this.setupFormSubmission();
+    }
+
+    // Charger les paramètres de recherche depuis l'URL
+    loadSearchParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Pré-remplir les champs du formulaire avec les paramètres URL
+        const departure = urlParams.get('departure');
+        const arrival = urlParams.get('arrival');
+        const date = urlParams.get('date');
+        const returnDate = urlParams.get('return-date');
+        const passengers = urlParams.get('passengers');
+
+        if (departure) {
+            const departureInput = document.getElementById('departure');
+            if (departureInput) departureInput.value = departure;
+        }
+
+        if (arrival) {
+            const arrivalInput = document.getElementById('arrival');
+            if (arrivalInput) arrivalInput.value = arrival;
+        }
+
+        if (date) {
+            const dateInput = document.getElementById('date');
+            if (dateInput) dateInput.value = date;
+        }
+
+        if (returnDate) {
+            const returnDateInput = document.getElementById('return-date');
+            if (returnDateInput) returnDateInput.value = returnDate;
+        }
+
+        if (passengers) {
+            const passengersInput = document.getElementById('passengers');
+            if (passengersInput) passengersInput.value = passengers;
+        }
+
+        // Afficher un message si des paramètres ont été chargés
+        if (departure || arrival || date) {
+            console.log('✅ Paramètres de recherche chargés depuis l\'URL:', {
+                departure, arrival, date, returnDate, passengers
+            });
+        }
     }
 
     setupPassengerControls() {
@@ -305,15 +350,48 @@ class SearchFormManager {
         if (bookingForm) {
             bookingForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                console.log('Recherche de trajets...', {
-                    departure: document.getElementById('departure').value,
-                    arrival: document.getElementById('arrival').value,
-                    date: document.getElementById('date').value,
-                    returnDate: document.getElementById('return-date').value,
-                    passengers: document.getElementById('passengers').value
+                
+                const departure = document.getElementById('departure').value.trim();
+                const arrival = document.getElementById('arrival').value.trim();
+                const date = document.getElementById('date').value;
+                const returnDate = document.getElementById('return-date').value;
+                const passengers = document.getElementById('passengers').value;
+                
+                // Validation des champs obligatoires
+                if (!departure || !arrival || !date) {
+                    alert('Veuillez remplir les champs obligatoires : Départ, Arrivée et Date');
+                    return;
+                }
+                
+                // Mettre à jour l'URL avec les nouveaux paramètres
+                const params = new URLSearchParams({
+                    departure: departure,
+                    arrival: arrival,
+                    date: date,
+                    passengers: passengers
                 });
-                // Ici on peut filtrer les trajets affichés ou faire une nouvelle recherche
-                alert('Recherche de nouveaux trajets...');
+                
+                // Ajouter la date de retour si elle est renseignée
+                if (returnDate) {
+                    params.append('return-date', returnDate);
+                }
+                
+                // Mettre à jour l'URL sans recharger la page
+                const newUrl = `${window.location.pathname}?${params.toString()}`;
+                window.history.pushState({}, '', newUrl);
+                
+                console.log('✅ Nouvelle recherche de trajets:', {
+                    departure, arrival, date, returnDate, passengers
+                });
+                
+                // Simulation de recherche
+                alert('Recherche mise à jour ! Les trajets seront filtrés selon vos nouveaux critères.');
+                
+                // Scroll vers les résultats
+                document.querySelector('.offers-container').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
             });
         }
     }
