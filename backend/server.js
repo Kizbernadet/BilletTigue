@@ -49,6 +49,14 @@ app.use('/api', require('./routes/profileRoutes'));
 // Routes pour la gestion des trajets
 app.use('/api', require('./routes/trajetRoutes'));
 
+// ========== Intégration des routes administrateur ========== 
+// Routes pour la gestion administrative (transporteurs, utilisateurs, stats)
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+// ========== Intégration des routes de statistiques ========== 
+// Routes pour les statistiques administrateur dynamiques
+app.use('/api/stats', require('./routes/statsRoutes'));
+
 // Autres routes
 app.use('/api/users', require('./routes/userRoutes'));
 

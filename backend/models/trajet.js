@@ -6,43 +6,31 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
 const Trajet = sequelize.define('Trajet', {
-    idTrajet: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    idCompte: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'comptes',
-            key: 'id'
-        }
-    },
-    villeDepart: {
+    departure_city: {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    villeArrivee: {
+    arrival_city: {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    dateDepart: {
+    departure_time: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    heureDepart: {
-        type: DataTypes.TIME,
-        allowNull: false
-    },
-    prix: {
+    price: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         validate: {
             min: 0
         }
     },
-    nombrePlaces: {
+    seats_count: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,
@@ -51,7 +39,7 @@ const Trajet = sequelize.define('Trajet', {
             max: 50
         }
     },
-    placesDisponibles: {
+    available_seats: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 1,
@@ -59,56 +47,52 @@ const Trajet = sequelize.define('Trajet', {
             min: 0
         }
     },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    typeVehicule: {
-        type: DataTypes.ENUM('bus', 'minibus', 'voiture', 'camion'),
+    status: {
+        type: DataTypes.STRING(20),
         allowNull: false,
-        defaultValue: 'bus'
+        defaultValue: 'active'
     },
-    statut: {
-        type: DataTypes.ENUM('actif', 'annulé', 'terminé', 'en_cours'),
-        allowNull: false,
-        defaultValue: 'actif'
-    },
-    accepteColis: {
+    accepts_packages: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: true
     },
-    poidsMaxColis: {
+    max_package_weight: {
         type: DataTypes.DECIMAL(8, 2),
         allowNull: true,
         validate: {
             min: 0
         }
     },
-    prixColis: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true,
-        validate: {
-            min: 0
+    departure_point: {
+        type: DataTypes.STRING(200),
+        allowNull: true
+    },
+    arrival_point: {
+        type: DataTypes.STRING(200),
+        allowNull: true
+    },
+    transporteur_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'transporteurs',
+            key: 'id'
         }
     },
-    pointDepart: {
-        type: DataTypes.STRING(200),
-        allowNull: true
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     },
-    pointArrivee: {
-        type: DataTypes.STRING(200),
-        allowNull: true
-    },
-    conditions: {
-        type: DataTypes.TEXT,
-        allowNull: true
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
     }
 }, {
-    tableName: 'Trajet',
-    timestamps: true,
-    createdAt: 'dateCreation',
-    updatedAt: 'dateModification'
+    tableName: 'trajets',
+    timestamps: false
 });
 
 module.exports = Trajet;

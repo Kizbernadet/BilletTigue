@@ -45,15 +45,87 @@ class AuthAPI {
     }
 
     /**
-     * Connexion d'un utilisateur
+     * Connexion d'un utilisateur (détection automatique du type)
+     * @param {Object} credentials - Identifiants de connexion
+     * @param {string} credentials.email - Email de l'utilisateur
+     * @param {string} credentials.password - Mot de passe
+     * @param {string} [credentials.userType] - Type d'utilisateur ('user' ou 'transporter')
+     * @returns {Promise<Object>} Résultat de la connexion
+     */
+    static async login(credentials) {
+        // Déterminer le type d'utilisateur selon le contexte
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        const userType = credentials.userType || roleParam || 'user';
+
+        // Utiliser l'endpoint approprié selon le type
+        if (userType === 'transporter') {
+            return this.loginTransporter(credentials);
+        } else {
+            return this.loginUser(credentials);
+        }
+    }
+
+    /**
+     * Connexion d'un utilisateur standard
      * @param {Object} credentials - Identifiants de connexion
      * @param {string} credentials.email - Email de l'utilisateur
      * @param {string} credentials.password - Mot de passe
      * @returns {Promise<Object>} Résultat de la connexion
      */
-    static async login(credentials) {
+    static async loginUser(credentials) {
         try {
-            const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/auth/login`, {
+            const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/auth/login-user`, {
+                method: 'POST',
+                headers: API_CONFIG.DEFAULT_HEADERS,
+                body: JSON.stringify(credentials)
+            });
+
+            if (!response.ok) {
+                throw {
+                    response: {
+                        status: response.status,
+                        data: data
+                    }
+                };
+            }
+
+            // Sauvegarder le token dans le bon storage
+            if (data.token) {
+                if (credentials.rememberMe) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    sessionStorage.removeItem('authToken');
+                    sessionStorage.removeItem('userData');
+                } else {
+                    sessionStorage.setItem('authToken', data.token);
+                    sessionStorage.setItem('userData', JSON.stringify(data.user));
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                }
+            }
+
+            return {
+                success: true,
+                data: data,
+                message: 'Connexion réussie'
+            };
+
+        } catch (error) {
+            return handleApiError(error);
+        }
+    }
+
+    /**
+     * Connexion d'un transporteur
+     * @param {Object} credentials - Identifiants de connexion
+     * @param {string} credentials.email - Email de l'utilisateur
+     * @param {string} credentials.password - Mot de passe
+     * @returns {Promise<Object>} Résultat de la connexion
+     */
+    static async loginTransporter(credentials) {
+        try {
+            const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/auth/login-transporter`, {
                 method: 'POST',
                 headers: API_CONFIG.DEFAULT_HEADERS,
                 body: JSON.stringify(credentials)

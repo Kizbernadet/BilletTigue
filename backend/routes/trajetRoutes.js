@@ -1,35 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const trajetController = require('../controllers/trajetController');
-const roleMiddleware = require('../middlewares/roleMiddleware');
-const { protect } = require('../middlewares/authMiddleware');
+const { requireTransporter } = require('../middlewares/roleMiddleware');
+const { protect, optionalAuth } = require('../middlewares/authMiddleware');
 
 // Routes publiques (accessibles à tous)
 router.get('/trajets', trajetController.getAllTrajets); // Liste des trajets disponibles
-router.get('/trajets/:id', trajetController.getTrajetById); // Détails d'un trajet
+router.get('/trajets/:id', trajetController.getTrajetDetails); // Détails d'un trajet spécifique
+
+// ===== NOUVELLES ROUTES DE RECHERCHE =====
+
+// Autocomplete des villes (public)
+router.get('/cities/suggestions', trajetController.getCitySuggestions);
+
+// Recherche de trajets (public avec auth optionnelle)
+router.post('/trajets/search', optionalAuth, trajetController.searchTrajets);
 
 // Routes protégées (transporteurs uniquement)
 router.post('/trajets', 
     protect, 
-    roleMiddleware(['transporter']), 
+    requireTransporter, 
     trajetController.createTrajet
 );
 
 router.get('/transporteur/trajets', 
     protect, 
-    roleMiddleware(['transporter']), 
+    requireTransporter, 
     trajetController.getTrajetsByTransporteur
 );
 
 router.put('/trajets/:id', 
     protect, 
-    roleMiddleware(['transporter']), 
+    requireTransporter, 
     trajetController.updateTrajet
 );
 
 router.delete('/trajets/:id', 
     protect, 
-    roleMiddleware(['transporter']), 
+    requireTransporter, 
     trajetController.deleteTrajet
 );
 

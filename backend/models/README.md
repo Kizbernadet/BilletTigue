@@ -1,66 +1,13 @@
-# 📋 MODÈLES SEQUELIZE - CORRECTIONS APPORTÉES
+# 📋 MODÈLES SEQUELIZE - STRUCTURE VALIDÉE
 
-## 🔧 **Problèmes identifiés et corrigés**
+## 🎯 **Structure finale conforme aux tables validées**
 
-### **1. Incohérence des noms de fichiers**
-- **Problème** : Le fichier `index.js` importait des modèles avec des noms en majuscules
-- **Solution** : Correction des imports pour correspondre aux noms de fichiers réels
+### **Modifications appliquées selon la restructuration**
 
-### **2. Modèle `colis.js` vide**
-- **Problème** : Le fichier ne contenait qu'un espace
-- **Solution** : Création complète du modèle avec tous les champs nécessaires
-
-### **3. Noms de tables incohérents**
-- **Problème** : Mélange de conventions (camelCase, snake_case, singulier/pluriel)
-- **Solution** : Standardisation selon la restructuration de la base de données
-
-### **4. Références de clés étrangères incorrectes**
-- **Problème** : Références vers des tables et colonnes inexistantes
-- **Solution** : Mise à jour des références selon la nouvelle structure
-
-## 📊 **Changements appliqués**
-
-### **Tables renommées (singulier → pluriel)**
-| Ancien nom | Nouveau nom |
-|------------|-------------|
-| `role` | `roles` |
-| `compte` | `comptes` |
-| `utilisateur` | `utilisateurs` |
-| `transporteur` | `transporteurs` |
-| `administrateur` | `administrateurs` |
-| `trajet` | `trajets` |
-| `envoi` | `envois` |
-| `paiement` | `paiements` |
-| `reservation` | `reservations` |
-| `pointDepot` | `point_depot` |
-
-### **Colonnes renommées (camelCase → snake_case)**
-| Ancien nom | Nouveau nom |
-|------------|-------------|
-| `idRole` | `id` |
-| `nomRole` | `name` |
-| `idCompte` | `id` |
-| `motDePasse` | `password_hash` |
-| `statut` | `status` |
-| `idUtilisateur` | `id` |
-| `nom` | `last_name` |
-| `prenom` | `first_name` |
-| `telephone` | `phone_number` |
-| `villeDepart` | `departure_city` |
-| `villeArrivee` | `arrival_city` |
-| `dateHeure` | `departure_time` |
-| `prix` | `price` |
-
-### **Clés étrangères standardisées**
-| Ancien nom | Nouveau nom |
-|------------|-------------|
-| `idRole` | `role_id` |
-| `idCompte` | `compte_id` |
-| `idTransporteur` | `transporteur_id` |
-| `idUtilisateur` | `utilisateur_id` |
-| `idExpediteur` | `expediteur_id` |
-| `idEnvoi` | `envoi_id` |
-| `idTrajet` | `trajet_id` |
+1. **Tables obsolètes supprimées** : `point_depot`, `depots`, `PointDepot`
+2. **Nouveau modèle** : `zones_desservies` (remplace les anciens)
+3. **Modèles mis à jour** : `reservations`, `paiements`, `colis`, `trajets`, `transporteurs`
+4. **Associations corrigées** selon la nouvelle structure
 
 ## 🏗️ **Structure finale des modèles**
 
@@ -109,6 +56,7 @@
   first_name: STRING,
   phone_number: STRING,
   company_name: STRING,
+  company_type: STRING DEFAULT 'mixte',
   compte_id: INTEGER (FK → comptes.id),
   created_at: DATE,
   updated_at: DATE
@@ -135,13 +83,37 @@
   arrival_city: STRING,
   departure_time: DATE,
   price: DECIMAL(10,2),
+  seats_count: INTEGER DEFAULT 1,
+  available_seats: INTEGER DEFAULT 1,
+  status: STRING DEFAULT 'active',
+  accepts_packages: BOOLEAN DEFAULT true,
+  max_package_weight: DECIMAL,
+  departure_point: STRING,
+  arrival_point: STRING,
   transporteur_id: INTEGER (FK → transporteurs.id),
   created_at: DATE,
   updated_at: DATE
 }
 ```
 
-### **7. Envoi (envois)**
+### **7. Reservation (reservations)**
+```javascript
+{
+  id: INTEGER (PK),
+  reservation_date: DATE,
+  passenger_first_name: STRING,
+  passenger_last_name: STRING,
+  phone_number: STRING,
+  status: STRING DEFAULT 'pending',
+  seats_reserved: INTEGER DEFAULT 1,
+  trajet_id: INTEGER (FK → trajets.id),
+  compte_id: INTEGER (FK → comptes.id),
+  created_at: DATE,
+  updated_at: DATE
+}
+```
+
+### **8. Envoi (envois)**
 ```javascript
 {
   id: INTEGER (PK),
@@ -157,81 +129,85 @@
 }
 ```
 
-### **8. Paiement (paiements)**
+### **9. Paiement (paiements)**
 ```javascript
 {
   id: INTEGER (PK),
   amount: DECIMAL(10,2),
   status: STRING DEFAULT 'pending',
   payment_date: DATE,
+  reservation_id: INTEGER (FK → reservations.id),
+  created_at: DATE,
+  updated_at: DATE
+}
+```
+
+### **10. Colis (colis)**
+```javascript
+{
+  id: INTEGER (PK),
+  description: STRING,
+  weight: DECIMAL(8,2),
+  dimensions: STRING,
+  shipping_cost: DECIMAL(10,2),
+  status: STRING DEFAULT 'pending',
   envoi_id: INTEGER (FK → envois.id),
   created_at: DATE,
   updated_at: DATE
 }
 ```
 
-### **9. Reservation (reservations)**
+### **11. ZonesDesservies (zones_desservies)**
 ```javascript
 {
   id: INTEGER (PK),
-  reservation_date: DATE,
-  passenger_name: STRING,
-  phone_number: STRING,
-  trajet_id: INTEGER (FK → trajets.id),
-  compte_id: INTEGER (FK → comptes.id),
-  created_at: DATE,
-  updated_at: DATE
-}
-```
-
-### **10. PointDepot (point_depot)**
-```javascript
-{
-  id: INTEGER (PK),
-  adresse: STRING,
+  city_name: STRING,
+  region: STRING,
+  zone_type: STRING DEFAULT 'both',
+  service_frequency: STRING,
+  max_weight_capacity: DECIMAL,
   transporteur_id: INTEGER (FK → transporteurs.id),
   created_at: DATE,
   updated_at: DATE
 }
 ```
 
-### **11. Colis (colis)**
+### **12. RevokedToken (revoked_tokens)**
 ```javascript
 {
   id: INTEGER (PK),
-  description: STRING,
-  poids: DECIMAL(8,2),
-  dimensions: STRING,
-  valeur: DECIMAL(10,2),
-  statut: STRING DEFAULT 'en_attente',
-  envoi_id: INTEGER (FK → envois.id),
+  token: TEXT,
+  user_id: INTEGER (FK → comptes.id),
+  revoked_at: DATE,
+  expires_at: DATE,
+  reason: STRING DEFAULT 'logout',
   created_at: DATE,
   updated_at: DATE
 }
 ```
 
-## 🔗 **Associations définies**
+## 🔗 **Associations mises à jour**
 
 ### **Relations principales**
 - **Role 1,N Compte** : Un rôle peut avoir plusieurs comptes
 - **Compte 1,1 Utilisateur/Transporteur/Administrateur** : Un compte peut être lié à un seul profil
-- **Transporteur 1,N PointDepot** : Un transporteur peut avoir plusieurs points de dépôt
+- **Transporteur 1,N ZonesDesservies** : Un transporteur peut desservir plusieurs zones
 - **Transporteur 1,N Trajet** : Un transporteur peut proposer plusieurs trajets
 - **Utilisateur 1,N Envoi** : Un utilisateur peut faire plusieurs envois
 - **Transporteur 1,N Envoi** : Un transporteur peut gérer plusieurs envois
-- **Envoi 1,1 Paiement** : Chaque envoi a un paiement associé
+- **Reservation 1,1 Paiement** : Chaque réservation a un paiement associé
 - **Compte 1,N Reservation** : Un compte peut faire plusieurs réservations
 - **Trajet 1,N Reservation** : Un trajet peut avoir plusieurs réservations
 - **Envoi 1,N Colis** : Un envoi peut contenir plusieurs colis
+- **Compte 1,N RevokedToken** : Pour la gestion des déconnexions
 
 ## ✅ **Résultat**
 
 Tous les modèles sont maintenant :
-- ✅ **Cohérents** avec la restructuration de la base de données
-- ✅ **Standardisés** avec les conventions snake_case
-- ✅ **Complets** avec tous les champs nécessaires
-- ✅ **Correctement associés** avec les bonnes relations
-- ✅ **Prêts** pour l'utilisation avec Sequelize
+- ✅ **100% conformes** à la structure validée
+- ✅ **Cohérents** avec la base de données restructurée
+- ✅ **Optimisés** avec les bonnes associations
+- ✅ **Prêts** pour l'utilisation en production
 
 ## 🚀 **Utilisation**
 
@@ -239,6 +215,10 @@ Pour utiliser ces modèles, importer le fichier `index.js` dans votre `server.js
 
 ```javascript
 const models = require('./models');
+
+// Les modèles sont disponibles :
+const { Role, Compte, Utilisateur, Transporteur, ZonesDesservies, 
+        Trajet, Reservation, Paiement, Envoi, Colis, RevokedToken } = models;
 ```
 
-Toutes les associations seront automatiquement définies et les modèles seront disponibles. 
+Toutes les associations sont automatiquement définies et les modèles sont prêts à l'emploi ! 

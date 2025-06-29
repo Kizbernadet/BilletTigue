@@ -52,14 +52,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Gestionnaire pour le bouton de déconnexion
     document.querySelectorAll('.logout-link').forEach(logoutLink => {
-        logoutLink.addEventListener('click', function(e) {
+        logoutLink.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
-            // Logique de déconnexion
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
+            
+            console.log('🔓 Déconnexion demandée via menu profil');
             closeMenu();
-            window.location.href = '../index.html';
+            
+            // Utiliser la déconnexion sécurisée
+            if (window.SecureLogout) {
+                await SecureLogout.logout();
+            } else {
+                // Fallback si le module n'est pas disponible
+                console.warn('⚠️ Module SecureLogout non disponible, déconnexion basique');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.replace('../index.html?fallback=true');
+            }
         });
     });
 

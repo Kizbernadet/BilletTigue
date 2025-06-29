@@ -11,14 +11,6 @@ const Transporteur = sequelize.define('Transporteur', {
         primaryKey: true,
         autoIncrement: true
     },
-    last_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    first_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     phone_number: {
         type: DataTypes.STRING,
         allowNull: false
@@ -26,6 +18,11 @@ const Transporteur = sequelize.define('Transporteur', {
     company_name: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    company_type: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        defaultValue: 'mixte'
     },
     compte_id: {
         type: DataTypes.INTEGER,

@@ -16,13 +16,30 @@ const Reservation = sequelize.define('Reservation', {
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    passenger_name: {
+    passenger_first_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    passenger_last_name: {
         type: DataTypes.STRING,
         allowNull: false
     },
     phone_number: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'pending'
+    },
+    seats_reserved: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
+        validate: {
+            min: 1
+        }
     },
     trajet_id: {
         type: DataTypes.INTEGER,

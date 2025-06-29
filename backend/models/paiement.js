@@ -25,11 +25,11 @@ const Paiement = sequelize.define('Paiement', {
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    envoi_id: {
+    reservation_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'envois',
+            model: 'reservations',
             key: 'id'
         }
     },

@@ -79,4 +79,10 @@ const apiRequest = async (url, options) => {
     }
 };
 
-export { API_CONFIG, getAuthHeaders, handleApiError, apiRequest }; 
+// Export de CONFIG pour compatibilité avec les autres fichiers
+const CONFIG = {
+    API_BASE_URL: API_CONFIG.BASE_URL,
+    ...API_CONFIG
+};
+
+export { API_CONFIG, CONFIG, getAuthHeaders, handleApiError, apiRequest }; 

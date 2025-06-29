@@ -1,0 +1,1097 @@
+/* ==========================================================================
+   Variables CSS pour le Dashboard Administrateur - BilletTigue
+   ========================================================================== */
+
+:root {
+    /* Variables héritées du projet */
+    --primary-color: #183C4A;
+    --accent-color: #EF9846;
+    --accent-color-dark: #dc7e26;
+    --main-radius: 1rem;
+    --font-color-base: #374151;
+    --font-color-light: #FFFFFF;
+    --font-color-primary: var(--primary-color);
+    --font-color-accent: var(--accent-color);
+    --color-white: #FFFFFF;
+    
+    /* Variables spécifiques au dashboard admin */
+    --admin-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --admin-gradient-users: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --admin-gradient-transporters: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --admin-gradient-accounts: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --admin-gradient-active: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    
+    --admin-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --admin-shadow-hover: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --admin-border-radius: 16px;
+    --admin-border-radius-sm: 12px;
+    --admin-border-radius-xs: 8px;
+    --admin-transition: all 0.3s ease;
+    
+    /* Variables de couleurs de status */
+    --admin-status-active-bg: #d4edda;
+    --admin-status-active-color: #155724;
+    --admin-status-inactive-bg: #f8d7da;
+    --admin-status-inactive-color: #721c24;
+    
+    /* Variables des boutons */
+    --admin-btn-primary: #2196F3;
+    --admin-btn-primary-hover: #1976D2;
+    --admin-btn-success: #28a745;
+    --admin-btn-success-hover: #218838;
+    --admin-btn-danger: #dc3545;
+    --admin-btn-danger-hover: #c82333;
+    --admin-btn-secondary: #6c757d;
+    --admin-btn-secondary-hover: #5a6268;
+    
+    /* Variables du modal */
+    --admin-modal-backdrop: rgba(0, 0, 0, 0.5);
+    --admin-modal-z-index: 1000;
+}
+
+/* ==========================================================================
+   Layout Principal du Dashboard Admin
+   ========================================================================== */
+
+.admin-container {
+    min-height: 100vh;
+    background: var(--admin-gradient-primary);
+    padding: 2rem 0;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+.admin-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* ==========================================================================
+   Header du Dashboard Admin
+   ========================================================================== */
+
+.admin-header {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--admin-shadow-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-title h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+    margin: 0;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+}
+
+.admin-title .badge {
+    background: var(--admin-gradient-primary);
+    color: var(--font-color-light);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Boutons du Dashboard Admin
+   ========================================================================== */
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--admin-border-radius-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--admin-btn-primary);
+    color: var(--font-color-light);
+}
+
+.btn-primary:hover {
+    background: var(--admin-btn-primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--admin-btn-success);
+    color: var(--font-color-light);
+}
+
+.btn-success:hover {
+    background: var(--admin-btn-success-hover);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--admin-btn-danger);
+    color: var(--font-color-light);
+}
+
+.btn-danger:hover {
+    background: var(--admin-btn-danger-hover);
+}
+
+.btn-secondary {
+    background: var(--admin-btn-secondary);
+    color: var(--font-color-light);
+}
+
+.btn-secondary:hover {
+    background: var(--admin-btn-secondary-hover);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+}
+
+/* ==========================================================================
+   Grille de Statistiques
+   ========================================================================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius-sm);
+    padding: 1.5rem;
+    box-shadow: var(--admin-shadow-hover);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--admin-border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--font-color-light);
+}
+
+.stat-icon.users {
+    background: var(--admin-gradient-users);
+}
+
+.stat-icon.transporters {
+    background: var(--admin-gradient-transporters);
+}
+
+.stat-icon.accounts {
+    background: var(--admin-gradient-accounts);
+}
+
+.stat-icon.active {
+    background: var(--admin-gradient-active);
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+    margin: 0;
+}
+
+.stat-content p {
+    color: #666;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   Contenu Principal et Cartes
+   ========================================================================== */
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.content-card {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius);
+    padding: 2rem;
+    box-shadow: var(--admin-shadow-card);
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.content-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+    margin: 0;
+}
+
+/* ==========================================================================
+   Système d'Onglets
+   ========================================================================== */
+
+.tabs {
+    display: flex;
+    border-bottom: 2px solid #f1f3f4;
+    margin-bottom: 2rem;
+}
+
+.tab {
+    padding: 1rem 2rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 2px solid transparent;
+    transition: var(--admin-transition);
+    font-family: inherit;
+}
+
+.tab.active {
+    color: var(--admin-btn-primary);
+    border-bottom-color: var(--admin-btn-primary);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================================================================
+   Tableaux de Données
+   ========================================================================== */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: var(--font-color-base);
+}
+
+.data-table tr:hover {
+    background: #f8f9fa;
+}
+
+/* ==========================================================================
+   Badges de Statut
+   ========================================================================== */
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background: var(--admin-status-active-bg);
+    color: var(--admin-status-active-color);
+}
+
+.status-inactive {
+    background: var(--admin-status-inactive-bg);
+    color: var(--admin-status-inactive-color);
+}
+
+/* ==========================================================================
+   Modales
+   ========================================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: var(--admin-modal-z-index);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--admin-modal-backdrop);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius);
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: #f1f3f4;
+}
+
+/* ==========================================================================
+   Formulaires
+   ========================================================================== */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--font-color-base);
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e1e5e9;
+    border-radius: var(--admin-border-radius-xs);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--admin-btn-primary);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* ==========================================================================
+   Actions et Boutons d'Action
+   ========================================================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ==========================================================================
+   États de Chargement et Vides
+   ========================================================================== */
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.loading.show {
+    display: block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .admin-wrapper {
+        padding: 0 1rem;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .tabs {
+        overflow-x: auto;
+    }
+    
+    .tab {
+        white-space: nowrap;
+    }
+    
+    .admin-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .content-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-container {
+        padding: 1rem 0;
+    }
+    
+    .admin-wrapper {
+        padding: 0 0.5rem;
+    }
+    
+    .admin-header {
+        padding: 1.5rem;
+    }
+    
+    .content-card {
+        padding: 1.5rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .stats-grid {
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .stat-content h3 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ==========================================================================
+   Intégration avec DaisyUI et Tailwind CSS
+   ========================================================================== */
+
+/* Surcharge des classes DaisyUI pour respecter le thème admin */
+.admin-container .btn-outline {
+    border-color: var(--admin-btn-primary);
+    color: var(--admin-btn-primary);
+}
+
+.admin-container .btn-outline:hover {
+    background: var(--admin-btn-primary);
+    border-color: var(--admin-btn-primary);
+    color: var(--font-color-light);
+}
+
+.admin-container .card {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius);
+    box-shadow: var(--admin-shadow-card);
+}
+
+.admin-container .badge-primary {
+    background: var(--admin-gradient-primary);
+    color: var(--font-color-light);
+    border: none;
+}
+
+/* Classes utilitaires spécifiques au dashboard admin */
+.admin-gradient-bg {
+    background: var(--admin-gradient-primary);
+}
+
+.admin-card-shadow {
+    box-shadow: var(--admin-shadow-card);
+}
+
+.admin-hover-lift:hover {
+    transform: translateY(-5px);
+    transition: var(--admin-transition);
+}
+
+.admin-border-radius {
+    border-radius: var(--admin-border-radius);
+}
+
+.admin-border-radius-sm {
+    border-radius: var(--admin-border-radius-sm);
+}
+
+.admin-border-radius-xs {
+    border-radius: var(--admin-border-radius-xs);
+}
+
+/* ==========================================================================
+   Modal Améliorée - Étapes et Fonctionnalités Avancées
+   ========================================================================== */
+
+/* Redéfinition de la modale pour les formulaires multi-étapes */
+.modal-content {
+    background: var(--color-white);
+    border-radius: var(--admin-border-radius);
+    padding: 0;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    margin-bottom: 0;
+}
+
+.modal-title-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-icon {
+    font-size: 1.5rem;
+    color: #fbbf24;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    background: #f9fafb;
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: var(--admin-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Étapes de Progression */
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e5e7eb;
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    max-width: 120px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: var(--admin-transition);
+}
+
+.step.active .step-number {
+    background: var(--admin-btn-primary);
+    color: white;
+}
+
+.step.completed .step-number {
+    background: var(--admin-btn-success);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    text-align: center;
+}
+
+.step.active .step-label {
+    color: var(--admin-btn-primary);
+    font-weight: 600;
+}
+
+/* Étapes du Formulaire */
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+    animation: slideInRight 0.3s ease;
+}
+
+.step-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--font-color-base);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.step-title i {
+    color: var(--admin-btn-primary);
+    font-size: 1.25rem;
+}
+
+/* Champs de Formulaire Améliorés */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--font-color-base);
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-label i {
+    color: var(--admin-btn-primary);
+    font-size: 0.875rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: var(--admin-border-radius-xs);
+    font-size: 0.875rem;
+    transition: var(--admin-transition);
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--admin-btn-primary);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: var(--admin-transition);
+    font-size: 0.875rem;
+}
+
+.password-toggle:hover {
+    color: var(--admin-btn-primary);
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.input-feedback {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    min-height: 1rem;
+}
+
+.input-feedback.success {
+    color: var(--admin-btn-success);
+}
+
+.input-feedback.error {
+    color: var(--admin-btn-danger);
+}
+
+.form-hint {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Carte de Récapitulatif */
+.summary-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--admin-border-radius-xs);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-card h5 {
+    margin: 0 0 1rem 0;
+    color: var(--font-color-base);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.summary-card h5::before {
+    content: '📋';
+    font-size: 1.25rem;
+}
+
+.summary-content {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.summary-value {
+    color: var(--font-color-base);
+    font-weight: 600;
+}
+
+/* Checkboxes Personnalisées */
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    position: relative;
+    transition: var(--admin-transition);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background: var(--admin-btn-primary);
+    border-color: var(--admin-btn-primary);
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.checkbox-text {
+    font-size: 0.875rem;
+    color: var(--font-color-base);
+    line-height: 1.5;
+}
+
+.checkbox-text a {
+    color: var(--admin-btn-primary);
+    text-decoration: none;
+}
+
+.checkbox-text a:hover {
+    text-decoration: underline;
+}
+
+/* Footer de la Modal et Navigation */
+.footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.step-navigation {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--admin-btn-primary);
+    color: var(--admin-btn-primary);
+}
+
+.btn-outline:hover {
+    background: var(--admin-btn-primary);
+    color: white;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--admin-btn-primary), var(--admin-btn-success));
+    transition: width 0.3s ease;
+}
+
+/* Animations Additionnelles */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive pour la Modal Améliorée */
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 95%;
+    }
+    
+    .progress-steps {
+        margin-bottom: 1rem;
+    }
+    
+    .step-label {
+        display: none;
+    }
+    
+    .footer-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .step-navigation {
+        width: 100%;
+        justify-content: center;
+    }
+} 

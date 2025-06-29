@@ -3,322 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de bord Administrateur - BilletTigue</title>
-    <!-- Les liens CSS doivent pointer vers la racine du site -->
+    <title>Dashboard Administrateur - BilletTigue</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .dashboard-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .dashboard-main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        
-        .dashboard-card {
-            background: white;
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 700px;
-            width: 100%;
-        }
-        
-        .dashboard-icon {
-            font-size: 4rem;
-            color: #2196F3;
-            margin-bottom: 1rem;
-        }
-        
-        .dashboard-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-        
-        .dashboard-subtitle {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 2rem;
-        }
-        
-        .admin-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            color: white;
-        }
-        
-        .admin-info h3 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        .admin-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            text-align: left;
-        }
-        
-        .admin-detail {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .admin-detail i {
-            color: #FFD700;
-            width: 20px;
-        }
-        
-        .dashboard-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .dashboard-btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn-primary {
-            background: #2196F3;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #1976D2;
-        }
-        
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-        
-        .btn-secondary:hover {
-            background: #e9ecef;
-        }
-        
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background: #c82333;
-        }
-        
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: #218838;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .status-admin {
-            background: #cce5ff;
-            color: #004085;
-        }
-        
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        
-        .stat-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2196F3;
-        }
-        
-        .stat-label {
-            font-size: 0.875rem;
-            color: #666;
-            margin-top: 0.25rem;
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard-card {
-                padding: 2rem;
-                margin: 1rem;
-            }
-            
-            .dashboard-title {
-                font-size: 1.5rem;
-            }
-            
-            .dashboard-actions {
-                flex-direction: column;
-            }
-            
-            .admin-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .admin-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      .admin-list {
+        padding-right: 12px;
+      }
     </style>
 </head>
-<body class="min-h-screen bg-custom">
-    <header>
-        <!-- Container pour centrer la topbar -->
-        <div class="w-full flex justify-center p-4">
-            <!-- Topbar avec 95% de largeur -->
-            <div class="topbar-container">
-                <div class="logo-container w-3/12 h-full">
-                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
-                    <a href="../index.html" class="flex items-center">
-                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
-                        <span class="logo-text">BilletTigue</span>
-                    </a>
-                </div>
-                <nav class="nav-container w-5/12 h-full">
-                    <ul class="nav-list">
-                        <!-- Les liens de navigation doivent être relatifs à la racine -->
-                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
-                    </ul>
-                </nav>
-                <div class="action-container-wrapper">
-                    <!-- Le menu de langue reste identique -->
-                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
-                        <label tabindex="0" class="btn-lang">
-                            <span id="current-lang-text">Français</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </label>
-                        <ul id="lang-options" tabindex="0" class="lang-options-list">
-                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
-                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Bouton de déconnexion -->
-                    <button id="logoutBtn" class="btn-login">Se déconnecter</button>
-                </div>
-            </div>
+<body class="min-h-screen overflow-x-hidden">
+  <div class="transporter-dashboard-container">
+    <div class="transporter-dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="transporter-sidebar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" style="height:48px; width:auto;">
+        <span>BilletTiguè</span>
+      </div>
+      <!-- Menu -->
+      <nav class="menu">
+        <ul>
+          <li><a href="#" class="active"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Utilisateurs</span></a></li>
+                      <li><a href="admin-dashboard-transporter.html"><i class="fa-solid fa-truck"></i> <span class="menu-label">Transporteurs</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Paiements</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
+          <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- Contenu principal -->
+    <main class="transporter-dashboard-main">
+      <div class="transporter-main-wrapper">
+        <div class="transporter-title-bar">
+          <h1>Tableau de bord administrateur</h1>
+          <!-- Section profil -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profileBtn" onclick="toggleProfileMenu()">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Administrateur</span>
+            </button>
+            <ul class="profile-dropdown-menu" id="profileDropdown">
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-user"></i>
+                  Mon Profil
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-cog"></i>
+                  Paramètres
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-bell"></i>
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="../index.html" class="profile-dropdown-link logout-link">
+                  <i class="fa-solid fa-sign-out-alt"></i>
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </header>
-
-    <main class="dashboard-container">
-        <div class="dashboard-main">
+        <div class="transporter-main-content">
+          <!-- Section des cartes dashboard -->
+          <div class="dashboard-content-section">
             <div class="dashboard-card">
-                <div class="dashboard-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                
-                <h1 class="dashboard-title">Connexion administrateur réussie !</h1>
-                <p class="dashboard-subtitle">Bienvenue dans votre espace d'administration Billettigue</p>
-                
-                <div class="status-badge status-admin">
-                    <i class="fas fa-crown"></i> Compte administrateur connecté
-                </div>
-                
-                <div class="admin-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">150</div>
-                        <div class="stat-label">Utilisateurs</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">25</div>
-                        <div class="stat-label">Transporteurs</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">1,250</div>
-                        <div class="stat-label">Réservations</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">98%</div>
-                        <div class="stat-label">Satisfaction</div>
-                    </div>
-                </div>
-                
-                <div class="admin-info">
-                    <h3>Informations administrateur</h3>
-                    <div class="admin-details" id="adminDetails">
-                        <!-- Les informations admin seront affichées ici -->
-                    </div>
-                </div>
-                
-                <div class="dashboard-actions">
-                    <a href="../index.html" class="dashboard-btn btn-primary">
-                        <i class="fas fa-home"></i>
-                        Retour à l'accueil
-                    </a>
-                    <a href="#" class="dashboard-btn btn-success">
-                        <i class="fas fa-users"></i>
-                        Gérer les utilisateurs
-                    </a>
-                    <a href="#" class="dashboard-btn btn-secondary">
-                        <i class="fas fa-chart-bar"></i>
-                        Statistiques
-                    </a>
-                    <a href="#" class="dashboard-btn btn-secondary">
-                        <i class="fas fa-cog"></i>
-                        Paramètres
-                    </a>
-                    <button id="logoutBtn2" class="dashboard-btn btn-danger">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Se déconnecter
-                    </button>
-                </div>
+              <h3><i class="fa-solid fa-users"></i> Gestion des utilisateurs</h3>
+              <p>Gérez les comptes utilisateurs et leurs permissions</p>
+              <div class="card-stats">
+                <span class="stat-number">128</span>
+                <span class="stat-label">Utilisateurs actifs</span>
+              </div>
             </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-truck"></i> Transporteurs</h3>
+              <p>Supervision et validation des transporteurs</p>
+              <div class="card-stats">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Transporteurs validés</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-route"></i> Trajets</h3>
+              <p>Monitoring des trajets et itinéraires</p>
+              <div class="card-stats">
+                <span class="stat-number">67</span>
+                <span class="stat-label">Trajets actifs</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-chart-line"></i> Statistiques générales</h3>
+              <p>Vue d'ensemble de la plateforme</p>
+              <div class="card-stats">
+                <span class="stat-number">95%</span>
+                <span class="stat-label">Taux de satisfaction</span>
+              </div>
+            </div>
+
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-box"></i> Colis en transit</h3>
+              <p>Suivi global des expéditions</p>
+              <div class="card-stats">
+                <span class="stat-number">342</span>
+                <span class="stat-label">Colis en cours</span>
+              </div>
+            </div>
+
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-euro-sign"></i> Revenus</h3>
+              <p>Suivi financier de la plateforme</p>
+              <div class="card-stats">
+                <span class="stat-number">45,720€</span>
+                <span class="stat-label">Ce mois</span>
+              </div>
+            </div>
+
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-shield-alt"></i> Sécurité</h3>
+              <p>Monitoring de la sécurité système</p>
+              <div class="card-stats">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Incidents détectés</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
+    </div>
+  </div>
 
-    <footer>
-        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
-    </footer>
+  <!-- Scripts de sécurité -->
+  <script src="../src/js/secure-logout.js"></script>
+  <script src="../src/js/profile-display.js"></script>
+  <!-- Gestionnaire de statistiques dynamiques -->
+  <script src="../src/js/admin-stats-manager.js"></script>
 
-    <!-- Le script JS doit pointer vers la racine du site -->
-    <script src="../src/js/main.js"></script>
-    <script type="module" src="../src/js/dashboard.js"></script>
+  <script>
+    function toggleProfileMenu() {
+      const dropdown = document.getElementById('profileDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Fermer le menu quand on clique ailleurs
+    document.addEventListener('click', function(event) {
+      const profileBtn = document.getElementById('profileBtn');
+      const dropdown = document.getElementById('profileDropdown');
+      
+      if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // Vérifier l'authentification admin
+    function checkAuth() {
+      const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+      const userData = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+      
+      if (!token) {
+        console.log('🔐 Aucun token trouvé, redirection vers login');
+        window.location.href = 'login.html';
+        return false;
+      }
+      
+      if (!userData) {
+        console.log('🔐 Aucune donnée utilisateur trouvée, redirection vers login');
+        window.location.href = 'login.html';
+        return false;
+      }
+      
+      try {
+        const user = JSON.parse(userData);
+        console.log('👤 Utilisateur connecté:', user);
+        
+        if (user.role !== 'admin') {
+          console.log('⛔ Accès refusé - Rôle requis: admin, rôle actuel:', user.role);
+          alert('Accès refusé. Vous devez être administrateur pour accéder à cette page.');
+          
+          // Rediriger selon le rôle de l'utilisateur
+          if (user.role === 'transporter') {
+                                    window.location.href = 'transporter-dashboard.html';
+          } else if (user.role === 'user') {
+            window.location.href = 'user-dashboard.html';
+          } else {
+            window.location.href = 'login.html';
+          }
+          return false;
+        }
+        
+        console.log('✅ Accès autorisé - Utilisateur admin connecté');
+        return true;
+        
+      } catch (error) {
+        console.error('❌ Erreur lors du parsing des données utilisateur:', error);
+        window.location.href = 'login.html';
+        return false;
+      }
+    }
+
+    // Fonction de déconnexion
+    function logout() {
+      console.log('⚠️ Déconnexion basique (fallback)');
+      
+      // Nettoyage plus complet
+      const authKeys = ['authToken', 'userData', 'user', 'token'];
+      authKeys.forEach(key => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
+      
+      window.location.replace('../index.html?fallback=true');
+    }
+
+    // Charger les données admin au chargement de la page
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Vérifier l'authentification en premier
+      if (!checkAuth()) {
+        return; // Si l'auth échoue, on s'arrête là
+      }
+      
+      // Initialiser l'affichage personnalisé du profil
+      ProfileDisplay.init();
+      
+      // Initialiser le gestionnaire de statistiques dynamiques
+      if (window.AdminStatsManager) {
+        console.log('📊 Initialisation des statistiques dynamiques...');
+        window.adminStatsManager = new AdminStatsManager();
+        await window.adminStatsManager.init();
+      } else {
+        console.warn('⚠️ Gestionnaire de statistiques non disponible, valeurs statiques conservées');
+      }
+      
+      console.log('✅ Dashboard Admin chargé et sécurisé');
+      
+      // Configurer les événements de déconnexion sécurisée
+      const logoutLinks = document.querySelectorAll('.logout-btn, .logout-link');
+      logoutLinks.forEach(link => {
+        link.addEventListener('click', async function(e) {
+          e.preventDefault();
+          console.log('🔓 Déconnexion admin demandée');
+          
+          // Nettoyer le gestionnaire de statistiques
+          if (window.adminStatsManager) {
+            window.adminStatsManager.destroy();
+          }
+          
+          // Utiliser la déconnexion sécurisée
+          if (window.SecureLogout) {
+            await SecureLogout.logout();
+          } else {
+            // Fallback
+            logout();
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html> 

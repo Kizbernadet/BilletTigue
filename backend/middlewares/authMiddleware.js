@@ -51,9 +51,13 @@ const protect = async (req, res, next) => {
                 return res.status(401).json({ message: 'Token révoqué. Veuillez vous reconnecter.' });
             }
 
-            // Récupérer le compte et l'utilisateur en base
+            // Récupérer le compte avec le rôle et l'utilisateur en base
             const compte = await Compte.findByPk(decoded.id, {
-                include: [{ model: Utilisateur, as: 'utilisateur' }]
+                include: [
+                    { model: Utilisateur, as: 'utilisateur' },
+                    { model: require('../models/index').Transporteur, as: 'transporteur' },
+                    { model: require('../models/index').Role, as: 'role' }
+                ]
             });
 
             if (!compte) {
@@ -65,7 +69,9 @@ const protect = async (req, res, next) => {
                 id: compte.id,
                 email: compte.email,
                 status: compte.status,
-                utilisateur: compte.utilisateur
+                role: compte.role?.name || decoded.role, // Utiliser le rôle du token comme fallback
+                utilisateur: compte.utilisateur,
+                transporteur: compte.transporteur
             };
 
             next();
@@ -92,7 +98,7 @@ const protect = async (req, res, next) => {
 // - next (Function) : Fonction pour passer au middleware suivant
 // Retour : (void) Passe à la suite ou retourne une erreur
 const admin = (req, res, next) => {
-    if (req.user && req.user.status === 'admin') {
+    if (req.user && req.user.role === 'admin') {
         next();
     } else {
         return res.status(403).json({ message: 'Accès refusé. Droits administrateur requis.' });
@@ -121,9 +127,13 @@ const optionalAuth = async (req, res, next) => {
             // Vérifier si le token n'est pas révoqué
             const isRevoked = await RevokedToken.findOne({ where: { token } });
             if (!isRevoked) {
-                // Récupérer le compte et l'utilisateur en base
+                // Récupérer le compte avec le rôle et l'utilisateur en base
                 const compte = await Compte.findByPk(decoded.id, {
-                    include: [{ model: Utilisateur, as: 'utilisateur' }]
+                    include: [
+                        { model: Utilisateur, as: 'utilisateur' },
+                        { model: require('../models/index').Transporteur, as: 'transporteur' },
+                        { model: require('../models/index').Role, as: 'role' }
+                    ]
                 });
 
                 if (compte) {
@@ -132,7 +142,9 @@ const optionalAuth = async (req, res, next) => {
                         id: compte.id,
                         email: compte.email,
                         status: compte.status,
-                        utilisateur: compte.utilisateur
+                        role: compte.role?.name || decoded.role,
+                        utilisateur: compte.utilisateur,
+                        transporteur: compte.transporteur
                     };
                 }
             }

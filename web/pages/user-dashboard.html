@@ -205,6 +205,7 @@
                     <div class="profile-dropdown-wrapper">
                         <button id="profileBtn">
                             <i class="fa-solid fa-circle-user"></i>
+                            <span>Utilisateur</span>
                             <i class="fa-solid fa-caret-down"></i>
                         </button>
                         <ul id="profileDropdown" class="profile-dropdown-menu">
@@ -274,6 +275,14 @@
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
     <script type="module" src="../src/js/dashboard.js"></script>
+    <!-- Déconnexion sécurisée -->
+    <script src="../src/js/secure-logout.js"></script>
     <script src="../src/js/profile-dropdown.js"></script>
+    <!-- Affichage personnalisé du profil -->
+    <script src="../src/js/profile-display.js"></script>
+    <script>
+        // Initialiser l'affichage personnalisé du profil
+        ProfileDisplay.init();
+    </script>
 </body>
 </html> 

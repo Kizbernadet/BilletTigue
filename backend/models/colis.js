@@ -15,22 +15,28 @@ const Colis = sequelize.define('Colis', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    poids: {
+    weight: {
         type: DataTypes.DECIMAL(8, 2),
-        allowNull: false
+        allowNull: false,
+        validate: {
+            min: 0
+        }
     },
     dimensions: {
         type: DataTypes.STRING,
         allowNull: true
     },
-    valeur: {
+    shipping_cost: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: true
+        allowNull: false,
+        validate: {
+            min: 0
+        }
     },
-    statut: {
+    status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'en_attente'
+        defaultValue: 'pending'
     },
     envoi_id: {
         type: DataTypes.INTEGER,

@@ -3,32 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BilletTigue - Votre plateforme de billetterie</title>
-    <link rel="icon" type="image/png" href="./public/images/logo/logo.png">
-    <link href="./public/assets/css/style.css" rel="stylesheet">
+    <title>BilletTigue - Recherche de trajets</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
+    
+    <!-- CSS Framework -->
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/search-trajets.css" rel="stylesheet">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="min-h-screen bg-custom">
+
+<body class="search-trajets-body min-h-screen overflow-x-hidden">
+    <!-- Header -->
     <header>
-        <!-- Container pour centrer la topbar -->
         <div class="w-full flex justify-center p-4">
-            <!-- Topbar avec 95% de largeur -->
             <div class="topbar-container">
+                <!-- Logo -->
                 <div class="logo-container w-3/12 h-full">
-                    <img src="./public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
                     <span class="logo-text">BilletTigue</span>
                 </div>
+                
+                <!-- Navigation -->
                 <nav class="nav-container w-5/12 h-full">
                     <ul class="nav-list">
-                        <li><a href="#" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
                         <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
                         <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
                         <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
                     </ul>
                 </nav>
+                
+                <!-- Action Container -->
                 <div class="action-container-wrapper">
-                    <!-- Language Button -->
+                    <!-- Language Dropdown -->
                     <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
                             <span id="current-lang-text" class="lang-text">Français</span>
@@ -41,7 +51,7 @@
                         </ul>
                     </div>
 
-                    <!-- Login Dropdown (visible si non connecté) -->
+                    <!-- Login Menu -->
                     <div id="login-menu" class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
                             <span class="login-text">Se connecter</span>
@@ -49,19 +59,19 @@
                             <i class="fa-solid fa-user login-icon" style="display:none;"></i>
                         </label>
                         <ul tabindex="0" class="lang-options-list">
-                            <li><a href="./pages/login.html?role=user" class="lang-option text-sm">Utilisateur</a></li>
-                            <li><a href="./pages/login.html?role=transporter" class="lang-option text-sm">Transporteur</a></li>
+                            <li><a href="./login.html?role=user" class="lang-option text-sm">Utilisateur</a></li>
+                            <li><a href="./login.html?role=transporter" class="lang-option text-sm">Transporteur</a></li>
                         </ul>
                     </div>
 
-                    <!-- Hamburger Button (mobile only) -->
+                    <!-- Mobile Hamburger -->
                     <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
                         <span class="hamburger-bar"></span>
                         <span class="hamburger-bar"></span>
                         <span class="hamburger-bar"></span>
                     </button>
 
-                    <!-- Menu utilisateur (visible si connecté) -->
+                    <!-- User Menu (hidden by default) -->
                     <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
                         <label tabindex="0" class="btn-user">
                             <i class="fas fa-user-circle text-xl"></i>
@@ -69,7 +79,7 @@
                             <i class="fas fa-chevron-down text-xs"></i>
                         </label>
                         <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./pages/profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
                             <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
                         </ul>
                     </div>
@@ -78,35 +88,33 @@
         </div>
     </header>
 
-    <main>
-        <div class="hero-container">
-            <h1 class="hero-title">Voyagez en toute sérénité à travers le Mali<br>grâce à notre plateforme de réservation</h1>
-        </div>
-
+    <!-- Main Content -->
+    <main class="search-main">
+        <!-- Search Section -->
         <section class="booking-section">
             <div class="booking-form-container">
                 <form class="booking-form">
                     <div class="form-group">
-                        <label for="departure">Départ</label>
-                        <input type="text" id="departure" placeholder="Départ de..." required>
+                        <label for="departure" class="form-label">Départ</label>
+                        <input type="text" id="departure" class="form-input" placeholder="Départ de..." required>
                     </div>
                     <div class="form-group">
-                        <label for="arrival">Arrivée</label>
-                        <input type="text" id="arrival" placeholder="Destination..." required>
+                        <label for="arrival" class="form-label">Arrivée</label>
+                        <input type="text" id="arrival" class="form-input" placeholder="Destination..." required>
                     </div>
                     <div class="form-group">
-                        <label for="date">Date</label>
-                        <input type="date" id="date" required>
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" id="date" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label for="return-date">Date de retour</label>
-                        <input type="date" id="return-date" required>
+                        <label for="return-date" class="form-label">Date de retour</label>
+                        <input type="date" id="return-date" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label for="passengers">Passagers</label>
+                        <label for="passengers" class="form-label">Passagers</label>
                         <div class="number-input-container">
                             <button type="button" class="control-btn" id="decrement-btn" aria-label="Diminuer le nombre de passagers">-</button>
-                            <input type="number" id="passengers" value="1" min="1" required>
+                            <input type="number" id="passengers" class="form-input text-center" value="1" min="1" required>
                             <button type="button" class="control-btn" id="increment-btn" aria-label="Augmenter le nombre de passagers">+</button>
                         </div>
                     </div>
@@ -116,82 +124,61 @@
                     </button>
                 </form>
             </div>
+        </section>
 
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon-bg">
-                        <i class="fas fa-users feature-icon"></i>
+        <!-- Offers Section -->
+        <section class="offers-container">
+            <h1 class="offers-title">Offres de trajets disponibles</h1>
+            
+            <!-- Price Filter -->
+            <div class="filters-section">
+                <div class="filters-container">
+                    <div class="price-filter">
+                        <div class="price-range-container">
+                            <span class="filter-label">Prix max : <span id="price-value">6000</span> FCFA</span>
+                            <input type="range" id="price-range" min="1500" max="6000" value="6000" step="500" class="price-slider">
+                        </div>
+                        <div class="filter-actions">
+                            <button class="filter-btn apply-filter" id="apply-filter">Appliquer</button>
+                            <button class="filter-btn reset-filter" id="reset-filter">Reset</button>
+                        </div>
                     </div>
-                    <p class="feature-text">
-                        <strong>Rejoignez plus de 75 millions</strong> de voyageurs réservant plus de 2 millions de trajets dans plus de 85 pays.
-                    </p>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon-bg">
-                        <i class="fas fa-headset feature-icon"></i>
-                    </div>
-                    <p class="feature-text">
-                        <strong>Profitez de notre service client</strong> disponible 24h/24 et 7j/7 pour vous aider à chaque étape.
-                    </p>
+            </div>
+
+            <!-- Trajets will be dynamically inserted here -->
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <button class="pagination-button disabled" id="prev-page">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Précédent</span>
+                </button>
+                
+                <div class="pagination-info">
+                    <span id="pagination-text">Page 1</span>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon-bg">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                    </div>
-                    <p class="feature-text">
-                        <strong>Annulez à tout moment</strong> et recevez un remboursement intégral, sans avoir à fournir de raison.
-                    </p>
-                </div>
+                
+                <button class="pagination-button" id="next-page">
+                    <span>Suivant</span>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </section>
     </main>
 
-    <footer>
-        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
-    </footer>
-
-    <!-- JavaScript -->
-    <script src="./src/js/main.js"></script>
-
-    <!-- Menu mobile (slide) -->
+    <!-- Mobile Menu -->
     <nav id="mobile-menu" class="mobile-menu" style="display:none;">
         <ul class="nav-list">
-            <li><a href="#" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+            <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
             <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
             <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
             <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
         </ul>
     </nav>
 
-    <script>
-    // Menu mobile hamburger
-    const hamburger = document.getElementById('mobile-hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    function toggleMobileMenu() {
-        hamburger.classList.toggle('is-active');
-        if (hamburger.classList.contains('is-active')) {
-            mobileMenu.style.display = 'block';
-            setTimeout(() => mobileMenu.classList.add('mobile-menu--open'), 10);
-            document.body.style.overflow = 'hidden';
-        } else {
-            mobileMenu.classList.remove('mobile-menu--open');
-            setTimeout(() => { mobileMenu.style.display = 'none'; }, 350);
-            document.body.style.overflow = '';
-        }
-    }
-    hamburger.addEventListener('click', toggleMobileMenu);
-    // Fermer le menu si on clique en dehors
-    mobileMenu.addEventListener('click', function(e) {
-        if (e.target === mobileMenu) toggleMobileMenu();
-    });
-
-    function toggleProfileMenu() {
-        const dropdown = document.getElementById('profileDropdown');
-        if (dropdown) {
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-    }
-    </script>
+    <!-- Scripts -->
+    <script src="../src/js/main.js"></script>
+    <script src="../src/js/search-trajets.js"></script>
 </body>
 </html> 

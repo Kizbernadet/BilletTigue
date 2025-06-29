@@ -144,6 +144,13 @@ class AuthManager {
             return;
         }
 
+        // Déterminer le type d'utilisateur selon le contexte
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        const userType = roleParam || 'user'; // Par défaut utilisateur
+
+        console.log(`🔑 Tentative de connexion ${userType === 'transporter' ? 'transporteur' : 'utilisateur'}:`, email);
+
         // Afficher un indicateur de chargement amélioré
         const submitButton = form.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
@@ -160,24 +167,23 @@ class AuthManager {
         submitButton.classList.add('loading');
 
         try {
-            const result = await AuthAPI.login({ email, password, rememberMe });
+            // Utiliser l'API avec détection automatique du type d'utilisateur
+            const result = await AuthAPI.login({ 
+                email, 
+                password, 
+                rememberMe,
+                userType // Passer le type explicitement
+            });
             
             if (result.success) {
                 this.showMessage(result.message, 'success');
                 
-                // Rediriger selon le rôle de l'utilisateur
+                // Rediriger selon le rôle de l'utilisateur retourné par l'API
                 setTimeout(() => {
                     const user = AuthAPI.getCurrentUser();
-                    if (user && user.role === 'admin') {
-                        // Rediriger l'admin vers son tableau de bord
-                        window.location.href = './admin-dashboard.html';
-                    } else if (user && user.role === 'transporter') {
-                        // Rediriger les transporteurs vers leur dashboard personnalisé
-                        window.location.href = './transporter-dashboard-custom.html';
-                    } else {
-                        // Rediriger les autres utilisateurs vers le tableau de bord utilisateur
-                        window.location.href = './user-dashboard.html';
-                    }
+                    console.log('🔄 Redirection après connexion pour:', user);
+                    
+                    this.redirectUserToDashboard(user);
                 }, 1500);
             } else {
                 this.showMessage(result.message, 'error');
@@ -197,6 +203,38 @@ class AuthManager {
             submitButton.disabled = false;
             submitButton.innerHTML = originalHTML;
             submitButton.classList.remove('loading');
+        }
+    }
+
+    /**
+     * Redirige l'utilisateur vers le bon dashboard selon son rôle
+     */
+    redirectUserToDashboard(user) {
+        if (!user) {
+            console.error('❌ Aucun utilisateur trouvé pour la redirection');
+            window.location.href = './login.html';
+            return;
+        }
+
+        console.log(`🎯 Redirection basée sur le rôle: ${user.role}`);
+
+        switch (user.role) {
+            case 'admin':
+                console.log('🔐 Redirection admin vers admin-dashboard.html');
+                window.location.href = './admin-dashboard.html';
+                break;
+                
+            case 'transporteur':
+            case 'transporter': // Support pour les deux formats
+                console.log('🚛 Redirection transporteur vers transporter-dashboard.html');
+                window.location.href = './transporter-dashboard.html';
+                break;
+                
+            case 'user':
+            default:
+                console.log('👤 Redirection utilisateur vers user-dashboard.html');
+                window.location.href = './user-dashboard.html';
+                break;
         }
     }
 
@@ -324,9 +362,9 @@ class AuthManager {
     }
 
     /**
-     * Vérifie le statut d'authentification
+     * Vérifie le statut d'authentification de manière sécurisée
      */
-    checkAuthenticationStatus() {
+    async checkAuthenticationStatus() {
         // Ne vérifier l'authentification que sur les pages de login et register
         const isOnAuthPage = window.location.pathname.includes('login.html') || 
                             window.location.pathname.includes('register.html');
@@ -335,18 +373,78 @@ class AuthManager {
             return; // Ne rien faire si on n'est pas sur une page d'auth
         }
 
+        // Vérifier si on vient d'une déconnexion
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('logout') || urlParams.get('emergency') || urlParams.get('fallback')) {
+            console.log('🔓 Arrivée après déconnexion, nettoyage préventif');
+            this.preventiveCleanup();
+            return;
+        }
+
         if (AuthAPI.isAuthenticated()) {
-            const user = AuthAPI.getCurrentUser();
-            console.log('Utilisateur connecté:', user);
+            console.log('🔍 Token trouvé, vérification de validité...');
             
-            // Rediriger selon le rôle de l'utilisateur
-            if (user && user.role === 'admin') {
-                window.location.href = './admin-dashboard.html';
-            } else if (user && user.role === 'transporter') {
-                window.location.href = './transporter-dashboard-custom.html';
+            // Vérifier la validité du token côté serveur
+            const isValidToken = await this.verifyTokenValidity();
+            
+            if (isValidToken) {
+                const user = AuthAPI.getCurrentUser();
+                console.log('✅ Token valide, utilisateur connecté:', user);
+                
+                // Rediriger selon le rôle de l'utilisateur
+                console.log('🔄 Redirection automatique pour utilisateur déjà connecté:', user);
+                this.redirectUserToDashboard(user);
             } else {
-                window.location.href = './user-dashboard.html';
+                console.log('❌ Token invalide, nettoyage et maintien sur page de connexion');
+                this.preventiveCleanup();
             }
+        }
+    }
+
+    /**
+     * Vérifie la validité du token côté serveur
+     */
+    async verifyTokenValidity() {
+        try {
+            const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+            
+            if (!token) {
+                return false;
+            }
+
+            // Faire une requête simple pour vérifier le token
+            const response = await fetch('/api/auth/verify-token', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            return response.ok;
+        } catch (error) {
+            console.warn('⚠️ Impossible de vérifier le token:', error.message);
+            return false; // En cas d'erreur, considérer le token comme invalide
+        }
+    }
+
+    /**
+     * Nettoyage préventif des données d'authentification
+     */
+    preventiveCleanup() {
+        console.log('🧹 Nettoyage préventif des données d\'authentification');
+        
+        // Nettoyer les données principales
+        const authKeys = ['authToken', 'userData', 'user', 'token'];
+        authKeys.forEach(key => {
+            sessionStorage.removeItem(key);
+            localStorage.removeItem(key);
+        });
+        
+        // Nettoyer l'URL
+        if (window.history && window.history.replaceState) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
         }
     }
 

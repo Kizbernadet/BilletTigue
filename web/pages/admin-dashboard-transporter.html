@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Transporteurs - BilletTigue</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <div class="transporter-dashboard-container">
+    <div class="transporter-dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="transporter-sidebar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" style="height:48px; width:auto;">
+        <span>BilletTiguè</span>
+      </div>
+      <!-- Menu -->
+      <nav class="menu">
+        <ul>
+          <li><a href="admin-dashboard.html"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Utilisateurs</span></a></li>
+          <li><a href="#" class="active"><i class="fa-solid fa-truck"></i> <span class="menu-label">Transporteurs</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Paiements</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
+          <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- Contenu principal -->
+    <main class="transporter-dashboard-main">
+      <div class="transporter-main-wrapper">
+        <div class="transporter-title-bar">
+          <h1>Gestion des transporteurs</h1>
+          <!-- Section profil -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profileBtn" onclick="toggleProfileMenu()">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Administrateur</span>
+            </button>
+            <ul class="profile-dropdown-menu" id="profileDropdown">
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-user"></i>
+                  Mon Profil
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-cog"></i>
+                  Paramètres
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="fa-solid fa-bell"></i>
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="../index.html" class="profile-dropdown-link logout-link">
+                  <i class="fa-solid fa-sign-out-alt"></i>
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="transporter-main-content flex flex-col gap-4">
+          <!-- Section des statistiques transporteurs -->
+          <section class="transporters-stats-section">
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-truck"></i> Total</h3>
+              <div class="card-stats">
+                <span class="stat-number">47</span>
+                <span class="stat-label">Transporteurs</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-check-circle"></i> Actifs</h3>
+              <div class="card-stats">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Validés</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-clock"></i> En attente</h3>
+              <div class="card-stats">
+                <span class="stat-number">18</span>
+                <span class="stat-label">À valider</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-ban"></i> Suspendus</h3>
+              <div class="card-stats">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Comptes</span>
+              </div>
+            </div>
+
+          </section>
+          
+          <!-- Section des actions CRUD -->
+          <section class="transporters-actions-section">
+            
+            <div class="dashboard-card action-card create" onclick="createTransporter()">
+              <h3><i class="fa-solid fa-plus"></i> Créer</h3>
+              <div class="action-description">
+                <span>Nouveau compte transporteur</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card action-card read" onclick="readTransporters()">
+              <h3><i class="fa-solid fa-eye"></i> Consulter</h3>
+              <div class="action-description">
+                <span>Voir détails & liste</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card action-card update" onclick="updateTransporter()">
+              <h3><i class="fa-solid fa-edit"></i> Modifier</h3>
+              <div class="action-description">
+                <span>Éditer profils & infos</span>
+              </div>
+            </div>
+            
+            <div class="dashboard-card action-card delete" onclick="deleteTransporter()">
+              <h3><i class="fa-solid fa-trash"></i> Supprimer</h3>
+              <div class="action-description">
+                <span>Désactiver comptes</span>
+              </div>
+            </div>
+
+          </section>
+          
+        </div>
+      </div>
+    </main>
+    </div>
+  </div>
+
+      <!-- Protection d'authentification -->
+    <script src="../src/js/auth-protection.js"></script>
+    <!-- Déconnexion sécurisée -->
+    <script src="../src/js/secure-logout.js"></script>
+    <!-- Affichage personnalisé du profil -->
+    <script src="../src/js/profile-display.js"></script>
+    <!-- Gestionnaire de statistiques dynamiques -->
+    <script src="../src/js/admin-stats-manager.js"></script>
+  
+  <!-- Scripts JavaScript -->
+      <script>
+        // Activer la protection d'authentification
+        AuthProtection.protect();
+        
+        // Initialiser l'affichage personnalisé du profil
+        ProfileDisplay.init();
+        
+        // Initialiser les statistiques dynamiques
+        (async function() {
+          if (window.AdminStatsManager) {
+            console.log('📊 Initialisation des statistiques transporteurs dynamiques...');
+            window.adminStatsManager = new AdminStatsManager();
+            await window.adminStatsManager.init();
+          } else {
+            console.warn('⚠️ Gestionnaire de statistiques non disponible, valeurs statiques conservées');
+          }
+        })();
+  </script>
+  <script src="../src/js/admin-dashboard-transporter.js"></script>
+</body>
+</html> 

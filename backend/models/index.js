@@ -7,12 +7,12 @@
  * Associations principales :
  * - Role 1,N Compte
  * - Compte 1,1 Utilisateur/Transporteur/Administrateur
- * - Transporteur 1,N PointDepot
+ * - Transporteur 1,N ZonesDesservies
  * - Transporteur 1,N Trajet
  * - Utilisateur 1,N Envoi
  * - Transporteur 1,N Envoi
  * - Compte 1,N Envoi
- * - Envoi 1,1 Paiement
+ * - Reservation 1,1 Paiement
  * - Compte 1,N Reservation
  * - Compte 1,N RevokedToken (pour la déconnexion)
  *
@@ -24,7 +24,7 @@ const Compte = require('./compte');
 const Administrateur = require('./administrateur');
 const Transporteur = require('./transporteur');
 const Utilisateur = require('./utilisateur');
-const PointDepot = require('./PointDepot');
+const ZonesDesservies = require('./zones_desservies');
 const Trajet = require('./trajet');
 const Envoi = require('./envoi');
 const Paiement = require('./paiement');
@@ -48,13 +48,13 @@ Administrateur.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
 Compte.hasMany(RevokedToken, { foreignKey: 'user_id', as: 'revokedTokens' });
 RevokedToken.belongsTo(Compte, { foreignKey: 'user_id', as: 'compte' });
 
-// Transporteur 1,N PointDepot
-Transporteur.hasMany(PointDepot, { foreignKey: 'transporteur_id', as: 'pointsDepot' });
-PointDepot.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
+// Transporteur 1,N ZonesDesservies
+Transporteur.hasMany(ZonesDesservies, { foreignKey: 'transporteur_id', as: 'zonesDesservies' });
+ZonesDesservies.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
-// Compte 1,N Trajet (un compte peut créer plusieurs trajets)
-Compte.hasMany(Trajet, { foreignKey: 'idCompte', as: 'trajets' });
-Trajet.belongsTo(Compte, { foreignKey: 'idCompte', as: 'compte' });
+// Transporteur 1,N Trajet
+Transporteur.hasMany(Trajet, { foreignKey: 'transporteur_id', as: 'trajets' });
+Trajet.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur' });
 
 // Utilisateur 1,N Envoi
 Utilisateur.hasMany(Envoi, { foreignKey: 'expediteur_id', as: 'envois' });
@@ -68,9 +68,9 @@ Envoi.belongsTo(Transporteur, { foreignKey: 'transporteur_id', as: 'transporteur
 Compte.hasMany(Envoi, { foreignKey: 'compte_id', as: 'envoisCompte' });
 Envoi.belongsTo(Compte, { foreignKey: 'compte_id', as: 'compte' });
 
-// Envoi 1,1 Paiement
-Envoi.hasOne(Paiement, { foreignKey: 'envoi_id', as: 'paiement' });
-Paiement.belongsTo(Envoi, { foreignKey: 'envoi_id', as: 'envoi' });
+// Reservation 1,1 Paiement (mise à jour selon la structure validée)
+Reservation.hasOne(Paiement, { foreignKey: 'reservation_id', as: 'paiement' });
+Paiement.belongsTo(Reservation, { foreignKey: 'reservation_id', as: 'reservation' });
 
 // Compte 1,N Reservation
 Compte.hasMany(Reservation, { foreignKey: 'compte_id', as: 'reservations' });
@@ -90,7 +90,7 @@ module.exports = {
   Administrateur,
   Transporteur,
   Utilisateur,
-  PointDepot,
+  ZonesDesservies,
   Trajet,
   Envoi,
   Paiement,

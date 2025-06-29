@@ -134,7 +134,7 @@
                 <button type="submit" class="auth-button">S'inscrire</button>
             </form>
             <p class="auth-footer-link">
-                Vous avez déjà un compte ? <a href="./login.html">Connectez-vous</a>
+                Vous avez déjà un compte ? <a href="#" id="login-link">Connectez-vous</a>
             </p>
         </div>
     </main>
@@ -146,5 +146,30 @@
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
     <script type="module" src="../src/js/auth.js"></script>
+    
+    <script>
+    // Logique pour le lien de connexion selon le rôle sélectionné
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginLink = document.getElementById('login-link');
+        const roleUserRadio = document.getElementById('role-user');
+        const roleTransporterRadio = document.getElementById('role-transporter');
+        
+        function updateLoginLink() {
+            const selectedRole = roleTransporterRadio && roleTransporterRadio.checked ? 'transporter' : 'user';
+            if (loginLink) {
+                loginLink.href = `./login.html?role=${selectedRole}`;
+            }
+        }
+        
+        // Mettre à jour le lien quand le rôle change
+        if (roleUserRadio && roleTransporterRadio) {
+            roleUserRadio.addEventListener('change', updateLoginLink);
+            roleTransporterRadio.addEventListener('change', updateLoginLink);
+        }
+        
+        // Initialiser avec le rôle par défaut
+        updateLoginLink();
+    });
+    </script>
 </body>
 </html> 

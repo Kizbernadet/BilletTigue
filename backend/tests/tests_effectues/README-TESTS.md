@@ -111,23 +111,65 @@ Ce dossier contient tous les tests pertinents pour le projet Billettigue, organi
 - Outils de test installés (Postman, navigateur, etc.)
 
 ### **Comptes de test requis**
+
 ```
-Admin :
-- Email: admin@billettigue.com
-- Mot de passe: admin123
 
-Utilisateur :
-- Email: user@test.com
-- Mot de passe: user123
+#### **📝 Historique des comptes créés**
+*Cette section sera mise à jour automatiquement à chaque création de compte*
 
-Transporteur :
-- Email: transporter@test.com
-- Mot de passe: transporter123
+**🔐 Administrateurs créés :**
+- **admin@billettigue.com** - b kizz (ID: 1) - Créé le 21/06/2025 via script create-admin.js - Statut: active
 
-Transporteur : 
-- konoha@exemple.com
-- Mot de passe : konoha@123
-```
+Informations du compte : 
+Email : admin@billettigue.com
+Mot de passe : Admin123!
+Nom : b kizz
+Rôle : admin
+Statut : active
+
+**👤 Utilisateurs créés :**
+- **john.doe@test.com** - John Doe (ID: à déterminer) - Créé le 27/06/2025 - Type: utilisateur standard - Statut: active
+
+Informations du compte :
+Email : john.doe@test.com
+Mot de passe : user@123
+Nom : John Doe
+Téléphone : +221701234567
+Rôle : user
+Statut : active
+
+**🚛 Transporteurs créés :**
+- **expresstransport@test.com** - Transport Express (ID: à déterminer) - Créé le 23/12/2024 - Type: mixte - Statut: active
+
+Informations du compte :
+Email : transporter_fret@test.com
+Mot de passe : test@123
+Téléphone : 1234567890
+Nom de l'entreprise : Fret Express
+Type d'entreprise : freight-carrier
+Rôle : transporter
+Statut : active
+
+Informations du compte :
+Email : passengers_transporter@test.com
+Mot de passe : test@123
+Téléphone : +223 11 22 33 44
+Nom de l'entreprise : Passengers Transport
+Type d'entreprise : passengers-carrier
+Rôle : transporter
+Statut : active
+
+Informations du compte :
+Email : kbvoyages@test.com
+Mot de passe : test@123
+
+---
+**📊 Statistiques :**
+- Total des comptes créés : 3
+- Administrateurs actifs : 1
+- Utilisateurs actifs : 1
+- Transporteurs actifs : 1
+- Dernière mise à jour : 27/06/2025 - Ajout compte utilisateur "John Doe" pour tests d'inscription et connexion
 
 ### **Outils nécessaires**
 - **Postman** : Tests d'API

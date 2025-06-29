@@ -1,6 +1,18 @@
 // ===== GESTION DES TRAJETS - BilletTigue =====
 
-// Données des trajets (simulation d'une base de données)
+// Import de l'API trajets
+import { 
+    createTrajet, 
+    getTrajetsByTransporteur, 
+    getTrajetById, 
+    updateTrajet, 
+    deleteTrajet, 
+    changeStatutTrajet,
+    formaterTrajetPourAffichage,
+    isUserLoggedIn 
+} from './api/trajetApi.js';
+
+// Données des trajets (simulation d'une base de données) - À supprimer quand l'API sera connectée
 const trajetsData = {
   1: {
     id: 1,
@@ -101,7 +113,9 @@ let trajetActuel = null;
 
 function toggleProfileMenu() {
   const dropdown = document.getElementById('profileDropdown');
+  if (dropdown) {
   dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  }
 }
 
 // ===== FONCTIONS DE GESTION DES TRAJETS =====
@@ -208,18 +222,25 @@ function demarrerTrajetModal() {
 }
 
 // Fonction pour terminer un trajet
+function terminerTrajet(trajetId) {
+  if (confirm('Êtes-vous sûr de vouloir terminer ce trajet ?')) {
+    // Ici on pourrait faire un appel API pour changer le statut
+    alert(`Trajet ${trajetId} terminé avec succès`);
+    // Recharger la liste ou mettre à jour l'élément du DOM
+  }
+}
+
 function terminerTrajetModal() {
   if (trajetActuel) {
-    // Ici on pourrait faire un appel API pour changer le statut
-    alert(`Trajet ${trajetActuel.id} terminé avec succès`);
+    terminerTrajet(trajetActuel.id);
     fermerModal();
   }
 }
 
 // Fonction pour générer un rapport
 function genererRapport(trajetId) {
-  // Ici on pourrait générer et télécharger un rapport
-  alert(`Rapport généré pour le trajet ${trajetId}`);
+  // Ici on pourrait ouvrir une page de rapport ou télécharger un PDF
+  alert(`Génération du rapport pour le trajet ${trajetId} - Fonctionnalité à implémenter`);
 }
 
 function genererRapportModal() {
@@ -231,25 +252,35 @@ function genererRapportModal() {
 
 // ===== FONCTIONS POUR LE FORMULAIRE D'AJOUT DE TRAJET =====
 
-// Ouvrir le formulaire d'ajout de trajet
+// Fonction pour ouvrir le formulaire d'ajout de trajet
 function ouvrirFormulaireTrajet() {
+  // Réinitialiser le formulaire
+  document.getElementById('formNouveauTrajet').reset();
+  
+  // Effacer les messages précédents
+  const messagesContainer = document.getElementById('formMessages');
+  if (messagesContainer) {
+    messagesContainer.innerHTML = '';
+  }
+  
+  // Afficher la modal
   document.getElementById('formulaireTrajetModal').style.display = 'flex';
-  // Définir la date minimale à aujourd'hui
-  const dateCourante = new Date().toISOString().split('T')[0];
-  document.getElementById('dateDepart').min = dateCourante;
-  document.getElementById('dateValidite').min = dateCourante;
 }
 
-// Fermer le formulaire d'ajout de trajet
+// Fonction pour fermer le formulaire d'ajout de trajet
 function fermerFormulaireTrajet() {
   document.getElementById('formulaireTrajetModal').style.display = 'none';
-  reinitialiserFormulaire();
 }
 
-// Réinitialiser le formulaire
+// Fonction pour réinitialiser le formulaire
 function reinitialiserFormulaire() {
   document.getElementById('formNouveauTrajet').reset();
-  document.getElementById('formMessages').innerHTML = '';
+  
+  // Effacer les messages
+  const messagesContainer = document.getElementById('formMessages');
+  if (messagesContainer) {
+    messagesContainer.innerHTML = '';
+  }
 }
 
 // Valider le formulaire
@@ -319,7 +350,7 @@ function soumettreFormulaireTrajet(event) {
     }
 
     // Simuler l'envoi au serveur
-    simulerCreationTrajet(data);
+    creerTrajetViaAPI(data);
   } catch (error) {
     afficherMessages(['Une erreur est survenue lors de la soumission du formulaire'], 'error');
   }
@@ -341,72 +372,93 @@ function afficherMessages(messages, type) {
   }
 }
 
-// Simuler la création d'un trajet
-function simulerCreationTrajet(data) {
+// Créer un nouveau trajet via l'API
+async function creerTrajetViaAPI(data) {
   try {
+    // Vérifier si l'utilisateur est connecté
+    if (!isUserLoggedIn()) {
+      afficherMessages(['Vous devez être connecté pour créer un trajet'], 'error');
+      return;
+    }
+
     // Afficher un message de chargement
     afficherMessages(['Création du trajet en cours...'], 'success');
     
-    // Simuler un délai de traitement
-    setTimeout(() => {
-      try {
-        // Générer un nouvel ID
-        const ids = Object.keys(trajetsData).map(Number);
-        const nouvelId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
-        
-        // Créer l'objet trajet
-        const nouveauTrajet = {
-          id: nouvelId,
-          statut: data.statutInitial || 'En attente',
-          itineraire: `${data.lieuDepart} → ${data.lieuArrivee}`,
-          date: formaterDate(data.dateDepart),
-          heure: data.heureDepart,
-          validite: formaterDate(data.dateValidite),
-          vehicule: data.vehicule,
-          chauffeur: data.chauffeur,
-          places: `0/${data.nombrePlaces}`,
-          prix: `${data.prixPlace} FCFA`,
-          distance: data.distance ? `${data.distance} km` : 'Non spécifiée'
-        };
-
-        // Ajouter à la base de données simulée
-        trajetsData[nouvelId] = nouveauTrajet;
-
+    // Appeler l'API pour créer le trajet
+    const result = await createTrajet(data);
+    
+    if (result.success) {
         // Afficher le message de succès
         afficherMessages(['Trajet créé avec succès !'], 'success');
 
         // Fermer le formulaire après 2 secondes
         setTimeout(() => {
           fermerFormulaireTrajet();
+        // Recharger la liste des trajets
+        chargerTrajetsDepuisAPI();
         }, 2000);
+    } else {
+      // Afficher l'erreur
+      afficherMessages([result.message || 'Erreur lors de la création du trajet'], 'error');
+    }
 
-      } catch (error) {
-        afficherMessages(['Erreur lors de la création du trajet'], 'error');
-      }
-    }, 1500);
   } catch (error) {
+    console.error('Erreur lors de la création du trajet:', error);
     afficherMessages(['Erreur lors du traitement'], 'error');
   }
 }
 
-// Formater une date pour l'affichage
-function formaterDate(dateString) {
+// Charger les trajets depuis l'API
+async function chargerTrajetsDepuisAPI() {
   try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return 'Date invalide';
+    // Vérifier si l'utilisateur est connecté
+    if (!isUserLoggedIn()) {
+      console.log('Utilisateur non connecté, utilisation des données simulées');
+      return;
     }
-    return date.toLocaleDateString('fr-FR');
+
+    const result = await getTrajetsByTransporteur();
+    
+    if (result.success) {
+      // Formater et afficher les trajets
+      const trajetsFormates = result.data.map(trajet => formaterTrajetPourAffichage(trajet));
+      afficherTrajetsDansListe(trajetsFormates);
+    } else {
+      console.error('Erreur lors du chargement des trajets:', result.message);
+    }
+    
   } catch (error) {
-    return 'Date invalide';
+    console.error('Erreur lors du chargement des trajets:', error);
   }
 }
 
-// Recharger la liste des trajets (fonction optionnelle pour l'avenir)
-function rechargerListeTrajets() {
-  // Cette fonction pourrait être utilisée pour recharger la liste depuis le serveur
-  // Pour l'instant, elle est commentée car nous utilisons des données simulées
-  console.log('Rechargement de la liste des trajets...');
+// Afficher les trajets dans la liste
+function afficherTrajetsDansListe(trajets) {
+  const trajetsList = document.querySelector('.trajets-list');
+  if (!trajetsList) return;
+
+  if (trajets.length === 0) {
+    trajetsList.innerHTML = `
+      <div class="trajet-item-mini trajet-message-empty">
+        <p class="size-10 capitalize border-black">Aucun trajet disponible</p>
+      </div>
+    `;
+    return;
+  }
+
+  trajetsList.innerHTML = trajets.map(trajet => `
+    <div class="trajet-item-mini" data-trajet-id="${trajet.id}" onclick="afficherProfilTrajet(${trajet.id})">
+      <span class="status-badge ${trajet.statut.toLowerCase().replace(' ', '-')}">${trajet.statut}</span>
+      <span class="trajet-itineraire">${trajet.itineraire}</span>
+      <span class="trajet-date"><i class="fa-solid fa-calendar"></i> ${trajet.date}</span>
+      <span class="trajet-horaire"><i class="fa-solid fa-clock"></i> ${trajet.heure}</span>
+      <div class="trajet-actions">
+        <button class="btn-action" title="Voir" onclick="event.stopPropagation(); afficherProfilTrajet(${trajet.id})"><i class="fa-solid fa-eye"></i></button>
+        <button class="btn-action" title="Modifier" onclick="event.stopPropagation(); modifierTrajet(${trajet.id})"><i class="fa-solid fa-edit"></i></button>
+        <button class="btn-action" title="Supprimer" onclick="event.stopPropagation(); supprimerTrajet(${trajet.id})"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ===== ÉVÉNEMENTS ET INITIALISATION =====
@@ -450,4 +502,27 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-}); 
+
+  // Charger les trajets au démarrage
+  chargerTrajetsDepuisAPI();
+});
+
+// ===== FONCTIONS GLOBALES (accessibles depuis le HTML) =====
+
+// Rendre les fonctions globales pour qu'elles soient accessibles depuis le HTML
+window.ouvrirFormulaireTrajet = ouvrirFormulaireTrajet;
+window.fermerFormulaireTrajet = fermerFormulaireTrajet;
+window.reinitialiserFormulaire = reinitialiserFormulaire;
+window.soumettreFormulaireTrajet = soumettreFormulaireTrajet;
+window.afficherProfilTrajet = afficherProfilTrajet;
+window.fermerModal = fermerModal;
+window.modifierTrajet = modifierTrajet;
+window.modifierTrajetModal = modifierTrajetModal;
+window.supprimerTrajet = supprimerTrajet;
+window.supprimerTrajetModal = supprimerTrajetModal;
+window.demarrerTrajet = demarrerTrajet;
+window.demarrerTrajetModal = demarrerTrajetModal;
+window.terminerTrajetModal = terminerTrajetModal;
+window.genererRapport = genererRapport;
+window.genererRapportModal = genererRapportModal;
+window.toggleProfileMenu = toggleProfileMenu; 
