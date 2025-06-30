@@ -210,34 +210,70 @@
     color: #10b981;
 }
 
-.price-button {
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.route-actions {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    font-family: 'Comfortaa', cursive;
+    gap: 1rem;
 }
 
-.price-button:hover {
-    background: #1d4ed8;
-    transform: scale(1.05);
+.price-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .price {
     font-size: 1rem;
+    font-weight: 700;
+    color: #1f2937;
 }
 
 .currency {
     font-size: 0.9rem;
     opacity: 0.9;
+    color: #6b7280;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.details-btn, .book-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Comfortaa', cursive;
+    font-size: 0.875rem;
+}
+
+.details-btn {
+    background: #f8fafc;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.details-btn:hover {
+    background: #f1f5f9;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+}
+
+.book-btn {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+.book-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 /* Filtres */
@@ -398,6 +434,324 @@
     font-weight: 500;
 }
 
+/* Modale Détails Trajet */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden; /* Empêcher les scrollbars */
+    box-sizing: border-box;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 1rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    font-family: 'Comfortaa', cursive;
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.modal-loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+
+.modal-loading .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f4f6;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+.modal-error {
+    text-align: center;
+    padding: 2rem;
+    color: #ef4444;
+}
+
+.modal-error i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.retry-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.retry-btn:hover {
+    background: #dc2626;
+}
+
+.route-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.75rem;
+}
+
+.route-cities {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.departure-city, .arrival-city {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.route-arrow-icon {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+.route-datetime {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.modal-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.info-icon {
+    color: #3b82f6;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    width: 20px;
+    text-align: center;
+}
+
+.info-content {
+    flex: 1;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.transporteur-info {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.transporteur-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.transporteur-icon {
+    width: 40px;
+    height: 40px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.transporteur-details h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    color: #1f2937;
+}
+
+.transporteur-details p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.contact-info i {
+    color: #3b82f6;
+}
+
+.description-section {
+    background: #fefce8;
+    border: 1px solid #fde047;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.description-section h4 {
+    margin: 0 0 0.5rem 0;
+    color: #a16207;
+    font-size: 0.9rem;
+}
+
+.description-section p {
+    margin: 0;
+    color: #a16207;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    background: #f9fafb;
+}
+
+.btn-secondary-modal, .btn-primary-modal {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Comfortaa', cursive;
+    border: none;
+    font-size: 0.875rem;
+}
+
+.btn-secondary-modal {
+    background: #f8fafc;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary-modal:hover {
+    background: #f1f5f9;
+    border-color: #9ca3af;
+}
+
+.btn-primary-modal {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+.btn-primary-modal:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary-modal:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .offers-container {
@@ -420,9 +774,22 @@
         align-items: stretch;
     }
 
-    .price-button {
-        text-align: center;
+    .route-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .details-btn, .book-btn {
+        width: 100%;
         justify-content: center;
+        padding: 0.6rem 1rem;
     }
     
     .booking-section, .offers-container {
@@ -467,5 +834,64 @@
     .filter-btn {
         padding: 0.35rem 0.6rem;
         font-size: 0.75rem;
+    }
+
+    /* Modale responsive */
+    .modal-overlay {
+        padding: 0.5rem;
+    }
+
+    .modal-container {
+        max-height: 95vh;
+        border-radius: 0.75rem;
+    }
+
+    .modal-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+    }
+
+    .route-cities {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .departure-city, .arrival-city {
+        font-size: 1.1rem;
+    }
+
+    .modal-info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .info-card {
+        padding: 0.75rem;
+    }
+
+    .transporteur-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-secondary-modal, .btn-primary-modal {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem;
     }
 } 

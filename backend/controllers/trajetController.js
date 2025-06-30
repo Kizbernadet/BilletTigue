@@ -122,46 +122,53 @@ const createTrajet = async (req, res) => {
 const getAllTrajets = async (req, res) => {
     try {
         const {
-            villeDepart,
-            villeArrivee,
-            dateDepart,
-            statut,
-            typeVehicule,
-            accepteColis,
+            departure_city,
+            arrival_city, 
+            departure_date,
+            villeDepart,      // Support ancien format pour compatibilité
+            villeArrivee,     // Support ancien format pour compatibilité
+            dateDepart,       // Support ancien format pour compatibilité
+            status,
+            statut,           // Support ancien format pour compatibilité
+            accepts_packages,
+            accepteColis,     // Support ancien format pour compatibilité
             page = 1,
             limit = 10
         } = req.query;
 
-        // Construire les conditions de filtrage
+        // Construire les conditions de filtrage avec les vrais noms de champs
         const whereClause = {
-            statut: { [Op.ne]: 'annulé' } // Exclure les trajets annulés par défaut
+            status: { [Op.ne]: 'cancelled' } // Exclure les trajets annulés par défaut
         };
 
-        if (villeDepart) {
-            whereClause.villeDepart = { [Op.iLike]: `%${villeDepart}%` };
+        // Support des anciens et nouveaux noms de paramètres
+        const departureCity = departure_city || villeDepart;
+        const arrivalCity = arrival_city || villeArrivee;
+        const departureDate = departure_date || dateDepart;
+        const trajetStatus = status || statut;
+        const acceptsPackages = accepts_packages || accepteColis;
+
+        if (departureCity) {
+            whereClause.departure_city = { [Op.iLike]: `%${departureCity}%` };
         }
 
-        if (villeArrivee) {
-            whereClause.villeArrivee = { [Op.iLike]: `%${villeArrivee}%` };
+        if (arrivalCity) {
+            whereClause.arrival_city = { [Op.iLike]: `%${arrivalCity}%` };
         }
 
-        if (dateDepart) {
-            const dateDepartObj = new Date(dateDepart);
-            whereClause.dateDepart = {
+        if (departureDate) {
+            const dateDepartObj = new Date(departureDate);
+            whereClause.departure_time = {
                 [Op.gte]: dateDepartObj
             };
         }
 
-        if (statut) {
-            whereClause.statut = statut;
+        if (trajetStatus) {
+            whereClause.status = trajetStatus;
         }
 
-        if (typeVehicule) {
-            whereClause.typeVehicule = typeVehicule;
-        }
-
-        if (accepteColis !== undefined) {
-            whereClause.accepteColis = accepteColis === 'true';
+        if (acceptsPackages !== undefined) {
+            whereClause.accepts_packages = acceptsPackages === 'true';
         }
 
         // Pagination
@@ -169,7 +176,12 @@ const getAllTrajets = async (req, res) => {
 
         const trajets = await Trajet.findAndCountAll({
             where: whereClause,
-            order: [['dateDepart', 'ASC']],
+            include: [{
+                model: Transporteur,
+                as: 'transporteur',
+                attributes: ['id', 'company_name', 'company_type', 'phone_number']
+            }],
+            order: [['departure_time', 'ASC']],
             limit: parseInt(limit),
             offset: offset
         });

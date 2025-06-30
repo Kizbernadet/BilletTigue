@@ -188,12 +188,29 @@ class TrajetsApi {
         ? `${this.baseUrl}?${queryParams.toString()}`
         : this.baseUrl;
       
-      const response = await fetch(url, {
+      // Essayer d'abord sans authentification (recherche publique)
+      let response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       });
+
+      // Si 401, essayer avec authentification si disponible
+      if (response.status === 401) {
+        console.log('🔐 Tentative avec authentification...');
+        
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        if (token) {
+          response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+        }
+      }
 
       const result = await response.json();
 

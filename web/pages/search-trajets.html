@@ -177,8 +177,145 @@
         </ul>
     </nav>
 
+    <!-- Modale Détails Trajet -->
+    <div id="trajet-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Détails du trajet</h2>
+                <button class="modal-close" id="close-modal" aria-label="Fermer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-content">
+                <!-- Loading State -->
+                <div id="modal-loading" class="modal-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Chargement des détails...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="modal-error" class="modal-error" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p id="modal-error-message">Erreur lors du chargement</p>
+                    <button class="retry-btn" id="modal-retry">Réessayer</button>
+                </div>
+
+                <!-- Details Content -->
+                <div id="modal-details" class="modal-details" style="display: none;">
+                    <!-- Route Header -->
+                    <div class="route-header">
+                        <div class="route-cities">
+                            <span class="departure-city" id="modal-departure-city">Bamako</span>
+                            <i class="fas fa-arrow-right route-arrow-icon"></i>
+                            <span class="arrival-city" id="modal-arrival-city">Sikasso</span>
+                        </div>
+                        <div class="route-datetime" id="modal-datetime">Mercredi 15 janvier 2025 à 08:00</div>
+                    </div>
+
+                    <!-- Info Grid -->
+                    <div class="modal-info-grid">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Heure de départ</span>
+                                <span class="info-value" id="modal-time">08:00</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Prix par personne</span>
+                                <span class="info-value" id="modal-price">5000 FCFA</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Places disponibles</span>
+                                <span class="info-value" id="modal-seats">12 / 45</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Point de départ</span>
+                                <span class="info-value" id="modal-departure-point">Gare routière</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Point d'arrivée</span>
+                                <span class="info-value" id="modal-arrival-point">Gare routière</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Colis</span>
+                                <span class="info-value" id="modal-packages">Oui (max 25kg)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transporteur Info -->
+                    <div class="transporteur-info">
+                        <div class="transporteur-header">
+                            <div class="transporteur-icon">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <div class="transporteur-details">
+                                <h4 id="modal-company-name">Transport Sogoba</h4>
+                                <p id="modal-company-type">Société de transport</p>
+                            </div>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-phone"></i>
+                            <span id="modal-company-phone">+223 XX XX XX XX</span>
+                        </div>
+                    </div>
+
+                    <!-- Description (optionnelle) -->
+                    <div class="description-section" id="modal-description-section" style="display: none;">
+                        <h4>Description</h4>
+                        <p id="modal-description-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary-modal" id="modal-close-btn">
+                    <i class="fas fa-times"></i>
+                    Fermer
+                </button>
+                <button class="btn-primary-modal" id="modal-book-btn">
+                    <i class="fas fa-ticket-alt"></i>
+                    Réserver ce trajet
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="../src/js/main.js"></script>
-    <script src="../src/js/search-trajets.js"></script>
+    <script type="module" src="../src/js/search-trajets.js"></script>
 </body>
 </html> 
