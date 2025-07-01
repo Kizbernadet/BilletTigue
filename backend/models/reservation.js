@@ -41,6 +41,23 @@ const Reservation = sequelize.define('Reservation', {
             min: 1
         }
     },
+    refundable_option: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        comment: 'Indique si la réservation a l\'option remboursable activée'
+    },
+    refund_supplement_amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00,
+        comment: 'Montant du supplément pour l\'option remboursable'
+    },
+    total_amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        comment: 'Montant total de la réservation (base + supplément remboursable)'
+    },
     trajet_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -51,7 +68,7 @@ const Reservation = sequelize.define('Reservation', {
     },
     compte_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: 'comptes',
             key: 'id'

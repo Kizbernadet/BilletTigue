@@ -23,7 +23,10 @@ function validateReservationData(data) {
         seats_reserved = 1,
         passenger_first_name,
         passenger_last_name,
-        phone_number
+        phone_number,
+        refundable_option = false,
+        refund_supplement_amount = 0,
+        total_amount
     } = data;
 
     // Validation des champs obligatoires
@@ -48,12 +51,28 @@ function validateReservationData(data) {
         throw new Error('Format de numéro de téléphone invalide');
     }
 
+    // Validation de l'option remboursable
+    const isRefundable = Boolean(refundable_option);
+    const supplementAmount = parseFloat(refund_supplement_amount) || 0;
+    const totalAmountValue = parseFloat(total_amount);
+
+    if (isRefundable && supplementAmount <= 0) {
+        throw new Error('Le supplément remboursable doit être positif si l\'option est activée');
+    }
+
+    if (!totalAmountValue || totalAmountValue <= 0) {
+        throw new Error('Le montant total doit être positif');
+    }
+
     return {
         trajet_id: parseInt(trajet_id),
         seats_reserved: seatsRequested,
         passenger_first_name: passenger_first_name.trim(),
         passenger_last_name: passenger_last_name.trim(),
-        phone_number: phone_number.trim()
+        phone_number: phone_number.trim(),
+        refundable_option: isRefundable,
+        refund_supplement_amount: supplementAmount,
+        total_amount: totalAmountValue
     };
 }
 
@@ -195,8 +214,14 @@ async function createReservation(data, userId) {
         // 3. Vérification des réservations existantes de l'utilisateur
         await checkUserExistingReservation(userId, validatedData.trajet_id, transaction);
 
-        // 4. Calcul du montant total
-        const totalAmount = calculateReservationAmount(trajet.price, validatedData.seats_reserved);
+        // 4. Calcul et validation du montant total
+        const baseAmount = calculateReservationAmount(trajet.price, validatedData.seats_reserved);
+        
+        // Vérifier la cohérence du montant total envoyé
+        const expectedTotal = baseAmount + validatedData.refund_supplement_amount;
+        if (Math.abs(validatedData.total_amount - expectedTotal) > 0.01) {
+            throw new Error('Incohérence dans le calcul du montant total');
+        }
 
         // 5. Création de la réservation
         const reservation = await Reservation.create({
@@ -207,13 +232,16 @@ async function createReservation(data, userId) {
             passenger_last_name: validatedData.passenger_last_name,
             phone_number: validatedData.phone_number,
             status: 'pending', // En attente de paiement
-            reservation_date: new Date()
+            reservation_date: new Date(),
+            refundable_option: validatedData.refundable_option,
+            refund_supplement_amount: validatedData.refund_supplement_amount,
+            total_amount: validatedData.total_amount
         }, { transaction });
 
         // 6. Création du paiement associé
         const paiement = await Paiement.create({
             reservation_id: reservation.id,
-            amount: totalAmount,
+            amount: validatedData.total_amount,
             status: 'pending', // En attente
             payment_date: new Date()
         }, { transaction });
@@ -250,10 +278,109 @@ async function createReservation(data, userId) {
             reservation: reservationComplete,
             next_step: 'payment',
             payment_info: {
-                amount: totalAmount,
+                amount: validatedData.total_amount,
                 currency: 'FCFA',
-                payment_id: paiement.id
+                payment_id: paiement.id,
+                refundable_option: validatedData.refundable_option,
+                refund_supplement: validatedData.refund_supplement_amount
             }
+        };
+
+    } catch (error) {
+        await transaction.rollback();
+        throw error;
+    }
+}
+
+/**
+ * Fonction : createGuestReservation
+ * Description : Créer une réservation pour un invité (sans compte)
+ * Paramètres :
+ * - data (object) : Données de la réservation
+ * Retour : (Promise<object>) Réservation créée avec QR code et référence
+ */
+async function createGuestReservation(data) {
+    const transaction = await sequelize.transaction();
+    
+    try {
+        // 1. Validation des données (mêmes règles que pour les utilisateurs connectés)
+        const validatedData = validateReservationData(data);
+
+        // 2. Vérification de la disponibilité du trajet
+        const trajet = await checkTrajetAvailability(
+            validatedData.trajet_id, 
+            validatedData.seats_reserved, 
+            transaction
+        );
+
+        // 3. Calcul et validation du montant total
+        const baseAmount = calculateReservationAmount(trajet.price, validatedData.seats_reserved);
+        
+        // Vérifier la cohérence du montant total envoyé
+        const expectedTotal = baseAmount + validatedData.refund_supplement_amount;
+        if (Math.abs(validatedData.total_amount - expectedTotal) > 0.01) {
+            throw new Error('Incohérence dans le calcul du montant total');
+        }
+
+        // 4. Créer la réservation invité (compte_id = null)
+        const reservation = await Reservation.create({
+            trajet_id: validatedData.trajet_id,
+            compte_id: null, // Réservation invité
+            seats_reserved: validatedData.seats_reserved,
+            passenger_first_name: validatedData.passenger_first_name,
+            passenger_last_name: validatedData.passenger_last_name,
+            phone_number: validatedData.phone_number,
+            status: 'confirmed', // Confirmé directement pour les invités
+            reservation_date: new Date(),
+            refundable_option: validatedData.refundable_option,
+            refund_supplement_amount: validatedData.refund_supplement_amount,
+            total_amount: validatedData.total_amount
+        }, { transaction });
+
+        // 5. Création du paiement associé
+        const paiement = await Paiement.create({
+            reservation_id: reservation.id,
+            amount: validatedData.total_amount,
+            status: 'completed', // Paiement considéré comme terminé pour les invités
+            payment_date: new Date()
+        }, { transaction });
+
+        // 6. Réservation des places (décrémenter available_seats)
+        await trajet.update({
+            available_seats: trajet.available_seats - validatedData.seats_reserved
+        }, { transaction });
+
+        // 7. Valider la transaction
+        await transaction.commit();
+
+        // 8. Générer une référence unique pour l'invité
+        const reference = `BT-${reservation.id.toString().padStart(6, '0')}`;
+
+        // 9. Récupérer la réservation complète
+        const reservationComplete = await Reservation.findByPk(reservation.id, {
+            include: [
+                {
+                    model: Trajet,
+                    as: 'trajet',
+                    include: [{
+                        model: Transporteur,
+                        as: 'transporteur',
+                        attributes: ['company_name', 'company_type', 'phone_number']
+                    }]
+                }
+            ]
+        });
+
+        return {
+            success: true,
+            reservation: reservationComplete,
+            reference: reference,
+            qr_code: {
+                data: reference,
+                verification_url: `${process.env.APP_URL || 'http://localhost:3000'}/verify/${reference}`
+            },
+            invoice_url: `${process.env.APP_URL || 'http://localhost:3000'}/invoice/${reference}`,
+            message: 'Réservation invité créée avec succès'
         };
 
     } catch (error) {
@@ -661,6 +788,7 @@ async function getReservationStats(filters = {}) {
 module.exports = {
     // Fonctions principales
     createReservation,
+    createGuestReservation,
     getUserReservations,
     getReservationById,
     cancelReservation,

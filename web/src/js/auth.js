@@ -207,7 +207,7 @@ class AuthManager {
     }
 
     /**
-     * Redirige l'utilisateur vers le bon dashboard selon son rôle
+     * Redirige l'utilisateur vers la page d'origine ou le dashboard selon son rôle
      */
     redirectUserToDashboard(user) {
         if (!user) {
@@ -216,7 +216,20 @@ class AuthManager {
             return;
         }
 
-        console.log(`🎯 Redirection basée sur le rôle: ${user.role}`);
+        // Vérifier s'il y a une URL de retour dans les paramètres
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnUrl = urlParams.get('returnUrl');
+
+        if (returnUrl) {
+            // Décoder l'URL de retour et rediriger vers celle-ci
+            const decodedReturnUrl = decodeURIComponent(returnUrl);
+            console.log('🔄 Redirection vers la page d\'origine:', decodedReturnUrl);
+            window.location.href = decodedReturnUrl;
+            return;
+        }
+
+        // Sinon, redirection normale vers le dashboard selon le rôle
+        console.log(`🎯 Redirection dashboard basée sur le rôle: ${user.role}`);
 
         switch (user.role) {
             case 'admin':
@@ -391,9 +404,20 @@ class AuthManager {
                 const user = AuthAPI.getCurrentUser();
                 console.log('✅ Token valide, utilisateur connecté:', user);
                 
-                // Rediriger selon le rôle de l'utilisateur
-                console.log('🔄 Redirection automatique pour utilisateur déjà connecté:', user);
-                this.redirectUserToDashboard(user);
+                // Vérifier s'il y a une URL de retour
+                const urlParams = new URLSearchParams(window.location.search);
+                const returnUrl = urlParams.get('returnUrl');
+                
+                if (returnUrl) {
+                    // Il y a une URL de retour, rediriger directement vers celle-ci
+                    const decodedReturnUrl = decodeURIComponent(returnUrl);
+                    console.log('🔄 Utilisateur déjà connecté, redirection vers page d\'origine:', decodedReturnUrl);
+                    window.location.href = decodedReturnUrl;
+                } else {
+                    // Pas d'URL de retour, redirection normale vers dashboard
+                    console.log('🔄 Redirection automatique pour utilisateur déjà connecté:', user);
+                    this.redirectUserToDashboard(user);
+                }
             } else {
                 console.log('❌ Token invalide, nettoyage et maintien sur page de connexion');
                 this.preventiveCleanup();

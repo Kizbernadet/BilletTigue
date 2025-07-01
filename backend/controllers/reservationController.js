@@ -41,6 +41,40 @@ const createReservation = async (req, res) => {
     }
 };
 
+// ========== CRÉER UNE RÉSERVATION INVITÉ ==========
+
+/**
+ * Fonction : createGuestReservation
+ * Description : Créer une réservation sans compte utilisateur
+ * Paramètres :
+ * - req.body : { trajet_id, seats_reserved, passenger_first_name, passenger_last_name, phone_number, refundable_option, refund_supplement_amount, total_amount }
+ * Retour : Réservation créée avec référence et QR code
+ */
+const createGuestReservation = async (req, res) => {
+    try {
+        // Déléguer la logique métier au service
+        const result = await reservationService.createGuestReservation(req.body);
+        
+        res.status(201).json({
+            success: true,
+            message: 'Réservation invité créée avec succès',
+            data: result
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la création de la réservation invité:', error);
+        
+        // Gestion des erreurs métier
+        const statusCode = error.message.includes('introuvable') ? 404 : 400;
+        
+        res.status(statusCode).json({
+            success: false,
+            message: error.message,
+            error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};
+
 // ========== RÉCUPÉRER MES RÉSERVATIONS ==========
 
 /**
@@ -229,6 +263,7 @@ const getReservationStats = async (req, res) => {
 
 module.exports = {
     createReservation,
+    createGuestReservation,
     getMyReservations,
     getReservationById,
     cancelReservation,

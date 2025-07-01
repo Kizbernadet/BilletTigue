@@ -112,8 +112,6 @@ Ce dossier contient tous les tests pertinents pour le projet Billettigue, organi
 
 ### **Comptes de test requis**
 
-```
-
 #### **📝 Historique des comptes créés**
 *Cette section sera mise à jour automatiquement à chaque création de compte*
 

@@ -276,6 +276,22 @@
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
+.book-btn.disabled,
+.book-btn:disabled {
+    background: #9ca3af !important;
+    color: #6b7280 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.book-btn.disabled:hover,
+.book-btn:disabled:hover {
+    background: #9ca3af !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 /* Filtres */
 .filters-section {
     width: 85%;

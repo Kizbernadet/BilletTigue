@@ -263,10 +263,13 @@ class PaginationManager {
                             <i class="fas fa-info-circle"></i>
                             <span>Détails</span>
                         </button>
-                        <button class="book-btn" onclick="event.stopPropagation(); paginationManager.selectRoute(${trajet.id})" title="Réserver ce trajet">
-                            <i class="fas fa-ticket-alt"></i>
-                            <span>Réserver</span>
-                </button>
+                        <button class="book-btn ${trajet.seats <= 0 ? 'disabled' : ''}" 
+                                onclick="event.stopPropagation(); ${trajet.seats > 0 ? `paginationManager.selectRoute(${trajet.id})` : ''}" 
+                                title="${trajet.seats <= 0 ? 'Trajet complet' : 'Réserver ce trajet'}"
+                                ${trajet.seats <= 0 ? 'disabled' : ''}>
+                            <i class="fas fa-${trajet.seats <= 0 ? 'times' : 'ticket-alt'}"></i>
+                            <span>${trajet.seats <= 0 ? 'Complet' : 'Réserver'}</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -277,7 +280,24 @@ class PaginationManager {
 
     selectRoute(routeId) {
         console.log('Trajet sélectionné:', routeId);
-        alert(`Vous avez sélectionné le trajet ${routeId}. Redirection vers la réservation...`);
+        this.handleDirectBooking(routeId);
+    }
+
+    // Gérer la réservation directe depuis les cartes de trajets
+    handleDirectBooking(trajetId) {
+        // Trouver le trajet dans la liste pour vérifier la disponibilité
+        const trajet = this.allTrajets.find(t => t.id == trajetId);
+        
+        if (trajet && trajet.seats <= 0) {
+            alert('Ce trajet est complet.');
+            return;
+        }
+
+        // Rediriger directement vers la page de réservation (connexion sera demandée à la fin)
+        const reservationUrl = `reservation.html?trajet_id=${trajetId}`;
+        window.location.href = reservationUrl;
+        
+        console.log('🎫 Redirection vers la page de réservation depuis la carte:', trajetId);
     }
 
     // Afficher les détails d'un trajet dans une modale
@@ -469,29 +489,17 @@ class PaginationManager {
 
     // Gérer la réservation depuis la modale
     handleModalBooking(trajet) {
-        // Vérifier si l'utilisateur est connecté
-        const token = localStorage.getItem('token');
-        
-        if (!token) {
-            alert('Vous devez être connecté pour réserver un trajet.');
-            this.closeModal();
-            window.location.href = 'login.html';
-            return;
-        }
-
         // Vérifier la disponibilité
         if (trajet.available_seats <= 0) {
             alert('Ce trajet est complet.');
             return;
         }
 
-        // Pour l'instant, afficher une alerte (à remplacer par un système de réservation)
-        alert(`Réservation pour le trajet ${trajet.departure_city} → ${trajet.arrival_city}\n\nCette fonctionnalité sera bientôt disponible !`);
+        // Rediriger directement vers la page de réservation (connexion sera demandée à la fin)
+        const reservationUrl = `reservation.html?trajet_id=${trajet.id}`;
+        window.location.href = reservationUrl;
         
-        // Fermer la modale après réservation
-        this.closeModal();
-        
-        console.log('🎫 Réservation trajet depuis modale:', trajet.id);
+        console.log('🎫 Redirection vers la page de réservation:', trajet.id);
     }
 
     // Initialiser les événements de la modale
@@ -827,6 +835,9 @@ class ProfileMenuManager {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser les utilitaires de redirection de connexion
+    initLoginRedirectUtils();
+    
     // Initialiser la pagination
     const paginationManager = new PaginationManager();
     

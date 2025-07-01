@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilletTigue - Réservation</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
+    
+    <!-- CSS Framework -->
+    <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/reservation.css" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Login Redirect Utils -->
+    <script src="../src/js/login-redirect-utils.js"></script>
+</head>
+
+<body class="reservation-body min-h-screen">
+    <!-- Header -->
+    <header>
+        <div class="w-full flex justify-center p-4">
+            <div class="topbar-container">
+                <!-- Logo -->
+                <div class="logo-container w-3/12 h-full">
+                    <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+                        <li><a href="search-trajets.html" class="nav-link"><i class="fas fa-bus"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                
+                <!-- Action Container -->
+                <div class="action-container-wrapper">
+                    <!-- Language Dropdown -->
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span id="current-lang-text" class="lang-text">Français</span>
+                            <i class="fas fa-chevron-down text-xs lang-arrow"></i>
+                            <i class="fa-solid fa-globe lang-icon" style="display:none;"></i>
+                        </label>
+                        <ul id="lang-options" tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
+                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Login Menu (visible when not logged in) -->
+                    <div id="login-menu" class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span class="login-text">Se connecter</span>
+                            <i class="fas fa-chevron-down text-xs login-arrow"></i>
+                            <i class="fa-solid fa-user login-icon" style="display:none;"></i>
+                        </label>
+                        <ul tabindex="0" class="lang-options-list">
+                            <li><a href="#" class="lang-option text-sm" onclick="redirectToLogin('user')">Utilisateur</a></li>
+                            <li><a href="#" class="lang-option text-sm" onclick="redirectToLogin('transporter')">Transporteur</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- User Menu (visible when logged in) -->
+                    <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
+                        <label tabindex="0" class="btn-user">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="user-name">Utilisateur</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </label>
+                        <ul id="user-options" tabindex="0" class="user-options-list">
+                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a class="user-option" href="./user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Mobile Hamburger -->
+                    <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="reservation-main">
+        <!-- Breadcrumb -->
+        <section class="breadcrumb-section">
+            <div class="breadcrumb-container">
+                <nav class="breadcrumb">
+                    <a href="search-trajets.html" class="breadcrumb-link">
+                        <i class="fas fa-search"></i>
+                        <span>Recherche</span>
+                    </a>
+                    <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                    <span class="breadcrumb-current">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Réservation</span>
+                    </span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loading-section" class="loading-section">
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <h2>Chargement des détails du trajet...</h2>
+                <p>Veuillez patienter</p>
+            </div>
+        </section>
+
+        <!-- Error State -->
+        <section id="error-section" class="error-section" style="display: none;">
+            <div class="error-container">
+                <i class="fas fa-exclamation-triangle error-icon"></i>
+                <h2>Erreur de chargement</h2>
+                <p id="error-message">Une erreur est survenue lors du chargement des détails du trajet.</p>
+                <div class="error-actions">
+                    <button class="btn-retry" onclick="window.location.reload()">
+                        <i class="fas fa-redo"></i>
+                        <span>Réessayer</span>
+                    </button>
+                    <a href="search-trajets.html" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Retour à la recherche</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservation Content -->
+        <section id="reservation-content" class="reservation-content" style="display: none;">
+            <div class="reservation-container">
+                
+                <!-- Trajet Details Card -->
+                <div class="trajet-card">
+                    <div class="trajet-header">
+                        <h2 class="trajet-title">
+                            <i class="fas fa-route"></i>
+                            <span>Détails du trajet</span>
+                        </h2>
+                        <div class="trajet-status" id="trajet-status">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Disponible</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trajet-details">
+                        <div class="route-info">
+                            <div class="route-point departure-point">
+                                <div class="point-indicator"></div>
+                                <div class="point-details">
+                                    <h3 id="departure-city">Ville de départ</h3>
+                                    <p id="departure-point">Point de départ</p>
+                                    <p class="departure-time">
+                                        <i class="fas fa-clock"></i>
+                                        <span id="departure-date-time">Date et heure</span>
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="route-point arrival-point">
+                                <div class="point-indicator"></div>
+                                <div class="point-details">
+                                    <h3 id="arrival-city">Ville d'arrivée</h3>
+                                    <p id="arrival-point">Point d'arrivée</p>
+                                    <p class="arrival-time">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span id="arrival-info">Informations d'arrivée</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="trajet-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-user-tie"></i>
+                                <span class="meta-label">Transporteur :</span>
+                                <span class="meta-value" id="transporteur-name">Nom du transporteur</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users"></i>
+                                <span class="meta-label">Places disponibles :</span>
+                                <span class="meta-value" id="available-seats">0</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span class="meta-label">Prix par place :</span>
+                                <span class="meta-value price" id="trajet-price">0 FCFA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservation Form -->
+                <div class="reservation-form-card">
+                    <div class="form-header">
+                        <h2 class="form-title">
+                            <i class="fas fa-edit"></i>
+                            <span>Informations de réservation</span>
+                        </h2>
+                    </div>
+                    
+                    <form id="reservation-form" class="reservation-form">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-user"></i>
+                                <span>Informations du passager</span>
+                            </h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="passenger-first-name">Prénom <span class="required">*</span></label>
+                                    <input type="text" id="passenger-first-name" name="passenger_first_name" required
+                                           placeholder="Votre prénom">
+                                </div>
+                                <div class="form-group">
+                                    <label for="passenger-last-name">Nom <span class="required">*</span></label>
+                                    <input type="text" id="passenger-last-name" name="passenger_last_name" required
+                                           placeholder="Votre nom">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone-number">Téléphone <span class="required">*</span></label>
+                                    <input type="tel" id="phone-number" name="phone_number" required
+                                           placeholder="65 12 34 56 ou +223 70 12 34 56"
+                                           title="Formats acceptés: 65-99 suivi de 6 chiffres, avec ou sans +223 (Mali)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="seats-reserved">Nombre de places <span class="required">*</span></label>
+                                    <div class="number-input-container">
+                                        <button type="button" class="control-btn" id="decrement-seats" aria-label="Diminuer">
+                                            <i class="fas fa-minus text-red-500"></i>
+                                        </button>
+                                        <input type="number" id="seats-reserved" name="seats_reserved" value="1" min="1" required>
+                                        <button type="button" class="control-btn" id="increment-seats" aria-label="Augmenter">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Mode de paiement</span>
+                            </h3>
+                            
+                            <div class="payment-methods">
+                                <div class="payment-option">
+                                    <input type="radio" id="payment-cash" name="payment_method" value="cash" checked>
+                                    <label for="payment-cash" class="payment-label">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span class="payment-name">Paiement en espèces</span>
+                                        <span class="payment-desc">Payer directement au transporteur</span>
+                                    </label>
+                                </div>
+                                <div class="payment-option">
+                                    <input type="radio" id="payment-mobile" name="payment_method" value="mobile_money">
+                                    <label for="payment-mobile" class="payment-label">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <span class="payment-name">Mobile Money</span>
+                                        <span class="payment-desc">Orange Money, MTN Money, etc.</span>
+                                    </label>
+                                </div>
+                                <div class="payment-option">
+                                    <input type="radio" id="payment-card" name="payment_method" value="card">
+                                    <label for="payment-card" class="payment-label">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span class="payment-name">Carte bancaire</span>
+                                        <span class="payment-desc">Visa, Mastercard</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Option remboursable -->
+                            <div class="refundable-option">
+                                <div class="refundable-checkbox">
+                                    <input type="checkbox" id="refundable-option" name="refundable_option">
+                                    <label for="refundable-option" class="refundable-label">
+                                        <div class="refundable-content">
+                                            <div class="refundable-main">
+                                                <i class="fas fa-shield-alt"></i>
+                                                <span class="refundable-name">Option remboursable</span>
+                                                <span class="refundable-price">+15%</span>
+                                            </div>
+                                            <span class="refundable-desc">Possibilité d'annulation avec remboursement</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <!-- Politique de remboursement (masquée par défaut) -->
+                                <div id="refund-policy" class="refund-policy" style="display: none;">
+                                    <div class="policy-header">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Politique de remboursement</span>
+                                    </div>
+                                    <div class="policy-content">
+                                        <div class="policy-item">
+                                            <i class="fas fa-clock"></i>
+                                            <div class="policy-details">
+                                                <span class="policy-title">Délai d'annulation</span>
+                                                <span class="policy-text">Jusqu'à 24h avant le départ</span>
+                                            </div>
+                                        </div>
+                                        <div class="policy-item">
+                                            <i class="fas fa-percentage"></i>
+                                            <div class="policy-details">
+                                                <span class="policy-title">Taux de remboursement</span>
+                                                <span class="policy-text">85% du montant payé (frais de 15% retenus)</span>
+                                            </div>
+                                        </div>
+                                        <div class="policy-item">
+                                            <i class="fas fa-calendar-check"></i>
+                                            <div class="policy-details">
+                                                <span class="policy-title">Validité du billet</span>
+                                                <span class="policy-text">30 jours à partir de la date d'achat</span>
+                                            </div>
+                                        </div>
+                                        <div class="policy-item">
+                                            <i class="fas fa-credit-card"></i>
+                                            <div class="policy-details">
+                                                <span class="policy-title">Délai de remboursement</span>
+                                                <span class="policy-text">5 à 7 jours ouvrables</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recap Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-receipt"></i>
+                                <span>Récapitulatif</span>
+                            </h3>
+                            
+                            <div class="reservation-summary">
+                                <div class="summary-row">
+                                    <span class="summary-label">Prix unitaire :</span>
+                                    <span class="summary-value" id="unit-price">0 FCFA</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Nombre de places :</span>
+                                    <span class="summary-value" id="seats-count">1</span>
+                                </div>
+                                <div class="summary-row" id="subtotal-row">
+                                    <span class="summary-label">Sous-total :</span>
+                                    <span class="summary-value" id="subtotal-price">0 FCFA</span>
+                                </div>
+                                <div class="summary-row" id="refund-supplement-row" style="display: none;">
+                                    <span class="summary-label">Supplément remboursable (15%) :</span>
+                                    <span class="summary-value" id="refund-supplement">0 FCFA</span>
+                                </div>
+                                <div class="summary-row summary-total">
+                                    <span class="summary-label">Total à payer :</span>
+                                    <span class="summary-value total-price" id="total-price">0 FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-back-to-search">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Retour</span>
+                            </button>
+                            <button type="submit" class="btn-confirm-reservation" id="confirm-reservation">
+                                <i class="fas fa-check"></i>
+                                <span>Confirmer la réservation</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Auth Options Modal -->
+        <div id="auth-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-container auth-options-modal">
+                <div class="modal-header">
+                    <h2 class="auth-title">Finaliser votre réservation</h2>
+                    <button class="modal-close" id="close-auth-modal" aria-label="Fermer">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-content">
+                    <p class="auth-subtitle">Choisissez votre mode de réservation :</p>
+                    
+                    <!-- Options de réservation -->
+                    <div class="reservation-options">
+                        <button class="reservation-option-btn guest-option" id="continue-as-guest">
+                            <div class="option-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="option-content">
+                                <h3>Continuer en tant qu'invité</h3>
+                                <p>Réservation rapide sans créer de compte</p>
+                                <span class="option-benefits">• E-facture avec QR code • Pas d'inscription</span>
+                            </div>
+                        </button>
+                        
+                        <div class="divider-or">
+                            <span>ou</span>
+                        </div>
+                        
+                        <button class="reservation-option-btn login-option" id="show-login-form">
+                            <div class="option-icon">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="option-content">
+                                <h3>Se connecter</h3>
+                                <p>Accès à votre espace personnel</p>
+                                <span class="option-benefits">• Historique • Gestion • Notifications</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <!-- Formulaire de connexion (masqué par défaut) -->
+                    <div id="login-form-container" class="login-form-container" style="display: none;">
+                        <div class="back-to-options">
+                            <button type="button" id="back-to-options" class="btn-back">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Retour aux options</span>
+                            </button>
+                        </div>
+                        
+                        <form id="login-form" class="auth-form">
+                            <div class="form-field">
+                                <input type="email" id="login-email" name="email" placeholder="Adresse e-mail" required>
+                            </div>
+                            <div class="form-field">
+                                <input type="password" id="login-password" name="password" placeholder="Mot de passe" required>
+                            </div>
+                            <div class="form-options">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="remember-me">
+                                    <label for="remember-me">Se souvenir de moi</label>
+                                </div>
+                                <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
+                            </div>
+                            <button type="submit" class="auth-button" id="login-submit">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Se connecter</span>
+                            </button>
+                        </form>
+                        
+                        <p class="auth-footer-link">
+                            Pas encore de compte ? <a href="register.html" target="_blank">Inscrivez-vous ici</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-container success-modal">
+                <div class="modal-header success-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="modal-title">Réservation confirmée !</h2>
+                </div>
+                
+                <div class="modal-content">
+                    <div class="success-message">
+                        <p>Votre réservation a été enregistrée avec succès.</p>
+                        <div class="reservation-details">
+                            <p><strong>Référence :</strong> <span id="reservation-reference">REF123456</span></p>
+                            <p><strong>Trajet :</strong> <span id="success-route">Départ → Arrivée</span></p>
+                            <p><strong>Places réservées :</strong> <span id="success-seats">1</span></p>
+                            <p><strong>Total payé :</strong> <span id="success-total">0 FCFA</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn-secondary" onclick="window.location.href='search-trajets.html'">
+                        <i class="fas fa-search"></i>
+                        <span>Nouvelle recherche</span>
+                    </button>
+                    <button class="btn-primary" id="dashboard-or-receipt-btn">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Mes réservations</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="mobile-menu" style="display:none;">
+        <ul class="nav-list">
+            <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+            <li><a href="search-trajets.html" class="nav-link"><i class="fas fa-bus"></i><span>Trajets</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Scripts -->
+    <script type="module" src="../src/js/reservation.js"></script>
+    <script type="module" src="../src/js/auth-protection.js"></script>
+    <script type="module" src="../src/js/secure-logout.js"></script>
+</body>
+</html> 

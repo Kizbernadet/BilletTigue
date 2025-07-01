@@ -25,6 +25,17 @@ router.post('/',
 );
 
 /**
+ * Route : POST /api/reservations/guest
+ * Description : Créer une réservation sans compte
+ * Middleware : Aucun (accès libre)
+ * Body : { trajet_id, seats_reserved, passenger_first_name, passenger_last_name, phone_number, refundable_option, refund_supplement_amount, total_amount }
+ * Retour : Réservation créée avec référence et QR code
+ */
+router.post('/guest', 
+    reservationController.createGuestReservation
+);
+
+/**
  * Route : GET /api/reservations
  * Description : Récupérer toutes mes réservations
  * Middleware : protect (authentification requise)
