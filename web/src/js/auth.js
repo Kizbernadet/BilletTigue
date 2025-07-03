@@ -178,6 +178,11 @@ class AuthManager {
             if (result.success) {
                 this.showMessage(result.message, 'success');
                 
+                // Marquer la connexion récente pour l'animation de bienvenue
+                if (window.ProfileButtonEnhancer) {
+                    ProfileButtonEnhancer.markRecentLogin();
+                }
+                
                 // Rediriger selon le rôle de l'utilisateur retourné par l'API
                 setTimeout(() => {
                     const user = AuthAPI.getCurrentUser();
@@ -221,34 +226,31 @@ class AuthManager {
         const returnUrl = urlParams.get('returnUrl');
 
         if (returnUrl) {
-            // Décoder l'URL de retour et rediriger vers celle-ci
+            // Décoder l'URL de retour 
             const decodedReturnUrl = decodeURIComponent(returnUrl);
-            console.log('🔄 Redirection vers la page d\'origine:', decodedReturnUrl);
-            window.location.href = decodedReturnUrl;
+            console.log('🔄 Retour à la page d\'origine après actualisation:', decodedReturnUrl);
+            
+            // Actualiser d'abord la page de login pour montrer le succès
+            // puis rediriger vers la page d'origine après un délai
+            setTimeout(() => {
+                window.location.href = decodedReturnUrl;
+            }, 2000); // 2 secondes pour voir le message de succès
             return;
         }
 
-        // Sinon, redirection normale vers le dashboard selon le rôle
-        console.log(`🎯 Redirection dashboard basée sur le rôle: ${user.role}`);
-
-        switch (user.role) {
-            case 'admin':
-                console.log('🔐 Redirection admin vers admin-dashboard.html');
-                window.location.href = './admin-dashboard.html';
-                break;
-                
-            case 'transporteur':
-            case 'transporter': // Support pour les deux formats
-                console.log('🚛 Redirection transporteur vers transporter-dashboard.html');
-                window.location.href = './transporter-dashboard.html';
-                break;
-                
-            case 'user':
-            default:
-                console.log('👤 Redirection utilisateur vers user-dashboard.html');
-                window.location.href = './user-dashboard.html';
-                break;
-        }
+        // Si pas de returnUrl, rester sur la page de login avec message de succès
+        // L'utilisateur peut ensuite naviguer manuellement
+        console.log('✅ Connexion réussie, restant sur la page de login');
+        
+        // Optionnel : rediriger vers l'accueil après un délai
+        setTimeout(() => {
+            // Déterminer le chemin vers l'accueil selon la page actuelle
+            let homePath = '../index.html'; // Pour les pages dans le dossier pages
+            if (!window.location.pathname.includes('/pages/')) {
+                homePath = './index.html'; // Pour les autres pages
+            }
+            window.location.href = homePath;
+        }, 3000); // 3 secondes pour lire le message
     }
 
     /**

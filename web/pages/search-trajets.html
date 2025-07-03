@@ -82,7 +82,7 @@
                             <i class="fas fa-chevron-down text-xs"></i>
                         </label>
                         <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a class="user-option" href="./profile.html" id="profile-link"><i class="fas fa-user"></i> Mon Profil</a></li>
                             <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
                         </ul>
                     </div>
@@ -316,6 +316,14 @@
 
     <!-- Scripts -->
     <script src="../src/js/main.js"></script>
+    <script src="../src/js/login-redirect-utils.js"></script>
+    <script src="../src/js/profile-button-enhancer.js"></script>
     <script type="module" src="../src/js/search-trajets.js"></script>
+    <script>
+        // Initialiser les utilitaires de redirection
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoginRedirectUtils();
+        });
+    </script>
 </body>
 </html> 

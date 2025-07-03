@@ -11,8 +11,14 @@ window.redirectToLogin = function(role) {
     // Capturer l'URL actuelle complète (avec paramètres)
     const currentUrl = encodeURIComponent(window.location.href);
     
+    // Déterminer le chemin vers login.html selon la page actuelle
+    let loginPath = './pages/login.html'; // Pour la page d'accueil
+    if (window.location.pathname.includes('/pages/')) {
+        loginPath = './login.html'; // Pour les pages dans le dossier pages
+    }
+    
     // Construire l'URL de login avec returnUrl
-    const loginUrl = `./login.html?role=${role}&returnUrl=${currentUrl}`;
+    const loginUrl = `${loginPath}?role=${role}&returnUrl=${currentUrl}`;
     
     console.log('🔗 Redirection vers login avec retour:', {
         role: role,
@@ -99,6 +105,16 @@ window.initLoginRedirectUtils = function() {
     // Mettre à jour l'affichage des menus
     updateTopbarMenus();
     
+    // Configurer les liens de profil selon la page actuelle
+    const profileLink = document.getElementById('profile-link');
+    if (profileLink) {
+        let profilePath = './pages/profile.html'; // Pour la page d'accueil
+        if (window.location.pathname.includes('/pages/')) {
+            profilePath = './profile.html'; // Pour les pages dans le dossier pages
+        }
+        profileLink.href = profilePath;
+    }
+    
     // Configurer la déconnexion si le bouton existe
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
@@ -113,8 +129,12 @@ window.initLoginRedirectUtils = function() {
             
             console.log('🔓 Déconnexion effectuée');
             
-            // Rediriger vers la page d'accueil
-            window.location.href = '../index.html';
+            // Déterminer le chemin vers l'accueil selon la page actuelle
+            let homePath = '../index.html'; // Pour les pages dans le dossier pages
+            if (!window.location.pathname.includes('/pages/')) {
+                homePath = './index.html'; // Pour les autres pages
+            }
+            window.location.href = homePath;
         });
     }
     

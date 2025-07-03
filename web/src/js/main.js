@@ -843,4 +843,74 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Affichage conditionnel du menu profil ou du bouton login
+    const userDataRaw = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+    const userData = userDataRaw ? JSON.parse(userDataRaw) : null;
+    const isLoggedIn = !!userData;
+
+    const profileBtnText = document.getElementById('profileBtnText');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileBtn = document.getElementById('profileBtn');
+
+    if (isLoggedIn) {
+        if (loginMenu) loginMenu.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'flex';
+        // Affichage du nom et du rôle
+        if (profileBtnText && userData) {
+            profileBtnText.innerHTML = `
+                <strong style='font-size:1em;'>${userData.firstName || ''} ${userData.lastName || ''}</strong>
+                <span style="display:block;font-size:0.85em;color:#f5f5f5;">${userData.role ? (userData.role === 'user' ? 'Utilisateur' : userData.role.charAt(0).toUpperCase() + userData.role.slice(1)) : ''}</span>
+            `;
+        }
+        // Affichage des options du menu
+        if (profileDropdown) {
+            profileDropdown.innerHTML = `
+                <a class="user-option" href="./pages/profile.html"><i class="fas fa-user"></i> Mon profil</a>
+                <a class="user-option" href="./pages/edit-profile.html"><i class="fas fa-user-edit"></i> Modifier mon profil</a>
+                <a class="user-option" href="./pages/change-password.html"><i class="fas fa-key"></i> Changer mon mot de passe</a>
+                <a class="user-option" href="./pages/reservations.html"><i class="fas fa-ticket-alt"></i> Mes réservations</a>
+                <a class="user-option" href="./pages/search-trajets.html"><i class="fas fa-search"></i> Rechercher trajets</a>
+                <a class="user-option" href="./pages/colis.html"><i class="fas fa-box"></i> Mes colis</a>
+                <a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            `;
+        }
+        // Gestion ouverture/fermeture du menu
+        if (profileBtn && profileDropdown) {
+            let isMenuOpen = false;
+            function openMenu() {
+                profileDropdown.style.display = 'block';
+                isMenuOpen = true;
+            }
+            function closeMenu() {
+                profileDropdown.style.display = 'none';
+                isMenuOpen = false;
+            }
+            function toggleMenu() {
+                if (isMenuOpen) closeMenu();
+                else openMenu();
+            }
+            profileBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMenu();
+            });
+            document.addEventListener('click', function(e) {
+                if (isMenuOpen && !profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+            // Déconnexion
+            profileDropdown.addEventListener('click', function(e) {
+                if (e.target && (e.target.id === 'logout-btn' || e.target.closest('#logout-btn'))) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.replace('./index.html');
+                }
+            });
+        }
+    } else {
+        if (loginMenu) loginMenu.style.display = 'flex';
+        if (userMenu) userMenu.style.display = 'none';
+    }
 });

@@ -62,16 +62,15 @@
                     </button>
 
                     <!-- Menu utilisateur (visible si connecté) -->
-                    <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
-                        <label tabindex="0" class="btn-user">
-                            <i class="fas fa-user-circle text-xl"></i>
-                            <span id="user-name">Utilisateur</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </label>
-                        <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./pages/profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
-                        </ul>
+                    <div id="user-menu" class="dropdown dropdown-end user-dropdown flex justify-center items-center" style="display: none;">
+                        <button id="profileBtn" class="btn-user" style="background: linear-gradient(90deg, #ff9800 0%, #ffb74d 100%); color: #fff; font-weight: bold; border-radius: 30px; padding: 0.5rem 0.6rem; font-size: 0.95rem; box-shadow: 0 4px 16px rgba(255,152,0,0.15); min-width: 0;">
+                            <i class="fas fa-user-circle text-xl" style="margin-right: 0.7em;"></i>
+                            <span id="profileBtnText" style="display: flex; flex-direction: column; align-items: flex-start;">
+                                Utilisateur
+                            </span>
+                            <i class="fas fa-chevron-down text-xs" style="margin-left: 0.7em;"></i>
+                        </button>
+                        <div id="profileDropdown" class="user-options-list" style="display: none;"></div>
                     </div>
                 </div>
             </div>
