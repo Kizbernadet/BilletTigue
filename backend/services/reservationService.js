@@ -87,12 +87,8 @@ function validateReservationData(data) {
  */
 async function checkTrajetAvailability(trajetId, seatsRequested, transaction) {
     // Récupérer le trajet avec verrouillage pour éviter les conflits
+    // On ne peut pas utiliser lock avec include, donc on récupère d'abord le trajet
     const trajet = await Trajet.findByPk(trajetId, {
-        include: [{
-            model: Transporteur,
-            as: 'transporteur',
-            attributes: ['id', 'company_name', 'company_type']
-        }],
         lock: true, // Verrouillage pour éviter les réservations simultanées
         transaction
     });
@@ -116,7 +112,17 @@ async function checkTrajetAvailability(trajetId, seatsRequested, transaction) {
         throw new Error(`Plus assez de places disponibles. Places restantes: ${trajet.available_seats}`);
     }
 
-    return trajet;
+    // Récupérer les informations du transporteur séparément si nécessaire
+    const trajetWithTransporteur = await Trajet.findByPk(trajetId, {
+        include: [{
+            model: Transporteur,
+            as: 'transporteur',
+            attributes: ['id', 'company_name', 'company_type']
+        }],
+        transaction
+    });
+
+    return trajetWithTransporteur;
 }
 
 /**

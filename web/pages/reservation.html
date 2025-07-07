@@ -67,19 +67,51 @@
                         </ul>
                     </div>
 
-                    <!-- User Menu (visible when logged in) -->
-                    <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
-                        <label tabindex="0" class="btn-user">
-                            <i class="fas fa-user-circle text-xl"></i>
-                            <span id="user-name">Utilisateur</span>
+                    <!-- Profile Menu (visible when logged in) -->
+                    <div id="profile-menu" class="profile-dropdown-wrapper" style="display: none;">
+                        <button id="profileBtn" onclick="toggleProfileMenu()" class="profile-btn">
+                            <i class="fa-solid fa-user-circle"></i>
+                            <span id="profile-name">Utilisateur</span>
                             <i class="fas fa-chevron-down text-xs"></i>
-                        </label>
-                        <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a class="user-option" href="./user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </button>
+                        <ul class="profile-dropdown-menu" id="profileDropdown">
+                            <li class="profile-info">
+                                <div class="profile-header">
+                                    <i class="fa-solid fa-user"></i>
+                                    <div class="profile-details">
+                                        <span id="profile-full-name">Prénom Nom</span>
+                                        <span id="profile-role" class="profile-role">Utilisateur</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="profile.html" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-user"></i>
+                                    Mon Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a href="user-dashboard.html" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-tachometer-alt"></i>
+                                    Mes Réservations
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-bell"></i>
+                                    Notifications
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="profile-dropdown-link" onclick="logout()">
+                                    <i class="fa-solid fa-sign-out-alt"></i>
+                                    Déconnexion
+                                </a>
+                            </li>
                         </ul>
                     </div>
+
+
 
                     <!-- Mobile Hamburger -->
                     <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
@@ -406,9 +438,9 @@
                     <!-- Options de réservation -->
                     <div class="reservation-options">
                         <button class="reservation-option-btn guest-option" id="continue-as-guest">
-                            <div class="option-icon">
+                            <!-- <div class="option-icon">
                                 <i class="fas fa-user-clock"></i>
-                            </div>
+                            </div> -->
                             <div class="option-content">
                                 <h3>Continuer en tant qu'invité</h3>
                                 <p>Réservation rapide sans créer de compte</p>
@@ -416,14 +448,10 @@
                             </div>
                         </button>
                         
-                        <div class="divider-or">
-                            <span>ou</span>
-                        </div>
-                        
                         <button class="reservation-option-btn login-option" id="show-login-form">
-                            <div class="option-icon">
+                            <!-- <div class="option-icon">
                                 <i class="fas fa-user-shield"></i>
-                            </div>
+                            </div> -->
                             <div class="option-content">
                                 <h3>Se connecter</h3>
                                 <p>Accès à votre espace personnel</p>
@@ -434,14 +462,14 @@
                     
                     <!-- Formulaire de connexion (masqué par défaut) -->
                     <div id="login-form-container" class="login-form-container" style="display: none;">
-                        <div class="back-to-options">
+                        <!-- <div class="back-to-options">
                             <button type="button" id="back-to-options" class="btn-back">
                                 <i class="fas fa-arrow-left"></i>
                                 <span>Retour aux options</span>
                             </button>
-                        </div>
+                        </div> -->
                         
-                        <form id="login-form" class="auth-form">
+                        <!-- <form id="login-form" class="auth-form">
                             <div class="form-field">
                                 <input type="email" id="login-email" name="email" placeholder="Adresse e-mail" required>
                             </div>
@@ -459,11 +487,11 @@
                                 <i class="fas fa-sign-in-alt"></i>
                                 <span>Se connecter</span>
                             </button>
-                        </form>
+                        </form> -->
                         
-                        <p class="auth-footer-link">
+                        <!-- <p class="auth-footer-link">
                             Pas encore de compte ? <a href="register.html" target="_blank">Inscrivez-vous ici</a>
-                        </p>
+                        </p> -->
                     </div>
                 </div>
             </div>
@@ -499,6 +527,93 @@
                     <button class="btn-primary" id="dashboard-or-receipt-btn">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Mes réservations</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guest Success Modal -->
+        <div id="guest-success-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-container guest-success-modal">
+                <div class="modal-header guest-success-header">
+                    <div class="guest-success-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <h2 class="modal-title">Réservation invité confirmée !</h2>
+                    <p class="guest-subtitle">Votre billet électronique est prêt</p>
+                </div>
+                
+                <div class="modal-content">
+                    <div class="guest-success-message">
+                        <div class="qr-code-section">
+                            <h3>QR Code de votre billet</h3>
+                            <div class="qr-code-container">
+                                <div id="qr-code-display" class="qr-code-display">
+                                    <!-- Le QR code sera généré ici -->
+                                </div>
+                                <p class="qr-instructions">Présentez ce QR code au transporteur</p>
+                            </div>
+                        </div>
+                        
+                        <div class="reservation-info-section">
+                            <h3>Détails de votre réservation</h3>
+                            <div class="guest-reservation-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Référence :</span>
+                                    <span class="detail-value" id="guest-reference">BT-000001</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Trajet :</span>
+                                    <span class="detail-value" id="guest-route">Départ → Arrivée</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Passager :</span>
+                                    <span class="detail-value" id="guest-passenger">Prénom Nom</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Places :</span>
+                                    <span class="detail-value" id="guest-seats">1</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Total payé :</span>
+                                    <span class="detail-value total-amount" id="guest-total">0 FCFA</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Statut :</span>
+                                    <span class="detail-value status-confirmed" id="guest-status">Confirmé</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="important-notices">
+                            <div class="notice-item">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Conservez cette référence pour toute réclamation</span>
+                            </div>
+                            <div class="notice-item">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Vous recevrez un SMS de confirmation</span>
+                            </div>
+                            <div class="notice-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Présentez-vous 15 minutes avant le départ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn-secondary" onclick="window.location.href='search-trajets.html'">
+                        <i class="fas fa-search"></i>
+                        <span>Nouvelle recherche</span>
+                    </button>
+                    <button class="btn-primary" id="download-receipt-btn">
+                        <i class="fas fa-download"></i>
+                        <span>Télécharger la facture</span>
+                    </button>
+                    <button class="btn-success" id="share-reservation-btn">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Partager</span>
                     </button>
                 </div>
             </div>

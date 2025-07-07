@@ -193,8 +193,8 @@ class DashboardManager {
             }
         } catch (error) {
             // Même en cas d'erreur, supprimer les données locales
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
             this.showMessage('Déconnexion effectuée', 'success');
             setTimeout(() => {
                 window.location.href = '../index.html';

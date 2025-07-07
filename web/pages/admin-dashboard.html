@@ -178,8 +178,8 @@
 
     // Vérifier l'authentification admin
     function checkAuth() {
-      const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
-      const userData = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+      const token = sessionStorage.getItem('authToken');
+      const userData = sessionStorage.getItem('userData');
       
       if (!token) {
         console.log('🔐 Aucun token trouvé, redirection vers login');
@@ -229,7 +229,6 @@
       // Nettoyage plus complet
       const authKeys = ['authToken', 'userData', 'user', 'token'];
       authKeys.forEach(key => {
-        localStorage.removeItem(key);
         sessionStorage.removeItem(key);
       });
       

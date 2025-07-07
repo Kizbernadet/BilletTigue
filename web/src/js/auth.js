@@ -238,19 +238,39 @@ class AuthManager {
             return;
         }
 
-        // Si pas de returnUrl, rester sur la page de login avec message de succès
-        // L'utilisateur peut ensuite naviguer manuellement
-        console.log('✅ Connexion réussie, restant sur la page de login');
+        // Rediriger selon le rôle de l'utilisateur
+        console.log('🔄 Redirection vers le dashboard approprié pour:', user.role);
         
-        // Optionnel : rediriger vers l'accueil après un délai
         setTimeout(() => {
-            // Déterminer le chemin vers l'accueil selon la page actuelle
-            let homePath = '../index.html'; // Pour les pages dans le dossier pages
-            if (!window.location.pathname.includes('/pages/')) {
-                homePath = './index.html'; // Pour les autres pages
+            let dashboardPath;
+            
+            // Déterminer le chemin selon le rôle
+            switch (user.role) {
+                case 'admin':
+                    dashboardPath = './admin-dashboard.html';
+                    break;
+                case 'transporteur':
+                case 'transporter':
+                case 'freight-carrier':
+                case 'passenger-carrier':
+                    dashboardPath = './transporter-dashboard.html';
+                    break;
+                case 'user':
+                default:
+                    dashboardPath = './user-dashboard.html';
+                    break;
             }
-            window.location.href = homePath;
-        }, 3000); // 3 secondes pour lire le message
+            
+            // Déterminer le chemin relatif selon la page actuelle
+            if (window.location.pathname.includes('/pages/')) {
+                dashboardPath = `./${dashboardPath}`; // Pour les pages dans le dossier pages
+            } else {
+                dashboardPath = `./pages/${dashboardPath}`; // Pour les autres pages
+            }
+            
+            console.log('🎯 Redirection vers:', dashboardPath);
+            window.location.href = dashboardPath;
+        }, 1500); // 1.5 secondes pour voir le message de succès
     }
 
     /**
@@ -380,6 +400,10 @@ class AuthManager {
      * Vérifie le statut d'authentification de manière sécurisée
      */
     async checkAuthenticationStatus() {
+        // DÉSACTIVATION TEMPORAIRE - Commenter pour éviter la connexion auto
+        console.log('🔧 Vérification automatique d\'authentification désactivée temporairement');
+        return;
+        
         // Ne vérifier l'authentification que sur les pages de login et register
         const isOnAuthPage = window.location.pathname.includes('login.html') || 
                             window.location.pathname.includes('register.html');
@@ -432,7 +456,7 @@ class AuthManager {
      */
     async verifyTokenValidity() {
         try {
-            const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+            const token = sessionStorage.getItem('authToken');
             
             if (!token) {
                 return false;
@@ -464,7 +488,6 @@ class AuthManager {
         const authKeys = ['authToken', 'userData', 'user', 'token'];
         authKeys.forEach(key => {
             sessionStorage.removeItem(key);
-            localStorage.removeItem(key);
         });
         
         // Nettoyer l'URL

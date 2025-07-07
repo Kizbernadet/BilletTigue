@@ -344,7 +344,7 @@ class ProfileManager {
         if (user) {
             // Mettre à jour les données locales
             Object.assign(user, updateData);
-            localStorage.setItem('user', JSON.stringify(user));
+            sessionStorage.setItem('userData', JSON.stringify(user));
         }
     }
 
@@ -372,12 +372,14 @@ class ProfileManager {
     async handleLogout() {
         try {
             await AuthAPI.logout();
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
             window.location.href = './login.html';
         } catch (error) {
             console.error('Erreur lors de la déconnexion:', error);
             // Forcer la déconnexion locale
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
             window.location.href = './login.html';
         }
     }

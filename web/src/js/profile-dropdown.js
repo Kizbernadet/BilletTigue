@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // Fallback si le module n'est pas disponible
                 console.warn('⚠️ Module SecureLogout non disponible, déconnexion basique');
-                localStorage.clear();
                 sessionStorage.clear();
                 window.location.replace('../index.html?fallback=true');
             }

@@ -21,7 +21,7 @@ class AuthProtection {
      */
     checkAuthentication() {
         // Récupérer le token d'authentification
-        const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         
         if (!token) {
             console.log('🔒 Aucun token d\'authentification trouvé - Redirection vers login');
@@ -54,7 +54,7 @@ class AuthProtection {
      */
     getUserData() {
         try {
-            const userDataString = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+            const userDataString = sessionStorage.getItem('userData');
             if (!userDataString) {
                 return null;
             }
@@ -146,10 +146,6 @@ class AuthProtection {
     clearAuthData() {
         sessionStorage.removeItem('authToken');
         sessionStorage.removeItem('userData');
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
     }
 
     /**

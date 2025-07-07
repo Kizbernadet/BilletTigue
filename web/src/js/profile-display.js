@@ -28,7 +28,7 @@ class ProfileDisplay {
      */
     getUserData() {
         try {
-            const userDataString = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+            const userDataString = sessionStorage.getItem('userData');
             if (!userDataString) {
                 console.log('🔒 Aucune donnée utilisateur trouvée');
                 return null;

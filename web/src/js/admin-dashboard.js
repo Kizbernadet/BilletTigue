@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Vérifier l'authentification
 function checkAuth() {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = sessionStorage.getItem('authToken');
+    const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
     
     if (!token) {
         window.location.href = 'login.html';
@@ -105,7 +105,7 @@ function loadCurrentTabData() {
 // Charger les statistiques
 async function loadStats() {
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/stats`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -146,7 +146,7 @@ async function loadTransporters() {
     empty.style.display = 'none';
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/transporters`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -226,7 +226,7 @@ async function loadUsers() {
     empty.style.display = 'none';
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/users`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -300,7 +300,7 @@ async function loadAccounts() {
     table.style.display = 'none';
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/accounts`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -363,7 +363,7 @@ async function createTransporter() {
     const data = Object.fromEntries(formData.entries());
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/create-transporter`, {
             method: 'POST',
             headers: {
@@ -406,7 +406,7 @@ function noteNewAccount(accountData, type) {
     });
     
     // Enregistrer localement pour le suivi
-    const existingAccounts = JSON.parse(localStorage.getItem('createdAccounts') || '[]');
+    const existingAccounts = JSON.parse(sessionStorage.getItem('createdAccounts') || '[]');
     existingAccounts.push({
         type,
         email: accountData.email,
@@ -416,7 +416,7 @@ function noteNewAccount(accountData, type) {
         createdAt: new Date().toISOString(),
         source: 'ADMIN_DASHBOARD'
     });
-    localStorage.setItem('createdAccounts', JSON.stringify(existingAccounts));
+    sessionStorage.setItem('createdAccounts', JSON.stringify(existingAccounts));
 }
 
 // Basculer le statut d'un transporteur
@@ -424,7 +424,7 @@ async function toggleTransporterStatus(id, currentStatus) {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/transporters/${id}/status`, {
             method: 'PUT',
             headers: {
@@ -453,7 +453,7 @@ async function toggleUserStatus(id, currentStatus) {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/users/${id}/status`, {
             method: 'PUT',
             headers: {
@@ -484,7 +484,7 @@ async function deleteTransporter(id) {
     }
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/transporters/${id}`, {
             method: 'DELETE',
             headers: {
@@ -514,7 +514,7 @@ async function deleteUser(id) {
     }
 
     try {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         const response = await fetch(`${API_BASE}/admin/users/${id}`, {
             method: 'DELETE',
             headers: {
@@ -549,8 +549,8 @@ function closeModal(modalId) {
 
 // Déconnexion
 function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('userData');
     window.location.href = 'login.html';
 }
 
@@ -563,7 +563,7 @@ window.addEventListener('click', function(e) {
 
 // Fonction pour afficher les comptes créés (pour le suivi)
 function showCreatedAccountsLog() {
-    const accounts = JSON.parse(localStorage.getItem('createdAccounts') || '[]');
+    const accounts = JSON.parse(sessionStorage.getItem('createdAccounts') || '[]');
     console.log('📋 HISTORIQUE DES COMPTES CRÉÉS:', accounts);
     return accounts;
 }

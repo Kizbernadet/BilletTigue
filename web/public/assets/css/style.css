@@ -1191,7 +1191,7 @@ html {
 .hero-title {
   font-family: 'Comfortaa', cursive;
   color: var(--color-white);
-  font-size: 3rem;
+  font-size: 2.1rem;
   font-weight: 600;
   line-height: 1.4;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
@@ -2075,8 +2075,8 @@ body {
 /* Menu déroulant */
 .user-options-list {
     position: absolute;
-    top: 120%;
-    right: 0;
+    top: 125%;
+    right: -50px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
@@ -2148,58 +2148,18 @@ body {
 
 /* Items du menu */
 .user-option {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
-    color: #333;
-    text-decoration: none;
-    font-size: 0.9rem;
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--font-color-base);
     font-weight: 500;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-/* Effet de survol des items */
 .user-option:hover {
-    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
-    color: #667eea;
-    transform: translateX(5px);
-}
-
-/* Icônes des items */
-.user-option i {
-    font-size: 1rem;
-    width: 20px;
-    text-align: center;
-    transition: all 0.2s ease;
-}
-
-.user-option:hover i {
-    transform: scale(1.1);
-    color: #667eea;
-}
-
-/* Style spécial pour le bouton de déconnexion */
-.user-option#logout-btn {
-    border-top: 1px solid rgba(0,0,0,0.05);
-    margin-top: 0.25rem;
-    color: #e74c3c;
-}
-
-.user-option#logout-btn:hover {
-    background: linear-gradient(135deg, #fff5f5 0%, #fee);
-    color: #c0392b;
-}
-
-.user-option#logout-btn i {
-    color: #e74c3c;
-}
-
-.user-option#logout-btn:hover i {
-    color: #c0392b;
-    transform: scale(1.1) rotate(-5deg);
+    background-color: var(--accent-color);
+    color: var(--font-color-light);
 }
 
 /* Animation d'entrée pour le nom d'utilisateur */
@@ -2276,4 +2236,11 @@ body {
 .hover\:bg-red-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(239 68 68 / var(--tw-bg-opacity, 1));
+}
+
+/* Forcer l'affichage du menu profil quand il est en display:block */
+.user-options-list[style*="display: block"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto;
 }

@@ -36,7 +36,7 @@ class SecureLogout {
      * Tente la déconnexion côté serveur
      */
     static async serverLogout() {
-        const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         
         if (!token) {
             console.log('📝 Aucun token trouvé, déconnexion locale uniquement');
@@ -134,7 +134,6 @@ class SecureLogout {
         
         profileKeys.forEach(key => {
             sessionStorage.removeItem(key);
-            localStorage.removeItem(key);
         });
     }
     

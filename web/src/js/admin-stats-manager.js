@@ -478,7 +478,7 @@ class AdminStatsManager {
     async makeAPIRequest(endpoint) {
         try {
             // Récupérer le token d'authentification
-            const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+            const token = sessionStorage.getItem('authToken');
             
             if (!token) {
                 throw new Error('Token d\'authentification manquant');

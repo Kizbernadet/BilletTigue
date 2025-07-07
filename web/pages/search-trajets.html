@@ -9,6 +9,7 @@
     <!-- CSS Framework -->
     <link href="../public/assets/css/style.css" rel="stylesheet">
     <link href="../public/assets/css/search-trajets.css" rel="stylesheet">
+    <link href="../public/assets/css/profile-menu.css" rel="stylesheet">
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -67,6 +68,50 @@
                         </ul>
                     </div>
 
+                    <!-- Profile Menu (visible si connecté) -->
+                    <div id="profile-menu" class="profile-dropdown-wrapper" style="display: none;">
+                        <button id="profileBtn" onclick="toggleProfileMenu()" class="profile-btn">
+                            <i class="fa-solid fa-user-circle"></i>
+                            <span id="profile-name">Utilisateur</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <ul class="profile-dropdown-menu" id="profileDropdown">
+                            <li class="profile-info">
+                                <div class="profile-header">
+                                    <i class="fa-solid fa-user"></i>
+                                    <div class="profile-details">
+                                        <span id="profile-full-name">Prénom Nom</span>
+                                        <span id="profile-role" class="profile-role">Utilisateur</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="profile.html" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-user"></i>
+                                    Mon Profil
+                                </a>
+                            </li>
+                            <li>
+                                <a href="user-dashboard.html" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-tachometer-alt"></i>
+                                    Mes Réservations
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="profile-dropdown-link">
+                                    <i class="fa-solid fa-bell"></i>
+                                    Notifications
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="profile-dropdown-link" onclick="logout()">
+                                    <i class="fa-solid fa-sign-out-alt"></i>
+                                    Déconnexion
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     <!-- Mobile Hamburger -->
                     <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
                         <span class="hamburger-bar"></span>
@@ -74,18 +119,7 @@
                         <span class="hamburger-bar"></span>
                     </button>
 
-                    <!-- User Menu (hidden by default) -->
-                    <div id="user-menu" class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center" style="display: none;">
-                        <label tabindex="0" class="btn-user">
-                            <i class="fas fa-user-circle text-xl"></i>
-                            <span id="user-name">Utilisateur</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </label>
-                        <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./profile.html" id="profile-link"><i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
-                        </ul>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -317,8 +351,8 @@
     <!-- Scripts -->
     <script src="../src/js/main.js"></script>
     <script src="../src/js/login-redirect-utils.js"></script>
-    <script src="../src/js/profile-button-enhancer.js"></script>
     <script type="module" src="../src/js/search-trajets.js"></script>
+    <script type="module" src="../src/js/profile-menu.js"></script>
     <script>
         // Initialiser les utilitaires de redirection
         document.addEventListener('DOMContentLoaded', function() {

@@ -288,12 +288,29 @@ class TransporterStatsManager {
 
         try {
             console.log('🌐 Requête API: /api/stats/transporter/own');
-            const result = await this.makeAPIRequest('/api/stats/transporter/own');
+            const token = sessionStorage.getItem('authToken');
+            const response = await fetch(`http://localhost:5000/api/stats/transporter/own`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Session expirée. Veuillez vous reconnecter.');
+                }
+                throw new Error(`Erreur serveur lors de la récupération des statistiques`);
+            }
+
+            const data = await response.json();
+            console.log(`✅ Réponse API /api/stats/transporter/own:`, data);
             
             // Mettre en cache le résultat
-            this.setCachedData(cacheKey, result);
+            this.setCachedData(cacheKey, data);
             
-            return result;
+            return data;
         } catch (error) {
             console.error('❌ Erreur récupération statistiques transporteur:', error);
             throw error;
@@ -305,7 +322,7 @@ class TransporterStatsManager {
      */
     async makeAPIRequest(endpoint) {
         try {
-            const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            const token = sessionStorage.getItem('authToken');
             
             if (!token) {
                 throw new Error('Token d\'authentification manquant');

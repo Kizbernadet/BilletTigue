@@ -465,7 +465,7 @@ function getApiBaseUrl() {
  * Obtenir le token d'authentification
  */
 function getAuthToken() {
-  return localStorage.getItem('token') || sessionStorage.getItem('authToken');
+  return sessionStorage.getItem('authToken');
 }
 
 /**

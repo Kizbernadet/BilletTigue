@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ========== Gestion de l'état d'authentification et du menu utilisateur ==========
-    const userMenu = document.getElementById('user-menu');
+    // ========== Gestion de l'état d'authentification ==========
     const loginMenu = document.getElementById('login-menu');
-    const userNameElement = document.getElementById('user-name');
-    const logoutBtn = document.getElementById('logout-btn');
     
     // Éléments du menu burger
     const burgerMenu = document.getElementById('burger-menu');
@@ -31,42 +28,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fonction pour vérifier si l'utilisateur est connecté
     function checkAuthState() {
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const token = sessionStorage.getItem('authToken');
+        const userData = sessionStorage.getItem('userData');
+        const user = userData ? JSON.parse(userData) : null;
         
         if (token && user) {
-            // Utilisateur connecté - afficher le menu utilisateur et le burger menu
-            if (userMenu) userMenu.style.display = 'flex';
+            // Utilisateur connecté - cacher le menu de connexion
             if (loginMenu) loginMenu.style.display = 'none';
-            if (burgerMenu) burgerMenu.style.display = 'flex';
-            
-            // Mettre à jour le nom d'utilisateur
-            if (userNameElement) {
-                const displayName = user.firstName || user.prenom || user.email.split('@')[0];
-                userNameElement.textContent = displayName;
-            }
-
-            // Mettre à jour les informations du menu burger
-            const firstName = user.firstName || user.prenom || '';
-            const lastName = user.lastName || user.nom || '';
-            
-            if (burgerUserName) {
-                const fullName = `${firstName} ${lastName}`.trim() || user.email.split('@')[0];
-                burgerUserName.textContent = fullName;
-            }
-
-            if (burgerUserEmail) {
-                burgerUserEmail.textContent = user.email || '';
-            }
-
-            if (burgerUserAvatar) {
-                updateUserAvatar(burgerUserAvatar, firstName, lastName);
-            }
         } else {
-            // Utilisateur non connecté - afficher le menu de connexion, cacher les autres
-            if (userMenu) userMenu.style.display = 'none';
+            // Utilisateur non connecté - afficher le menu de connexion
             if (loginMenu) loginMenu.style.display = 'flex';
-            if (burgerMenu) burgerMenu.style.display = 'none';
         }
     }
 
@@ -94,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             // Supprimer les données d'authentification
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userData');
             
             // Fermer le menu burger
             burgerMenu.classList.remove('active');
@@ -105,19 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Gestion de la déconnexion
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Supprimer les données d'authentification
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            
-            // Rediriger vers la page d'accueil
-            window.location.href = '/';
-        });
-    }
+
 
     // Vérifier l'état d'authentification au chargement
     checkAuthState();
@@ -844,73 +803,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Affichage conditionnel du menu profil ou du bouton login
-    const userDataRaw = sessionStorage.getItem('userData') || localStorage.getItem('userData');
-    const userData = userDataRaw ? JSON.parse(userDataRaw) : null;
-    const isLoggedIn = !!userData;
 
-    const profileBtnText = document.getElementById('profileBtnText');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const profileBtn = document.getElementById('profileBtn');
 
-    if (isLoggedIn) {
-        if (loginMenu) loginMenu.style.display = 'none';
-        if (userMenu) userMenu.style.display = 'flex';
-        // Affichage du nom et du rôle
-        if (profileBtnText && userData) {
-            profileBtnText.innerHTML = `
-                <strong style='font-size:1em;'>${userData.firstName || ''} ${userData.lastName || ''}</strong>
-                <span style="display:block;font-size:0.85em;color:#f5f5f5;">${userData.role ? (userData.role === 'user' ? 'Utilisateur' : userData.role.charAt(0).toUpperCase() + userData.role.slice(1)) : ''}</span>
-            `;
-        }
-        // Affichage des options du menu
-        if (profileDropdown) {
-            profileDropdown.innerHTML = `
-                <a class="user-option" href="./pages/profile.html"><i class="fas fa-user"></i> Mon profil</a>
-                <a class="user-option" href="./pages/edit-profile.html"><i class="fas fa-user-edit"></i> Modifier mon profil</a>
-                <a class="user-option" href="./pages/change-password.html"><i class="fas fa-key"></i> Changer mon mot de passe</a>
-                <a class="user-option" href="./pages/reservations.html"><i class="fas fa-ticket-alt"></i> Mes réservations</a>
-                <a class="user-option" href="./pages/search-trajets.html"><i class="fas fa-search"></i> Rechercher trajets</a>
-                <a class="user-option" href="./pages/colis.html"><i class="fas fa-box"></i> Mes colis</a>
-                <a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-            `;
-        }
-        // Gestion ouverture/fermeture du menu
-        if (profileBtn && profileDropdown) {
-            let isMenuOpen = false;
-            function openMenu() {
-                profileDropdown.style.display = 'block';
-                isMenuOpen = true;
+    // Fonction de nettoyage automatique des anciennes données d'authentification
+    function cleanupOldAuthData() {
+        const authKeys = [
+            'authToken', 'userData', 'user', 'token', 'userToken', 
+            'sessionToken', 'refreshToken', 'rememberMe', 'loginData', 
+            'authData', 'userProfile', 'currentUser', 'userSession'
+        ];
+        
+        // Supprimer les anciennes données d'authentification de localStorage
+        authKeys.forEach(key => {
+            if (localStorage.getItem(key)) {
+                console.log(`🧹 Suppression ancienne donnée localStorage: ${key}`);
+                localStorage.removeItem(key);
             }
-            function closeMenu() {
-                profileDropdown.style.display = 'none';
-                isMenuOpen = false;
+        });
+        
+        // Nettoyer par pattern pour localStorage
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const key = localStorage.key(i);
+            if (key && (key.includes('auth') || key.includes('user') || key.includes('token'))) {
+                console.log(`🧹 Suppression ancienne donnée localStorage (pattern): ${key}`);
+                localStorage.removeItem(key);
             }
-            function toggleMenu() {
-                if (isMenuOpen) closeMenu();
-                else openMenu();
-            }
-            profileBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMenu();
-            });
-            document.addEventListener('click', function(e) {
-                if (isMenuOpen && !profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                    closeMenu();
-                }
-            });
-            // Déconnexion
-            profileDropdown.addEventListener('click', function(e) {
-                if (e.target && (e.target.id === 'logout-btn' || e.target.closest('#logout-btn'))) {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.replace('./index.html');
-                }
-            });
         }
-    } else {
-        if (loginMenu) loginMenu.style.display = 'flex';
-        if (userMenu) userMenu.style.display = 'none';
     }
+
+    // Exécuter le nettoyage au chargement
+    cleanupOldAuthData();
 });

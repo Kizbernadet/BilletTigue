@@ -82,25 +82,37 @@ class ReservationManager {
             minute: '2-digit'
         });
 
-        // Remplir les informations du trajet
-        document.getElementById('departure-city').textContent = trajet.departure_city;
-        document.getElementById('arrival-city').textContent = trajet.arrival_city;
-        document.getElementById('departure-point').textContent = trajet.departure_point || 'Point de départ';
-        document.getElementById('arrival-point').textContent = trajet.arrival_point || 'Point d\'arrivée';
-        document.getElementById('departure-date-time').textContent = `${formattedDate} à ${formattedTime}`;
-        document.getElementById('arrival-info').textContent = 'Arrivée estimée';
-        document.getElementById('transporteur-name').textContent = trajet.transporteur?.company_name || 'Transporteur';
-        document.getElementById('available-seats').textContent = trajet.available_seats || 0;
-        document.getElementById('trajet-price').textContent = `${trajet.price || 0} FCFA`;
+        // Remplir les informations du trajet avec vérifications de nullité
+        const departureCity = document.getElementById('departure-city');
+        const arrivalCity = document.getElementById('arrival-city');
+        const departurePoint = document.getElementById('departure-point');
+        const arrivalPoint = document.getElementById('arrival-point');
+        const departureDateTime = document.getElementById('departure-date-time');
+        const arrivalInfo = document.getElementById('arrival-info');
+        const transporteurName = document.getElementById('transporteur-name');
+        const availableSeats = document.getElementById('available-seats');
+        const trajetPrice = document.getElementById('trajet-price');
+        
+        if (departureCity) departureCity.textContent = trajet.departure_city;
+        if (arrivalCity) arrivalCity.textContent = trajet.arrival_city;
+        if (departurePoint) departurePoint.textContent = trajet.departure_point || 'Point de départ';
+        if (arrivalPoint) arrivalPoint.textContent = trajet.arrival_point || 'Point d\'arrivée';
+        if (departureDateTime) departureDateTime.textContent = `${formattedDate} à ${formattedTime}`;
+        if (arrivalInfo) arrivalInfo.textContent = 'Arrivée estimée';
+        if (transporteurName) transporteurName.textContent = trajet.transporteur?.company_name || 'Transporteur';
+        if (availableSeats) availableSeats.textContent = trajet.available_seats || 0;
+        if (trajetPrice) trajetPrice.textContent = `${trajet.price || 0} FCFA`;
 
         // Mettre à jour le statut
         const statusElement = document.getElementById('trajet-status');
-        if (trajet.available_seats > 0) {
-            statusElement.innerHTML = '<i class="fas fa-check-circle"></i><span>Disponible</span>';
-            statusElement.className = 'trajet-status';
-        } else {
-            statusElement.innerHTML = '<i class="fas fa-times-circle"></i><span>Complet</span>';
-            statusElement.className = 'trajet-status unavailable';
+        if (statusElement) {
+            if (trajet.available_seats > 0) {
+                statusElement.innerHTML = '<i class="fas fa-check-circle"></i><span>Disponible</span>';
+                statusElement.className = 'trajet-status';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-times-circle"></i><span>Complet</span>';
+                statusElement.className = 'trajet-status unavailable';
+            }
         }
 
         // Stocker les données pour les calculs
@@ -112,26 +124,35 @@ class ReservationManager {
         
         // Définir les limites du sélecteur de places
         const seatsInput = document.getElementById('seats-reserved');
-        seatsInput.max = this.maxSeats;
-        
-        if (this.maxSeats <= 0) {
-            seatsInput.disabled = true;
-            document.getElementById('confirm-reservation').disabled = true;
+        if (seatsInput) {
+            seatsInput.max = this.maxSeats;
+            
+            if (this.maxSeats <= 0) {
+                seatsInput.disabled = true;
+                const confirmButton = document.getElementById('confirm-reservation');
+                if (confirmButton) {
+                    confirmButton.disabled = true;
+                }
+            }
         }
     }
 
     loadUserInfo() {
         try {
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
             
-            if (userData.first_name) {
-                document.getElementById('passenger-first-name').value = userData.first_name;
+            const firstNameInput = document.getElementById('passenger-first-name');
+            const lastNameInput = document.getElementById('passenger-last-name');
+            const phoneInput = document.getElementById('phone-number');
+            
+            if (userData.first_name && firstNameInput) {
+                firstNameInput.value = userData.first_name;
             }
-            if (userData.last_name) {
-                document.getElementById('passenger-last-name').value = userData.last_name;
+            if (userData.last_name && lastNameInput) {
+                lastNameInput.value = userData.last_name;
             }
-            if (userData.phone) {
-                document.getElementById('phone-number').value = userData.phone;
+            if (userData.phone && phoneInput) {
+                phoneInput.value = userData.phone;
             }
         } catch (error) {
             console.log('Impossible de charger les infos utilisateur:', error);
@@ -140,75 +161,117 @@ class ReservationManager {
 
     setupEventListeners() {
         // Contrôles de places
-        document.getElementById('decrement-seats').addEventListener('click', () => {
-            this.adjustSeats(-1);
-        });
+        const decrementSeats = document.getElementById('decrement-seats');
+        if (decrementSeats) {
+            decrementSeats.addEventListener('click', () => {
+                this.adjustSeats(-1);
+            });
+        }
         
-        document.getElementById('increment-seats').addEventListener('click', () => {
-            this.adjustSeats(1);
-        });
+        const incrementSeats = document.getElementById('increment-seats');
+        if (incrementSeats) {
+            incrementSeats.addEventListener('click', () => {
+                this.adjustSeats(1);
+            });
+        }
         
-        document.getElementById('seats-reserved').addEventListener('input', () => {
-            this.updateSummary();
-        });
+        const seatsReserved = document.getElementById('seats-reserved');
+        if (seatsReserved) {
+            seatsReserved.addEventListener('input', () => {
+                this.updateSummary();
+            });
+        }
 
         // Option remboursable
-        document.getElementById('refundable-option').addEventListener('change', (e) => {
-            this.toggleRefundPolicy(e.target.checked);
-            this.updateSummary();
-        });
+        const refundableOption = document.getElementById('refundable-option');
+        if (refundableOption) {
+            refundableOption.addEventListener('change', (e) => {
+                this.toggleRefundPolicy(e.target.checked);
+                this.updateSummary();
+            });
+        }
 
         // Bouton retour
-        document.querySelector('.btn-back-to-search').addEventListener('click', () => {
-            window.history.back();
-        });
+        const backButton = document.querySelector('.btn-back-to-search');
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                window.history.back();
+            });
+        }
 
         // Formulaire de réservation
-        document.getElementById('reservation-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitReservation();
-        });
+        const reservationForm = document.getElementById('reservation-form');
+        if (reservationForm) {
+            reservationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.submitReservation();
+            });
+        }
 
         // Fermer la modale de succès en cliquant sur l'overlay
-        document.getElementById('success-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'success-modal') {
-                this.closeSuccessModal();
-            }
-        });
+        const successModal = document.getElementById('success-modal');
+        if (successModal) {
+            successModal.addEventListener('click', (e) => {
+                if (e.target.id === 'success-modal') {
+                    this.closeSuccessModal();
+                }
+            });
+        }
 
         // Gestionnaires pour la modal d'authentification
-        document.getElementById('close-auth-modal').addEventListener('click', () => {
-            this.closeAuthModal();
-        });
-
-        document.getElementById('continue-as-guest').addEventListener('click', () => {
-            this.continueAsGuest();
-        });
-
-        document.getElementById('show-login-form').addEventListener('click', () => {
-            this.showLoginForm();
-        });
-
-        document.getElementById('back-to-options').addEventListener('click', () => {
-            this.showAuthOptions();
-        });
-
-        document.getElementById('auth-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'auth-modal') {
+        const closeAuthModal = document.getElementById('close-auth-modal');
+        if (closeAuthModal) {
+            closeAuthModal.addEventListener('click', () => {
                 this.closeAuthModal();
-            }
-        });
+            });
+        }
 
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            this.handleLogin(e);
-        });
+        const continueAsGuest = document.getElementById('continue-as-guest');
+        if (continueAsGuest) {
+            continueAsGuest.addEventListener('click', () => {
+                this.continueAsGuest();
+            });
+        }
+
+        const showLoginForm = document.getElementById('show-login-form');
+        if (showLoginForm) {
+            showLoginForm.addEventListener('click', () => {
+                this.showLoginForm();
+            });
+        }
+
+        const backToOptions = document.getElementById('back-to-options');
+        if (backToOptions) {
+            backToOptions.addEventListener('click', () => {
+                this.showAuthOptions();
+            });
+        }
+
+        const authModal = document.getElementById('auth-modal');
+        if (authModal) {
+            authModal.addEventListener('click', (e) => {
+                if (e.target.id === 'auth-modal') {
+                    this.closeAuthModal();
+                }
+            });
+        }
+
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                this.handleLogin(e);
+            });
+        }
 
         // Échappement pour fermer les modales
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (document.getElementById('auth-modal').style.display === 'flex') {
+                const authModal = document.getElementById('auth-modal');
+                const successModal = document.getElementById('success-modal');
+                
+                if (authModal && authModal.style.display === 'flex') {
                     this.closeAuthModal();
-                } else if (document.getElementById('success-modal').style.display === 'flex') {
+                } else if (successModal && successModal.style.display === 'flex') {
                     this.closeSuccessModal();
                 }
             }
@@ -217,6 +280,8 @@ class ReservationManager {
 
     adjustSeats(change) {
         const seatsInput = document.getElementById('seats-reserved');
+        if (!seatsInput) return;
+        
         const currentSeats = parseInt(seatsInput.value) || 1;
         const newSeats = Math.max(1, Math.min(this.maxSeats, currentSeats + change));
         
@@ -224,42 +289,56 @@ class ReservationManager {
         this.updateSummary();
         
         // Mettre à jour l'état des boutons
-        document.getElementById('decrement-seats').disabled = newSeats <= 1;
-        document.getElementById('increment-seats').disabled = newSeats >= this.maxSeats;
+        const decrementButton = document.getElementById('decrement-seats');
+        const incrementButton = document.getElementById('increment-seats');
+        
+        if (decrementButton) decrementButton.disabled = newSeats <= 1;
+        if (incrementButton) incrementButton.disabled = newSeats >= this.maxSeats;
     }
 
     updateSummary() {
-        const seats = parseInt(document.getElementById('seats-reserved').value) || 1;
+        const seatsInput = document.getElementById('seats-reserved');
+        const refundableOption = document.getElementById('refundable-option');
+        
+        if (!seatsInput || !refundableOption) return;
+        
+        const seats = parseInt(seatsInput.value) || 1;
         const subtotal = this.unitPrice * seats;
-        const isRefundable = document.getElementById('refundable-option').checked;
+        const isRefundable = refundableOption.checked;
         const refundSupplement = isRefundable ? Math.round(subtotal * this.refundSupplementRate) : 0;
         const total = subtotal + refundSupplement;
         
-        // Mettre à jour l'affichage
-        document.getElementById('unit-price').textContent = `${this.unitPrice} FCFA`;
-        document.getElementById('seats-count').textContent = seats;
-        document.getElementById('subtotal-price').textContent = `${subtotal} FCFA`;
-        document.getElementById('refund-supplement').textContent = `${refundSupplement} FCFA`;
-        document.getElementById('total-price').textContent = `${total} FCFA`;
+        // Mettre à jour l'affichage avec vérifications de nullité
+        const unitPriceElement = document.getElementById('unit-price');
+        const seatsCountElement = document.getElementById('seats-count');
+        const subtotalPriceElement = document.getElementById('subtotal-price');
+        const refundSupplementElement = document.getElementById('refund-supplement');
+        const totalPriceElement = document.getElementById('total-price');
+        
+        if (unitPriceElement) unitPriceElement.textContent = `${this.unitPrice} FCFA`;
+        if (seatsCountElement) seatsCountElement.textContent = seats;
+        if (subtotalPriceElement) subtotalPriceElement.textContent = `${subtotal} FCFA`;
+        if (refundSupplementElement) refundSupplementElement.textContent = `${refundSupplement} FCFA`;
+        if (totalPriceElement) totalPriceElement.textContent = `${total} FCFA`;
         
         // Afficher/masquer le supplément remboursable
         const supplementRow = document.getElementById('refund-supplement-row');
-        if (isRefundable) {
-            supplementRow.style.display = 'flex';
-        } else {
-            supplementRow.style.display = 'none';
+        if (supplementRow) {
+            supplementRow.style.display = isRefundable ? 'flex' : 'none';
         }
     }
 
     toggleRefundPolicy(isChecked) {
         const policyDiv = document.getElementById('refund-policy');
         
-        if (isChecked) {
-            policyDiv.style.display = 'block';
-            console.log('✅ Option remboursable activée (+15%)');
-        } else {
-            policyDiv.style.display = 'none';
-            console.log('❌ Option remboursable désactivée');
+        if (policyDiv) {
+            if (isChecked) {
+                policyDiv.style.display = 'block';
+                console.log('✅ Option remboursable activée (+15%)');
+            } else {
+                policyDiv.style.display = 'none';
+                console.log('❌ Option remboursable désactivée');
+            }
         }
     }
 
@@ -267,7 +346,7 @@ class ReservationManager {
         if (this.isLoading) return;
         
         // Vérifier la connexion au moment de la soumission
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         
         if (!token) {
             // Pas connecté - proposer les options
@@ -326,8 +405,8 @@ class ReservationManager {
             if (error.message.includes('Session expirée')) {
                 errorMessage = 'Votre session a expiré. Veuillez vous reconnecter.';
                 // Supprimer le token invalide
-                localStorage.removeItem('token');
-                localStorage.removeItem('userData');
+                sessionStorage.removeItem('authToken');
+                sessionStorage.removeItem('userData');
             } else if (error.message.includes('Plus assez de places')) {
                 errorMessage = 'Plus assez de places disponibles. Veuillez réduire le nombre de places ou choisir un autre trajet.';
             } else if (error.message.includes('déjà réservé')) {
@@ -343,18 +422,29 @@ class ReservationManager {
     }
 
     getFormData() {
-        const isRefundable = document.getElementById('refundable-option').checked;
-        const seats = parseInt(document.getElementById('seats-reserved').value);
+        const refundableOption = document.getElementById('refundable-option');
+        const seatsInput = document.getElementById('seats-reserved');
+        const firstNameInput = document.getElementById('passenger-first-name');
+        const lastNameInput = document.getElementById('passenger-last-name');
+        const phoneInput = document.getElementById('phone-number');
+        const paymentMethodInput = document.querySelector('input[name="payment_method"]:checked');
+        
+        if (!refundableOption || !seatsInput || !firstNameInput || !lastNameInput || !phoneInput || !paymentMethodInput) {
+            throw new Error('Tous les champs requis ne sont pas disponibles');
+        }
+        
+        const isRefundable = refundableOption.checked;
+        const seats = parseInt(seatsInput.value);
         const baseAmount = this.unitPrice * seats;
         const refundSupplement = isRefundable ? Math.round(baseAmount * this.refundSupplementRate) : 0;
         
         return {
             trajet_id: parseInt(this.trajetId),
-            passenger_first_name: document.getElementById('passenger-first-name').value.trim(),
-            passenger_last_name: document.getElementById('passenger-last-name').value.trim(),
-            phone_number: document.getElementById('phone-number').value.trim(),
+            passenger_first_name: firstNameInput.value.trim(),
+            passenger_last_name: lastNameInput.value.trim(),
+            phone_number: phoneInput.value.trim(),
             seats_reserved: seats,
-            payment_method: document.querySelector('input[name="payment_method"]:checked').value,
+            payment_method: paymentMethodInput.value,
             refundable_option: isRefundable,
             refund_supplement_amount: refundSupplement,
             total_amount: baseAmount + refundSupplement
@@ -365,19 +455,22 @@ class ReservationManager {
         // Validation des champs requis
         if (!data.passenger_first_name) {
             alert('Le prénom est requis');
-            document.getElementById('passenger-first-name').focus();
+            const firstNameInput = document.getElementById('passenger-first-name');
+            if (firstNameInput) firstNameInput.focus();
             return false;
         }
         
         if (!data.passenger_last_name) {
             alert('Le nom est requis');
-            document.getElementById('passenger-last-name').focus();
+            const lastNameInput = document.getElementById('passenger-last-name');
+            if (lastNameInput) lastNameInput.focus();
             return false;
         }
         
         if (!data.phone_number) {
             alert('Le numéro de téléphone est requis');
-            document.getElementById('phone-number').focus();
+            const phoneInput = document.getElementById('phone-number');
+            if (phoneInput) phoneInput.focus();
             return false;
         }
         
@@ -388,14 +481,16 @@ class ReservationManager {
                 '• 70 12 34 56 (Malitel)<br>' +
                 '• 80 12 34 56 (Telecel)<br>' +
                 '• +223 90 12 34 56 (avec indicatif)');
-            document.getElementById('phone-number').focus();
+            const phoneInput = document.getElementById('phone-number');
+            if (phoneInput) phoneInput.focus();
             return false;
         }
         
         // Validation du nombre de places
         if (data.seats_reserved < 1 || data.seats_reserved > this.maxSeats) {
             alert(`Le nombre de places doit être entre 1 et ${this.maxSeats}`);
-            document.getElementById('seats-reserved').focus();
+            const seatsInput = document.getElementById('seats-reserved');
+            if (seatsInput) seatsInput.focus();
             return false;
         }
         
@@ -426,7 +521,7 @@ class ReservationManager {
     }
 
     async createReservation(formData) {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('authToken');
         
         if (!token) {
             throw new Error('Token d\'authentification manquant');
@@ -476,7 +571,7 @@ class ReservationManager {
         document.getElementById('success-total').textContent = `${totalAmount} FCFA`;
         
         // Adapter le message selon le type d'utilisateur
-        const isLoggedIn = localStorage.getItem('token') !== null;
+        const isLoggedIn = sessionStorage.getItem('authToken') !== null;
         const successMessage = document.querySelector('.success-message p');
         
         if (isLoggedIn) {
@@ -627,9 +722,8 @@ class ReservationManager {
     }
 
     showGuestSuccessModal(reservationData) {
-        // Pour l'instant, utiliser la même modal de succès
-        // TODO: Créer une modal spéciale avec QR code et e-facture
-        this.showSuccessModal(reservationData.reservation || reservationData, reservationData);
+        // Utiliser la modale spéciale pour les invités
+        this.showGuestModal(reservationData);
         
         // Ajouter des informations spécifiques à l'invité
         console.log('🎫 Réservation invité confirmée:', {
@@ -638,23 +732,162 @@ class ReservationManager {
             invoice: reservationData.invoice_url
         });
         
-        // TODO: Générer le QR code et afficher l'e-facture
+        // Générer le QR code et afficher l'e-facture
         this.generateQRCode(reservationData.reference);
     }
 
+    showGuestModal(reservationData) {
+        const reservation = reservationData.reservation || reservationData;
+        
+        // Remplir les informations de la réservation
+        document.getElementById('guest-reference').textContent = reservationData.reference || `BT-${reservation.id.toString().padStart(6, '0')}`;
+        document.getElementById('guest-route').textContent = `${reservation.trajet?.departure_city || 'Départ'} → ${reservation.trajet?.arrival_city || 'Arrivée'}`;
+        document.getElementById('guest-passenger').textContent = `${reservation.passenger_first_name} ${reservation.passenger_last_name}`;
+        document.getElementById('guest-seats').textContent = reservation.seats_reserved;
+        document.getElementById('guest-total').textContent = `${reservation.total_amount} FCFA`;
+        document.getElementById('guest-status').textContent = 'Confirmé';
+        
+        // Afficher la modale
+        document.getElementById('guest-success-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Ajouter les gestionnaires d'événements pour cette modale
+        this.setupGuestModalEvents();
+    }
+
+    setupGuestModalEvents() {
+        // Fermer la modale en cliquant sur l'overlay
+        document.getElementById('guest-success-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'guest-success-modal') {
+                this.closeGuestModal();
+            }
+        });
+
+        // Bouton de téléchargement de facture
+        document.getElementById('download-receipt-btn').addEventListener('click', () => {
+            this.downloadGuestReceipt();
+        });
+
+        // Bouton de partage
+        document.getElementById('share-reservation-btn').addEventListener('click', () => {
+            this.shareReservation();
+        });
+
+        // Échappement pour fermer
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('guest-success-modal').style.display === 'flex') {
+                this.closeGuestModal();
+            }
+        });
+    }
+
+    closeGuestModal() {
+        document.getElementById('guest-success-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
     generateQRCode(reference) {
-        // TODO: Implémenter la génération du QR code
         console.log('🔲 Génération QR code pour:', reference);
         
-        // Simuler les données QR code
+        // Créer les données QR code
         const qrData = {
             reference: reference,
             platform: 'BilletTigue',
             type: 'reservation',
-            url: `${window.location.origin}/verify/${reference}`
+            url: `${window.location.origin}/verify/${reference}`,
+            timestamp: new Date().toISOString()
         };
         
         console.log('📋 Données QR code:', qrData);
+        
+        // Générer le QR code en utilisant une API en ligne (pour l'instant)
+        // TODO: Implémenter une vraie génération de QR code côté client
+        this.displayQRCode(reference, qrData);
+    }
+
+    displayQRCode(reference, qrData) {
+        const qrDisplay = document.getElementById('qr-code-display');
+        
+        // Pour l'instant, afficher un placeholder stylisé
+        // TODO: Remplacer par une vraie génération de QR code
+        qrDisplay.innerHTML = `
+            <div style="text-align: center; padding: 1rem;">
+                <div style="font-size: 3rem; color: #4CAF50; margin-bottom: 0.5rem;">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 0.5rem;">
+                    ${reference}
+                </div>
+                <div style="font-size: 0.7rem; color: #999;">
+                    QR Code
+                </div>
+            </div>
+        `;
+        
+        // Ajouter un effet de scan
+        qrDisplay.style.animation = 'qrShine 3s infinite';
+    }
+
+    downloadGuestReceipt() {
+        console.log('📄 Téléchargement de la facture invité...');
+        
+        // TODO: Implémenter la génération et téléchargement de facture PDF
+        // Pour l'instant, afficher un message
+        this.showErrorAlert('Fonctionnalité de téléchargement de facture en cours de développement');
+    }
+
+    shareReservation() {
+        console.log('📤 Partage de la réservation...');
+        
+        // Récupérer les données de réservation
+        const reference = document.getElementById('guest-reference').textContent;
+        const route = document.getElementById('guest-route').textContent;
+        const passenger = document.getElementById('guest-passenger').textContent;
+        
+        // Créer le texte de partage
+        const shareText = `J'ai réservé mon trajet sur BilletTigue !\n\n` +
+                         `🚌 ${route}\n` +
+                         `👤 ${passenger}\n` +
+                         `🎫 Référence: ${reference}\n\n` +
+                         `Réservez vos trajets sur ${window.location.origin}`;
+        
+        // Utiliser l'API Web Share si disponible
+        if (navigator.share) {
+            navigator.share({
+                title: 'Ma réservation BilletTigue',
+                text: shareText,
+                url: window.location.origin
+            }).catch(err => {
+                console.log('Erreur de partage:', err);
+                this.fallbackShare(shareText);
+            });
+        } else {
+            this.fallbackShare(shareText);
+        }
+    }
+
+    fallbackShare(shareText) {
+        // Fallback : copier dans le presse-papiers
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareText).then(() => {
+                this.showErrorAlert('Informations de réservation copiées dans le presse-papiers !');
+            }).catch(() => {
+                this.showErrorAlert('Impossible de copier dans le presse-papiers');
+            });
+        } else {
+            // Fallback pour les navigateurs plus anciens
+            const textArea = document.createElement('textarea');
+            textArea.value = shareText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                this.showErrorAlert('Informations de réservation copiées dans le presse-papiers !');
+            } catch (err) {
+                this.showErrorAlert('Impossible de copier dans le presse-papiers');
+            }
+            document.body.removeChild(textArea);
+        }
     }
 
     async handleLogin(event) {
@@ -690,8 +923,8 @@ class ReservationManager {
             
             if (response.ok && result.success) {
                 // Connexion réussie - sauvegarder les données
-                localStorage.setItem('token', result.data.token);
-                localStorage.setItem('userData', JSON.stringify(result.data.user));
+                sessionStorage.setItem('authToken', result.data.token);
+                sessionStorage.setItem('userData', JSON.stringify(result.data.user));
                 
                 console.log('✅ Connexion réussie, soumission de la réservation...');
                 
@@ -724,11 +957,9 @@ class ReservationManager {
     }
 
     updateUserMenu(userData) {
-        const userMenu = document.getElementById('user-menu');
-        if (userMenu && userData.first_name) {
-            userMenu.style.display = 'flex';
-            document.getElementById('user-name').textContent = userData.first_name;
-        }
+        // Mettre à jour le menu profil avec les nouvelles données utilisateur
+        const profileMenuManager = new ProfileMenuManager();
+        profileMenuManager.checkAuthAndSetupMenu();
     }
 
     showSubmitLoading() {
@@ -803,6 +1034,8 @@ class MobileMenuManager {
     }
 
     toggleMobileMenu() {
+        if (!this.mobileMenu || !this.hamburger) return;
+        
         this.isOpen = !this.isOpen;
         
         if (this.isOpen) {
@@ -815,7 +1048,7 @@ class MobileMenuManager {
     }
 }
 
-// Profile Menu Manager (réutilisé)
+// Profile Menu Manager
 class ProfileMenuManager {
     constructor() {
         this.init();
@@ -823,23 +1056,87 @@ class ProfileMenuManager {
 
     init() {
         this.checkAuthAndSetupMenu();
+        this.setupProfileMenuEvents();
     }
 
     checkAuthAndSetupMenu() {
-        const token = localStorage.getItem('token');
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const token = sessionStorage.getItem('authToken');
+        const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
         
-        const userMenu = document.getElementById('user-menu');
+        const loginMenu = document.getElementById('login-menu');
+        const profileMenu = document.getElementById('profile-menu');
         
         if (token && userData.first_name) {
-            // Utilisateur connecté - afficher le menu utilisateur
-            userMenu.style.display = 'flex';
-            document.getElementById('user-name').textContent = userData.first_name;
+            // Utilisateur connecté - afficher le menu profil
+            if (loginMenu) loginMenu.style.display = 'none';
+            if (profileMenu) {
+                profileMenu.style.display = 'flex';
+                this.updateProfileInfo(userData);
+            }
         } else {
-            // Utilisateur non connecté - masquer le menu (connexion sera demandée à la confirmation)
-            userMenu.style.display = 'none';
+            // Utilisateur non connecté - afficher le menu de connexion
+            if (loginMenu) loginMenu.style.display = 'flex';
+            if (profileMenu) profileMenu.style.display = 'none';
         }
     }
+
+    updateProfileInfo(userData) {
+        const profileName = document.getElementById('profile-name');
+        const profileFullName = document.getElementById('profile-full-name');
+        const profileRole = document.getElementById('profile-role');
+        
+        if (profileName) {
+            profileName.textContent = userData.first_name;
+        }
+        
+        if (profileFullName) {
+            profileFullName.textContent = `${userData.first_name} ${userData.last_name}`;
+        }
+        
+        if (profileRole) {
+            profileRole.textContent = userData.role || 'Utilisateur';
+        }
+    }
+
+    setupProfileMenuEvents() {
+        // Fermer le menu quand on clique ailleurs
+        document.addEventListener('click', (event) => {
+            const profileBtn = document.getElementById('profileBtn');
+            const dropdown = document.getElementById('profileDropdown');
+            
+            if (profileBtn && dropdown && !profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Échappement pour fermer
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const dropdown = document.getElementById('profileDropdown');
+                if (dropdown) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+    }
+}
+
+// Fonction globale pour toggle le menu profil
+function toggleProfileMenu() {
+    const dropdown = document.getElementById('profileDropdown');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+}
+
+// Fonction globale pour la déconnexion
+function logout() {
+    // Supprimer les données de session
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('userData');
+    
+    // Rediriger vers la page d'accueil
+    window.location.href = '../index.html';
 }
 
 // Initialisation au chargement de la page

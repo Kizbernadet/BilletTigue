@@ -90,19 +90,13 @@ class AuthAPI {
                 };
             }
 
-            // Sauvegarder le token dans le bon storage
+            // Sauvegarder le token uniquement dans sessionStorage (déconnexion à la fermeture du navigateur)
             if (data.token) {
-                if (credentials.rememberMe) {
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userData', JSON.stringify(data.user));
-                    sessionStorage.removeItem('authToken');
-                    sessionStorage.removeItem('userData');
-                } else {
-                    sessionStorage.setItem('authToken', data.token);
-                    sessionStorage.setItem('userData', JSON.stringify(data.user));
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('userData');
-                }
+                sessionStorage.setItem('authToken', data.token);
+                sessionStorage.setItem('userData', JSON.stringify(data.user));
+                // Nettoyer localStorage pour éviter les conflits
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
             }
 
             return {
@@ -140,19 +134,13 @@ class AuthAPI {
                 };
             }
 
-            // Sauvegarder le token dans le bon storage
+            // Sauvegarder le token uniquement dans sessionStorage (déconnexion à la fermeture du navigateur)
             if (data.token) {
-                if (credentials.rememberMe) {
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userData', JSON.stringify(data.user));
-                    sessionStorage.removeItem('authToken');
-                    sessionStorage.removeItem('userData');
-                } else {
-                    sessionStorage.setItem('authToken', data.token);
-                    sessionStorage.setItem('userData', JSON.stringify(data.user));
-                    localStorage.removeItem('authToken');
-                    localStorage.removeItem('userData');
-                }
+                sessionStorage.setItem('authToken', data.token);
+                sessionStorage.setItem('userData', JSON.stringify(data.user));
+                // Nettoyer localStorage pour éviter les conflits
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
             }
 
             return {
@@ -178,8 +166,6 @@ class AuthAPI {
             });
 
             // Supprimer les données locales même si la requête échoue
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
             sessionStorage.removeItem('authToken');
             sessionStorage.removeItem('userData');
 
@@ -199,8 +185,6 @@ class AuthAPI {
 
         } catch (error) {
             // Supprimer les données locales même en cas d'erreur
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
             sessionStorage.removeItem('authToken');
             sessionStorage.removeItem('userData');
             
@@ -213,7 +197,7 @@ class AuthAPI {
      * @returns {boolean} True si connecté, false sinon
      */
     static isAuthenticated() {
-        const token = sessionStorage.getItem('authToken') || localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         return !!token;
     }
 
@@ -222,7 +206,7 @@ class AuthAPI {
      * @returns {Object|null} Données de l'utilisateur ou null
      */
     static getCurrentUser() {
-        const userData = sessionStorage.getItem('userData') || localStorage.getItem('userData');
+        const userData = sessionStorage.getItem('userData');
         return userData ? JSON.parse(userData) : null;
     }
 }

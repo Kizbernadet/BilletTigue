@@ -728,78 +728,119 @@
 
 /* Success Modal */
 .success-modal {
-    max-width: 500px;
+    max-width: 550px;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(76, 175, 80, 0.4);
+    animation: modalSlideIn 0.4s ease-out;
 }
 
 .success-header {
     text-align: center;
-    padding: 2rem 2rem 1rem;
+    padding: 2.5rem 2rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .success-icon {
-    font-size: 4rem;
-    color: #4CAF50;
+    font-size: 4.5rem;
+    color: white;
     margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.success-modal .modal-title {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .success-message {
     text-align: center;
-    padding: 1rem 2rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    padding: 0 2rem;
 }
 
 .reservation-details {
-    background: #f8f9fa;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 1.5rem;
-    margin-top: 1.5rem;
-    text-align: left;
+    margin: 1rem 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .reservation-details p {
-    margin: 0.5rem 0;
+    margin: 0.75rem 0;
+    color: #333;
+    font-weight: 500;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.reservation-details p strong {
+    color: #4CAF50;
+    font-weight: 600;
 }
 
 .modal-actions {
     display: flex;
     gap: 1rem;
-    padding: 1rem 2rem 2rem;
     justify-content: center;
+    padding: 1.5rem 2rem 2rem;
+    background: white;
 }
 
 .btn-primary, .btn-secondary {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 500;
+    padding: 1rem 1.75rem;
+    border-radius: 12px;
     text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    min-width: 140px;
+    justify-content: center;
 }
 
 .btn-primary {
-    background: #667eea;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
     color: white;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
 }
 
 .btn-primary:hover {
-    background: #5a6fd8;
     transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
 }
 
 .btn-secondary {
-    background: #f5f5f5;
-    color: #666;
-    border: 1px solid #ddd;
+    background: #f8f9fa;
+    color: #333;
+    border: 2px solid #e0e0e0;
 }
 
 .btn-secondary:hover {
-    background: #eeeeee;
+    background: #e9ecef;
+    border-color: #4CAF50;
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Modal Overlay */
@@ -974,6 +1015,387 @@
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+/* Auth Modal Styles */
+.auth-options-modal {
+    max-width: 420px;
+    height: 500px;
+    width: 95%;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    animation: modalSlideIn 0.4s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.auth-options-modal .modal-header {
+    /* background: rgba(255, 255, 255, 0.1); */
+    /* backdrop-filter: blur(10px); */
+    padding: 2rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.auth-title {
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    /* text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); */
+}
+
+.auth-subtitle {
+    color: black;
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+    font-weight: 400;
+    text-align: center;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.auth-options-modal .modal-content {
+    padding: 1rem;
+    height: 80%;
+}
+
+.reservation-options {
+    display: none;
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10%;
+    width: 100%;
+    height: 80%;
+    padding: 1rem;
+}
+
+.reservation-option-btn {
+    width: 100%;
+    height: 50%;
+    /* min-width: 0; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* padding: 0.7rem 0.7rem; */
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    /* background: pink; */
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(.4,2,.6,1);
+    box-shadow: 0 2px 8px rgba(102,126,234,0.06);
+    text-align: left;
+    position: relative;
+    gap: 10px;
+}
+
+.reservation-option-btn:hover, .reservation-option-btn:focus {
+    border-color: #667eea;
+    box-shadow: 0 6px 24px rgba(102,126,234,0.18);
+    transform: translateY(-2px) scale(1.03);
+    z-index: 2;
+}
+
+.option-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1.05rem;
+    margin-right: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-content h3 {
+    font-size: 1.08rem;
+    margin-bottom: 0.18rem;
+    font-weight: 600;
+}
+
+.option-content p {
+    font-size: 0.89rem;
+    margin-bottom: 0.3rem;
+    color: #555;
+}
+
+.option-benefits {
+    font-size: 0.78rem;
+    padding: 0.22rem 0.5rem;
+    background: #f3f6ff;
+    color: #667eea;
+    border-radius: 7px;
+    font-weight: 500;
+}
+
+.divider-or {
+    flex-basis: 100%;
+    text-align: center;
+    margin: 0.3rem 0 0.7rem 0;
+    font-size: 0.92rem;
+    color: #aaa;
+    position: relative;
+}
+.divider-or::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: #e0e0e0;
+    z-index: 0;
+}
+.divider-or span {
+    background: white;
+    padding: 0 0.7rem;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 700px) {
+    .reservation-options {
+        flex-direction: column;
+        gap: 1.1rem;
+    }
+    .reservation-option-btn {
+        width: 100%;
+        margin-bottom: 0;
+    }
+}
+
+/* Login Form Styles */
+.login-form-container {
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.back-to-options {
+    margin-bottom: 1.5rem;
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: #667eea;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    transition: color 0.3s ease;
+}
+
+.btn-back:hover {
+    color: #5a67d8;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-field {
+    position: relative;
+}
+
+.form-field input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-field input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-container label {
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.forgot-password-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+    color: #5a67d8;
+    text-decoration: underline;
+}
+
+.auth-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+.auth-footer-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.auth-footer-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-footer-link a:hover {
+    color: #5a67d8;
+    text-decoration: underline;
+}
+
+/* Améliorations supplémentaires pour les modales */
+.auth-options-modal .reservation-option-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-options-modal .reservation-option-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.auth-options-modal .reservation-option-btn:hover::before {
+    left: 100%;
+}
+
+.auth-options-modal .reservation-option-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* Animation pour les icônes */
+.option-icon {
+    transition: transform 0.3s ease;
+}
+
+.reservation-option-btn:hover .option-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Amélioration du bouton de connexion */
+.auth-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.auth-button:hover::before {
+    left: 100%;
 }
 
 /* Responsive pour auth modal */
@@ -1210,5 +1632,471 @@
     
     .policy-details {
         margin-left: 1.5rem;
+    }
+}
+
+/* ========== MODALE DE SUCCÈS INVITÉ ========== */
+
+.guest-success-modal {
+    max-width: 600px;
+    width: 95%;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    animation: modalSlideIn 0.4s ease-out;
+}
+
+.guest-success-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem 2rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    position: relative;
+}
+
+.guest-success-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    animation: successPulse 2s infinite;
+}
+
+.guest-success-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.guest-success-modal .modal-title {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.guest-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0;
+    font-weight: 400;
+}
+
+.guest-success-modal .modal-content {
+    padding: 2rem;
+    background: white;
+}
+
+.guest-success-message {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Section QR Code */
+.qr-code-section {
+    text-align: center;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border: 2px dashed #4CAF50;
+}
+
+.qr-code-section h3 {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.qr-code-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.qr-code-display {
+    width: 200px;
+    height: 200px;
+    background: white;
+    border: 3px solid #4CAF50;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-code-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(76, 175, 80, 0.1) 50%, transparent 70%);
+    animation: qrShine 3s infinite;
+}
+
+@keyframes qrShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.qr-instructions {
+    color: #666;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Section Informations de réservation */
+.reservation-info-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 1.5rem;
+}
+
+.reservation-info-section h3 {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.guest-reservation-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 10px;
+    border-left: 4px solid #4CAF50;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.detail-value.total-amount {
+    color: #4CAF50;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.detail-value.status-confirmed {
+    color: #4CAF50;
+    font-weight: 600;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+/* Section Avis importants */
+.important-notices {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.important-notices h3 {
+    color: #856404;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.notice-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+}
+
+.notice-item:last-child {
+    margin-bottom: 0;
+}
+
+.notice-item i {
+    color: #856404;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.notice-item span {
+    color: #856404;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Actions de la modale */
+.guest-success-modal .modal-actions {
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:active {
+    transform: translateY(0);
+}
+
+/* Responsive pour la modale invité */
+@media (max-width: 768px) {
+    .guest-success-modal {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+    
+    .guest-success-message {
+        gap: 1.5rem;
+    }
+    
+    .qr-code-display {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .guest-reservation-details {
+        gap: 0.5rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .guest-success-modal .modal-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .btn-success, .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .guest-success-modal .modal-title {
+        font-size: 1.4rem;
+    }
+    
+    .guest-subtitle {
+        font-size: 1rem;
+    }
+    
+    .qr-code-section h3,
+    .reservation-info-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .detail-label,
+    .detail-value {
+        font-size: 0.9rem;
+    }
+    
+    .notice-item span {
+        font-size: 0.85rem;
+    }
+}
+
+/* Profile Menu Styles */
+.profile-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.profile-btn i {
+    font-size: 1.1rem;
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    min-width: 250px;
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.profile-dropdown-menu li {
+    list-style: none;
+}
+
+.profile-info {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.profile-header i {
+    font-size: 1.5rem;
+    opacity: 0.9;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.profile-details span:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.profile-role {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    text-transform: capitalize;
+}
+
+.profile-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-dropdown-link:last-child {
+    border-bottom: none;
+}
+
+.profile-dropdown-link:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
+.profile-dropdown-link i {
+    width: 16px;
+    text-align: center;
+    color: #666;
+}
+
+.profile-dropdown-link:hover i {
+    color: #667eea;
+}
+
+/* Responsive Profile Menu */
+@media (max-width: 768px) {
+    .profile-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .profile-btn span {
+        display: none;
+    }
+    
+    .profile-dropdown-menu {
+        min-width: 200px;
+        right: -50px;
+    }
+    
+    .profile-dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 60px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid white;
     }
 } 

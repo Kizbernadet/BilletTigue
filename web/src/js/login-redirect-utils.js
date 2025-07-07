@@ -35,8 +35,8 @@ window.redirectToLogin = function(role) {
  * et rediriger vers la page appropriée
  */
 window.checkAuthAndRedirect = function() {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    const token = sessionStorage.getItem('authToken');
+    const userData = sessionStorage.getItem('userData');
     
     if (token && userData) {
         try {
@@ -66,8 +66,8 @@ window.checkAuthAndRedirect = function() {
  * Mettre à jour l'affichage des menus selon l'état de connexion
  */
 window.updateTopbarMenus = function() {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    const token = sessionStorage.getItem('authToken');
+    const userData = sessionStorage.getItem('userData');
     
     const loginMenu = document.getElementById('login-menu');
     const userMenu = document.getElementById('user-menu');
@@ -122,8 +122,6 @@ window.initLoginRedirectUtils = function() {
             e.preventDefault();
             
             // Nettoyer les données de connexion
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
             sessionStorage.removeItem('authToken');
             sessionStorage.removeItem('userData');
             

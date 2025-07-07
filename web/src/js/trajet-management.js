@@ -92,7 +92,7 @@ async function loadTrajets() {
     try {
         showLoading();
         
-        const token = localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         if (!token) {
             throw new Error('Token d\'authentification manquant');
         }
@@ -238,7 +238,7 @@ async function handleCreateTrajet(event) {
             prixColis: trajetData.accepteColis === 'on' ? parseFloat(trajetData.prixColis) : null
         };
         
-        const token = localStorage.getItem('authToken');
+        const token = sessionStorage.getItem('authToken');
         if (!token) {
             throw new Error('Token d\'authentification manquant');
         }
@@ -319,7 +319,7 @@ async function executePendingAction() {
 }
 
 async function deleteTrajet(trajetId) {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     if (!token) {
         throw new Error('Token d\'authentification manquant');
     }
