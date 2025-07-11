@@ -183,7 +183,7 @@
                     <ul class="nav-list">
                         <!-- Les liens de navigation doivent être relatifs à la racine -->
                         <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
+                        <li><a href="search-trajets.html" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
                         <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
                         <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
                     </ul>
@@ -201,25 +201,8 @@
                         </ul>
                     </div>
 
-                    <!-- Bouton profil avec icône et flèche -->
-                    <div class="profile-dropdown-wrapper">
-                        <button id="profileBtn">
-                            <i class="fa-solid fa-circle-user"></i>
-                            <span>Utilisateur</span>
-                            <i class="fa-solid fa-caret-down"></i>
-                        </button>
-                        <ul id="profileDropdown" class="profile-dropdown-menu">
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-user"></i> Voir mon profil</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-user-pen"></i> Modifier mon profil</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-key"></i> Changer mon mot de passe</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-ticket"></i> Mes réservations</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-box"></i> Mes colis</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-bell"></i> Notifications</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-gear"></i> Paramètres</a></li>
-                            <li><a href="#" class="profile-dropdown-link"><i class="fa-solid fa-circle-question"></i> Support / Aide</a></li>
-                            <li><a href="#" class="profile-dropdown-link logout-link"><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</a></li>
-                        </ul>
-                    </div>
+                    <!-- Section d'authentification dynamique -->
+                    <div id="auth-section"></div>
                 </div>
             </div>
         </div>
@@ -274,15 +257,16 @@
 
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
+    <script src="../src/js/login-redirect-utils.js"></script>
+    <script src="../src/js/auth-state-manager.js"></script>
     <script type="module" src="../src/js/dashboard.js"></script>
     <!-- Déconnexion sécurisée -->
     <script src="../src/js/secure-logout.js"></script>
-    <script src="../src/js/profile-dropdown.js"></script>
-    <!-- Affichage personnalisé du profil -->
-    <script src="../src/js/profile-display.js"></script>
     <script>
-        // Initialiser l'affichage personnalisé du profil
-        ProfileDisplay.init();
+        // Initialiser les utilitaires de redirection
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoginRedirectUtils();
+        });
     </script>
 </body>
 </html> 

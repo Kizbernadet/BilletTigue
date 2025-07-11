@@ -31,12 +31,12 @@ class TransporterDashboard {
      */
     checkAuthentication() {
         if (!AuthAPI.isAuthenticated()) {
-            window.location.href = './login.html';
+            window.location.href = './pages/login.html';
             return;
         }
 
         const user = AuthAPI.getCurrentUser();
-        if (!user || user.role !== 'transporter') {
+        if (!user || (user.role !== 'transporteur' && user.role !== 'transporter')) {
             // Rediriger vers la page appropriée selon le rôle
             if (user && user.role === 'admin') {
                 window.location.href = './admin-dashboard.html';
@@ -128,7 +128,7 @@ class TransporterDashboard {
             await AuthAPI.logout();
             this.showMessage('Déconnexion réussie', 'success');
             setTimeout(() => {
-                window.location.href = './login.html';
+                window.location.href = './pages/login.html';
             }, 1000);
         } catch (error) {
             this.showMessage('Erreur lors de la déconnexion', 'error');

@@ -76,17 +76,9 @@ class GlobalProfileMenu {
     }
 
     setupLoginRedirectUtils() {
-        // Fonction globale pour rediriger vers la page de connexion appropriée
-        window.redirectToLogin = function(userType) {
-            const currentPage = window.location.pathname;
-            const returnUrl = encodeURIComponent(currentPage);
-            
-            if (userType === 'user') {
-                window.location.href = `login.html?return=${returnUrl}`;
-            } else if (userType === 'transporter') {
-                window.location.href = `login.html?type=transporter&return=${returnUrl}`;
-            }
-        };
+        // Cette fonction est maintenant gérée par login-redirect-utils.js
+        // Ne pas redéfinir window.redirectToLogin ici
+        console.log('✅ Profile menu initialisé - redirection gérée par login-redirect-utils.js');
     }
 }
 
@@ -94,7 +86,20 @@ class GlobalProfileMenu {
 function toggleProfileMenu() {
     const dropdown = document.getElementById('profileDropdown');
     if (dropdown) {
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        const isVisible = dropdown.classList.contains('show');
+        
+        if (isVisible) {
+            // Fermer le menu
+            dropdown.classList.remove('show');
+            setTimeout(() => {
+                dropdown.style.display = 'none';
+            }, 300);
+        } else {
+            // Ouvrir le menu
+            dropdown.style.display = 'block';
+            dropdown.offsetHeight; // Force reflow
+            dropdown.classList.add('show');
+        }
     }
 }
 

@@ -144,10 +144,23 @@ class AuthManager {
             return;
         }
 
-        // Déterminer le type d'utilisateur selon le contexte
-        const urlParams = new URLSearchParams(window.location.search);
-        const roleParam = urlParams.get('role');
-        const userType = roleParam || 'user'; // Par défaut utilisateur
+        // Déterminer le type d'utilisateur selon le sélecteur de rôle ou l'URL
+        const roleUserRadio = document.getElementById('role-user');
+        const roleTransporterRadio = document.getElementById('role-transporter');
+        
+        let userType = 'user'; // Par défaut utilisateur
+        
+        // Priorité 1: Sélecteur de rôle dans la page
+        if (roleTransporterRadio && roleTransporterRadio.checked) {
+            userType = 'transporter';
+        } else if (roleUserRadio && roleUserRadio.checked) {
+            userType = 'user';
+        } else {
+            // Priorité 2: Paramètre URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            userType = roleParam || 'user';
+        }
 
         console.log(`🔑 Tentative de connexion ${userType === 'transporter' ? 'transporteur' : 'utilisateur'}:`, email);
 
@@ -212,64 +225,40 @@ class AuthManager {
     }
 
     /**
-     * Redirige l'utilisateur vers la page d'origine ou le dashboard selon son rôle
+     * Redirige l'utilisateur vers la page d'accueil après connexion
      */
     redirectUserToDashboard(user) {
         if (!user) {
             console.error('❌ Aucun utilisateur trouvé pour la redirection');
-            window.location.href = './login.html';
+            window.location.href = './pages/login.html';
             return;
         }
 
-        // Vérifier s'il y a une URL de retour dans les paramètres
-        const urlParams = new URLSearchParams(window.location.search);
-        const returnUrl = urlParams.get('returnUrl');
-
-        if (returnUrl) {
-            // Décoder l'URL de retour 
-            const decodedReturnUrl = decodeURIComponent(returnUrl);
-            console.log('🔄 Retour à la page d\'origine après actualisation:', decodedReturnUrl);
-            
-            // Actualiser d'abord la page de login pour montrer le succès
-            // puis rediriger vers la page d'origine après un délai
-            setTimeout(() => {
-                window.location.href = decodedReturnUrl;
-            }, 2000); // 2 secondes pour voir le message de succès
+        // Utiliser le système de redirection vers la page d'accueil
+        if (window.LoginRedirectUtils) {
+            console.log('🔄 Utilisation du système de redirection vers la page d\'accueil');
+            LoginRedirectUtils.redirectAfterLogin(user);
             return;
         }
 
-        // Rediriger selon le rôle de l'utilisateur
-        console.log('🔄 Redirection vers le dashboard approprié pour:', user.role);
+        // Fallback vers l'ancien système si LoginRedirectUtils n'est pas disponible
+        console.log('⚠️ Fallback vers l\'ancien système de redirection');
+        
+        // Rediriger vers la page d'accueil
+        console.log('🔄 Redirection vers la page d\'accueil pour:', user.role);
         
         setTimeout(() => {
-            let dashboardPath;
-            
-            // Déterminer le chemin selon le rôle
-            switch (user.role) {
-                case 'admin':
-                    dashboardPath = './admin-dashboard.html';
-                    break;
-                case 'transporteur':
-                case 'transporter':
-                case 'freight-carrier':
-                case 'passenger-carrier':
-                    dashboardPath = './transporter-dashboard.html';
-                    break;
-                case 'user':
-                default:
-                    dashboardPath = './user-dashboard.html';
-                    break;
-            }
+            let homePath;
             
             // Déterminer le chemin relatif selon la page actuelle
             if (window.location.pathname.includes('/pages/')) {
-                dashboardPath = `./${dashboardPath}`; // Pour les pages dans le dossier pages
+                homePath = '../index.html'; // Pour les pages dans le dossier pages
             } else {
-                dashboardPath = `./pages/${dashboardPath}`; // Pour les autres pages
+                homePath = './index.html'; // Pour les autres pages
             }
             
-            console.log('🎯 Redirection vers:', dashboardPath);
-            window.location.href = dashboardPath;
+            console.log('🎯 Redirection vers la page d\'accueil:', homePath);
+            window.location.href = homePath;
         }, 1500); // 1.5 secondes pour voir le message de succès
     }
 
@@ -355,13 +344,7 @@ class AuthManager {
         const role = roleTransporter.checked ? 'transporter' : 'user';
 
         // Construire les données selon le rôle
-        const userData = {
-            email,
-            password,
-            confirmPassword,
-            role,
-            profile: {}
-        };
+        let userData = {};
 
         if (role === 'user') {
             const lastName = form.querySelector('#last-name').value;
@@ -372,9 +355,19 @@ class AuthManager {
                 return null;
             }
             
-            userData.profile = {
+            // Format attendu par le backend pour les utilisateurs
+            const phoneNumber = form.querySelector('#user-phone').value;
+            if (!phoneNumber) {
+                this.showMessage('Veuillez remplir le numéro de téléphone', 'error');
+                return null;
+            }
+            
+            userData = {
+                email,
+                password,
+                firstName,
                 lastName,
-                firstName
+                phoneNumber
             };
         } else {
             // Validation spécifique aux transporteurs
@@ -386,11 +379,27 @@ class AuthManager {
                 return null;
             }
             
-            userData.profile = {
+            // Mapper le service vers companyType
+            let companyType;
+            switch (service) {
+                case 'passengers':
+                    companyType = 'passenger-carrier';
+                    break;
+                case 'packages':
+                    companyType = 'freight-carrier';
+                    break;
+                default:
+                    companyType = 'mixte';
+            }
+            
+            // Format attendu par le backend pour les transporteurs
+            userData = {
+                email,
+                password,
+                phoneNumber,
                 companyName,
-                phoneNumber
+                companyType
             };
-            userData.service = service;
         }
 
         return userData;

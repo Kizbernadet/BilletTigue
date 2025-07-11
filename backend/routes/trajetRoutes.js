@@ -1,44 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const trajetController = require('../controllers/trajetController');
-const { requireTransporter } = require('../middlewares/roleMiddleware');
-const { protect, optionalAuth } = require('../middlewares/authMiddleware');
+const { protect } = require('../middlewares/authMiddleware');
 
-// Routes publiques (accessibles à tous)
-router.get('/trajets', trajetController.getAllTrajets); // Liste des trajets disponibles
-router.get('/trajets/:id', trajetController.getTrajetDetails); // Détails d'un trajet spécifique
+// Créer un nouveau trajet (transporteur uniquement)
+router.post('/', protect, trajetController.createTrajet);
 
-// ===== NOUVELLES ROUTES DE RECHERCHE =====
+// Récupérer tous les trajets (avec filtres optionnels)
+router.get('/', trajetController.getAllTrajets);
 
-// Autocomplete des villes (public)
-router.get('/cities/suggestions', trajetController.getCitySuggestions);
+// Récupérer un trajet par ID
+router.get('/:id', trajetController.getTrajetById);
 
-// Recherche de trajets (public avec auth optionnelle)
-router.post('/trajets/search', optionalAuth, trajetController.searchTrajets);
+// Récupérer les détails d'un trajet (alias pour getTrajetById)
+router.get('/:id/details', trajetController.getTrajetDetails);
 
-// Routes protégées (transporteurs uniquement)
-router.post('/trajets', 
-    protect, 
-    requireTransporter, 
-    trajetController.createTrajet
-);
+// Récupérer les trajets d'un transporteur spécifique
+router.get('/transporteur/mes-trajets', protect, trajetController.getTrajetsByTransporteur);
 
-router.get('/transporteur/trajets', 
-    protect, 
-    requireTransporter, 
-    trajetController.getTrajetsByTransporteur
-);
+// Rechercher des trajets avec critères
+router.get('/search/trajets', trajetController.searchTrajets);
 
-router.put('/trajets/:id', 
-    protect, 
-    requireTransporter, 
-    trajetController.updateTrajet
-);
+// Obtenir des suggestions de villes
+router.get('/suggestions/villes', trajetController.getCitySuggestions);
 
-router.delete('/trajets/:id', 
-    protect, 
-    requireTransporter, 
-    trajetController.deleteTrajet
-);
+// Modifier un trajet
+router.put('/:id', protect, trajetController.updateTrajet);
+
+// Supprimer un trajet
+router.delete('/:id', protect, trajetController.deleteTrajet);
 
 module.exports = router; 

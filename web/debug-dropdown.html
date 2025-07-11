@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Dropdown</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        /* Styles pour le bouton profil */
+        .profile-button {
+            margin-left: 0.5rem;
+            background-color: #4CAF50;
+            border: 1px solid #4CAF50;
+            padding: 0.5rem 0.9rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            font-family: Arial, sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .profile-button:hover {
+            background-color: #45a049;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Styles pour le dropdown */
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 999999;
+            padding: 0;
+            list-style: none;
+            margin: 0;
+            border: 1px solid #f0f0f0;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+        }
+
+        .profile-dropdown.hidden {
+            display: none;
+        }
+
+        .profile-dropdown:not(.hidden) {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 0.5rem 1.2rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: #4CAF50;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.2;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 0.5rem 0;
+        }
+
+        .dropdown-menu {
+            padding: 0.5rem 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.5rem 1.2rem;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            background: transparent;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .dropdown-item i {
+            width: 1rem;
+            height: 1rem;
+            color: inherit;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item span {
+            flex: 1;
+        }
+
+        .logout-item {
+            background-color: #dc3545;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .logout-item:hover {
+            background-color: #c82333;
+            color: white;
+            transform: translateX(2px);
+        }
+
+        .logout-item i {
+            color: inherit;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .test-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Dropdown - Test</h1>
+        
+        <div class="test-section">
+            <h3>Test 1: Dropdown Simple</h3>
+            <div class="relative">
+                <button id="test-button-1" class="profile-button">
+                    <i class="ri-user-3-line"></i>
+                    <span>Test User</span>
+                    <i class="ri-arrow-down-s-line"></i>
+                </button>
+                
+                <div id="test-dropdown-1" class="profile-dropdown hidden">
+                    <div class="dropdown-header">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <span>T</span>
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name">Test User</div>
+                                <div class="user-role">Utilisateur</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">
+                            <i class="ri-user-settings-line"></i>
+                            <span>Mon profil</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="ri-ticket-line"></i>
+                            <span>Mes réservations</span>
+                        </a>
+                        <button onclick="testLogout()" class="dropdown-item logout-item">
+                            <i class="ri-logout-box-r-line"></i>
+                            <span>Déconnexion</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="debug-info" id="debug-info-1">
+                Cliquez sur le bouton pour tester le dropdown...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Test 2: Dropdown avec Position Fixe</h3>
+            <button id="test-button-2" class="test-button">Ouvrir Dropdown Fixe</button>
+            <div id="test-dropdown-2" class="profile-dropdown hidden" style="position: fixed; top: 100px; left: 100px;">
+                <div class="dropdown-header">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <span>F</span>
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">Dropdown Fixe</div>
+                            <div class="user-role">Test</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dropdown-divider"></div>
+                
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-user-settings-line"></i>
+                        <span>Option 1</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="ri-settings-3-line"></i>
+                        <span>Option 2</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Contrôles de Test</h3>
+            <button class="test-button" onclick="showDebugInfo()">Afficher Info Debug</button>
+            <button class="test-button" onclick="forceShowDropdown()">Forcer Affichage</button>
+            <button class="test-button" onclick="checkElements()">Vérifier Éléments</button>
+            <button class="test-button" onclick="clearLogs()">Effacer Logs</button>
+        </div>
+
+        <div class="debug-info" id="debug-logs">
+            Logs de debug apparaîtront ici...
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let debugLogs = [];
+
+        // Fonction pour ajouter des logs
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLogs.push(`[${timestamp}] ${message}`);
+            updateDebugLogs();
+            console.log(message);
+        }
+
+        // Fonction pour mettre à jour l'affichage des logs
+        function updateDebugLogs() {
+            const logsElement = document.getElementById('debug-logs');
+            logsElement.innerHTML = debugLogs.join('<br>');
+        }
+
+        // Fonction pour effacer les logs
+        function clearLogs() {
+            debugLogs = [];
+            updateDebugLogs();
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('✅ Page chargée');
+            
+            // Test 1: Dropdown simple
+            const testButton1 = document.getElementById('test-button-1');
+            const testDropdown1 = document.getElementById('test-dropdown-1');
+            
+            if (testButton1 && testDropdown1) {
+                testButton1.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleDropdown(testDropdown1, testButton1, 'Test 1');
+                });
+                addLog('✅ Événements Test 1 configurés');
+            } else {
+                addLog('❌ Éléments Test 1 non trouvés');
+            }
+            
+            // Test 2: Dropdown fixe
+            const testButton2 = document.getElementById('test-button-2');
+            const testDropdown2 = document.getElementById('test-dropdown-2');
+            
+            if (testButton2 && testDropdown2) {
+                testButton2.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleDropdown(testDropdown2, testButton2, 'Test 2');
+                });
+                addLog('✅ Événements Test 2 configurés');
+            } else {
+                addLog('❌ Éléments Test 2 non trouvés');
+            }
+            
+            // Fermer les dropdowns en cliquant ailleurs
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.profile-button') && !e.target.closest('.profile-dropdown')) {
+                    closeAllDropdowns();
+                }
+            });
+            
+            // Fermer avec Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAllDropdowns();
+                }
+            });
+        });
+
+        function toggleDropdown(dropdown, button, testName) {
+            if (!dropdown || !button) {
+                addLog(`❌ ${testName}: Éléments manquants`);
+                return;
+            }
+            
+            const isOpen = !dropdown.classList.contains('hidden');
+            
+            if (isOpen) {
+                closeDropdown(dropdown, button, testName);
+            } else {
+                openDropdown(dropdown, button, testName);
+            }
+        }
+
+        function openDropdown(dropdown, button, testName) {
+            dropdown.classList.remove('hidden');
+            button.setAttribute('aria-expanded', 'true');
+            
+            // Afficher les informations de debug
+            const rect = dropdown.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(dropdown);
+            
+            addLog(`🔽 ${testName}: Dropdown ouvert`);
+            addLog(`📍 ${testName}: Position - top: ${rect.top}px, left: ${rect.left}px, width: ${rect.width}px, height: ${rect.height}px`);
+            addLog(`🎨 ${testName}: Display - ${computedStyle.display}, Visibility - ${computedStyle.visibility}, Z-index - ${computedStyle.zIndex}`);
+            
+            // Mettre à jour l'info de debug
+            const debugInfo = document.getElementById('debug-info-1');
+            if (debugInfo) {
+                debugInfo.innerHTML = `
+                    <strong>Dropdown ouvert</strong><br>
+                    Position: top=${rect.top}px, left=${rect.left}px<br>
+                    Taille: ${rect.width}x${rect.height}px<br>
+                    Display: ${computedStyle.display}<br>
+                    Z-index: ${computedStyle.zIndex}
+                `;
+            }
+        }
+
+        function closeDropdown(dropdown, button, testName) {
+            dropdown.classList.add('hidden');
+            button.setAttribute('aria-expanded', 'false');
+            addLog(`🔼 ${testName}: Dropdown fermé`);
+        }
+
+        function closeAllDropdowns() {
+            const dropdowns = document.querySelectorAll('.profile-dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
+            addLog('🔄 Tous les dropdowns fermés');
+        }
+
+        function showDebugInfo() {
+            const dropdowns = document.querySelectorAll('.profile-dropdown');
+            addLog(`📊 Nombre de dropdowns trouvés: ${dropdowns.length}`);
+            
+            dropdowns.forEach((dropdown, index) => {
+                const rect = dropdown.getBoundingClientRect();
+                const computedStyle = window.getComputedStyle(dropdown);
+                addLog(`📋 Dropdown ${index + 1}:`);
+                addLog(`   - Classes: ${dropdown.className}`);
+                addLog(`   - Display: ${computedStyle.display}`);
+                addLog(`   - Position: ${computedStyle.position}`);
+                addLog(`   - Z-index: ${computedStyle.zIndex}`);
+                addLog(`   - Rect: ${rect.top},${rect.left},${rect.width}x${rect.height}`);
+            });
+        }
+
+        function forceShowDropdown() {
+            const dropdown = document.getElementById('test-dropdown-1');
+            if (dropdown) {
+                dropdown.style.display = 'block';
+                dropdown.style.position = 'fixed';
+                dropdown.style.top = '200px';
+                dropdown.style.left = '200px';
+                dropdown.style.zIndex = '999999';
+                dropdown.style.backgroundColor = 'red';
+                addLog('🔴 Dropdown forcé à s'afficher en rouge à la position 200,200');
+            }
+        }
+
+        function checkElements() {
+            const elements = {
+                'test-button-1': document.getElementById('test-button-1'),
+                'test-dropdown-1': document.getElementById('test-dropdown-1'),
+                'test-button-2': document.getElementById('test-button-2'),
+                'test-dropdown-2': document.getElementById('test-dropdown-2')
+            };
+            
+            addLog('🔍 Vérification des éléments:');
+            Object.entries(elements).forEach(([id, element]) => {
+                addLog(`   ${id}: ${element ? '✅ Trouvé' : '❌ Manquant'}`);
+            });
+        }
+
+        function testLogout() {
+            addLog('🚪 Test de déconnexion');
+        }
+    </script>
+</body>
+</html> 

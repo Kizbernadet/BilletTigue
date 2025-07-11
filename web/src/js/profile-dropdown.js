@@ -14,13 +14,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fonction pour ouvrir le menu
     function openMenu() {
         profileDropdown.style.display = 'block';
+        // Forcer un reflow pour que l'animation fonctionne
+        profileDropdown.offsetHeight;
+        profileDropdown.classList.add('show');
         isMenuOpen = true;
         console.log('Menu ouvert');
     }
 
     // Fonction pour fermer le menu
     function closeMenu() {
-        profileDropdown.style.display = 'none';
+        profileDropdown.classList.remove('show');
+        setTimeout(() => {
+            if (!isMenuOpen) {
+                profileDropdown.style.display = 'none';
+            }
+        }, 300); // Correspond à la durée de l'animation CSS
         isMenuOpen = false;
         console.log('Menu fermé');
     }

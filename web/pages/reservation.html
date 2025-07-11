@@ -16,104 +16,43 @@
     
     <!-- Login Redirect Utils -->
     <script src="../src/js/login-redirect-utils.js"></script>
+    <!-- Ajout du CDN Remix Icon dans le <head> si absent -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body class="reservation-body min-h-screen">
     <!-- Header -->
     <header>
+        <!-- Topbar uniformisée (extrait à placer dans le <body>) -->
         <div class="w-full flex justify-center p-4">
             <div class="topbar-container">
-                <!-- Logo -->
                 <div class="logo-container w-3/12 h-full">
                     <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
                     <span class="logo-text">BilletTigue</span>
                 </div>
-                
-                <!-- Navigation -->
                 <nav class="nav-container w-5/12 h-full">
                     <ul class="nav-list">
-                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="search-trajets.html" class="nav-link"><i class="fas fa-bus"></i><span>Trajets</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                        <li><a href="../index.html" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
+                        <li><a href="search-trajets.html" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-box-3-line"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-question-line"></i><span>Aide</span></a></li>
                     </ul>
                 </nav>
-                
-                <!-- Action Container -->
                 <div class="action-container-wrapper">
-                    <!-- Language Dropdown -->
                     <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
                             <span id="current-lang-text" class="lang-text">Français</span>
-                            <i class="fas fa-chevron-down text-xs lang-arrow"></i>
-                            <i class="fa-solid fa-globe lang-icon" style="display:none;"></i>
+                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                            <i class="ri-global-line lang-icon" style="display:none;"></i>
                         </label>
                         <ul id="lang-options" tabindex="0" class="lang-options-list">
                             <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
                             <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
                         </ul>
                     </div>
-
-                    <!-- Login Menu (visible when not logged in) -->
-                    <div id="login-menu" class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
-                        <label tabindex="0" class="btn-lang">
-                            <span class="login-text">Se connecter</span>
-                            <i class="fas fa-chevron-down text-xs login-arrow"></i>
-                            <i class="fa-solid fa-user login-icon" style="display:none;"></i>
-                        </label>
-                        <ul tabindex="0" class="lang-options-list">
-                            <li><a href="#" class="lang-option text-sm" onclick="redirectToLogin('user')">Utilisateur</a></li>
-                            <li><a href="#" class="lang-option text-sm" onclick="redirectToLogin('transporter')">Transporteur</a></li>
-                        </ul>
+                    <div id="auth-section" class="flex items-center">
+                        <button class="btn-login">Se connecter</button>
                     </div>
-
-                    <!-- Profile Menu (visible when logged in) -->
-                    <div id="profile-menu" class="profile-dropdown-wrapper" style="display: none;">
-                        <button id="profileBtn" onclick="toggleProfileMenu()" class="profile-btn">
-                            <i class="fa-solid fa-user-circle"></i>
-                            <span id="profile-name">Utilisateur</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                        <ul class="profile-dropdown-menu" id="profileDropdown">
-                            <li class="profile-info">
-                                <div class="profile-header">
-                                    <i class="fa-solid fa-user"></i>
-                                    <div class="profile-details">
-                                        <span id="profile-full-name">Prénom Nom</span>
-                                        <span id="profile-role" class="profile-role">Utilisateur</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="profile.html" class="profile-dropdown-link">
-                                    <i class="fa-solid fa-user"></i>
-                                    Mon Profil
-                                </a>
-                            </li>
-                            <li>
-                                <a href="user-dashboard.html" class="profile-dropdown-link">
-                                    <i class="fa-solid fa-tachometer-alt"></i>
-                                    Mes Réservations
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="profile-dropdown-link">
-                                    <i class="fa-solid fa-bell"></i>
-                                    Notifications
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="profile-dropdown-link" onclick="logout()">
-                                    <i class="fa-solid fa-sign-out-alt"></i>
-                                    Déconnexion
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-
-
-                    <!-- Mobile Hamburger -->
                     <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
                         <span class="hamburger-bar"></span>
                         <span class="hamburger-bar"></span>
@@ -631,8 +570,17 @@
     </nav>
 
     <!-- Scripts -->
+    <script src="../src/js/main.js"></script>
+    <script src="../src/js/login-redirect-utils.js"></script>
+    <script src="../src/js/auth-state-manager.js"></script>
     <script type="module" src="../src/js/reservation.js"></script>
     <script type="module" src="../src/js/auth-protection.js"></script>
     <script type="module" src="../src/js/secure-logout.js"></script>
+    <script>
+        // Initialiser les utilitaires de redirection
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoginRedirectUtils();
+        });
+    </script>
 </body>
 </html> 

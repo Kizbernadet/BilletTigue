@@ -65,7 +65,7 @@
       try {
         console.log('🚛 Récupération des trajets du transporteur...');
         
-        const response = await fetch(`${CONFIG.API_BASE_URL}/transporteur/trajets`, {
+        const response = await fetch(`${this.baseUrl}/transporteur/mes-trajets`, {
           method: 'GET',
           headers: this.getHeaders()
         });

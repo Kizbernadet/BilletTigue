@@ -32,7 +32,7 @@ class ProfileManager {
     checkAuthentication() {
         if (!AuthAPI.isAuthenticated()) {
             // Rediriger vers la page de connexion si non authentifié
-            window.location.href = './login.html';
+            window.location.href = './pages/login.html';
             return;
         }
     }
@@ -374,13 +374,13 @@ class ProfileManager {
             await AuthAPI.logout();
             sessionStorage.removeItem('authToken');
             sessionStorage.removeItem('userData');
-            window.location.href = './login.html';
+            window.location.href = './pages/login.html';
         } catch (error) {
             console.error('Erreur lors de la déconnexion:', error);
             // Forcer la déconnexion locale
             sessionStorage.removeItem('authToken');
             sessionStorage.removeItem('userData');
-            window.location.href = './login.html';
+            window.location.href = './pages/login.html';
         }
     }
 

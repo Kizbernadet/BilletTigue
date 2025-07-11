@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification des Chemins</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .info { background: #e7f3ff; padding: 15px; margin: 10px 0; border-radius: 4px; }
+        .test-btn { padding: 10px 20px; margin: 5px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Vérification des Chemins de Login</h1>
+    
+    <div class="info">
+        <h3>Informations du serveur :</h3>
+        <p><strong>URL complète :</strong> <span id="full-url"></span></p>
+        <p><strong>Port :</strong> <span id="port"></span></p>
+        <p><strong>Pathname :</strong> <span id="pathname"></span></p>
+        <p><strong>Serveur détecté :</strong> <span id="server-type"></span></p>
+    </div>
+
+    <div class="info">
+        <h3>Chemins testés :</h3>
+        <div id="path-tests"></div>
+    </div>
+
+    <div class="info">
+        <h3>Test de redirection :</h3>
+        <button class="test-btn" onclick="testRedirect()">Tester redirectToLogin</button>
+        <div id="redirect-result"></div>
+    </div>
+
+    <script src="./src/js/login-redirect-utils.js"></script>
+    <script>
+        // Afficher les informations du serveur
+        document.getElementById('full-url').textContent = window.location.href;
+        document.getElementById('port').textContent = window.location.port;
+        document.getElementById('pathname').textContent = window.location.pathname;
+        
+        // Détecter le type de serveur
+        let serverType = 'Inconnu';
+        if (window.location.port === '5500') {
+            serverType = 'Live Server VS Code';
+        } else if (window.location.port === '8000') {
+            serverType = 'Python HTTP Server';
+        } else if (window.location.port === '3000') {
+            serverType = 'Node.js/Express';
+        }
+        document.getElementById('server-type').textContent = serverType;
+
+        // Tester les chemins possibles
+        const pathsToTest = [
+            '/pages/login.html',
+            './pages/login.html',
+            '../pages/login.html',
+            'pages/login.html',
+            '/login.html',
+            './login.html'
+        ];
+
+        const pathTests = document.getElementById('path-tests');
+        pathsToTest.forEach(path => {
+            const testUrl = new URL(path, window.location.origin);
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>${path}</strong> → ${testUrl.toString()}`;
+            pathTests.appendChild(div);
+        });
+
+        function testRedirect() {
+            const result = document.getElementById('redirect-result');
+            
+            if (typeof redirectToLogin !== 'undefined') {
+                // Capturer l'URL qui serait générée
+                const returnUrl = encodeURIComponent(window.location.href);
+                const userType = 'user';
+                
+                let expectedUrl;
+                if (window.location.port === '5500') {
+                    expectedUrl = `/pages/login.html?role=${userType}&returnUrl=${returnUrl}`;
+                } else {
+                    expectedUrl = `/pages/login.html?role=${userType}&returnUrl=${returnUrl}`;
+                }
+                
+                result.innerHTML = `
+                    <div class="success">
+                        ✅ Fonction redirectToLogin disponible<br>
+                        URL attendue : ${expectedUrl}
+                    </div>
+                `;
+            } else {
+                result.innerHTML = `
+                    <div class="error">
+                        ❌ Fonction redirectToLogin non disponible
+                    </div>
+                `;
+            }
+        }
+
+        // Test automatique au chargement
+        window.addEventListener('load', function() {
+            testRedirect();
+        });
+    </script>
+</body>
+</html> 

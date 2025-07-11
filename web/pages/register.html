@@ -9,6 +9,8 @@
     <link href="../public/assets/css/auth.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Ajout du CDN Remix Icon pour harmonisation -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body class="min-h-screen bg-custom">
     <header>
@@ -17,36 +19,38 @@
             <!-- Topbar avec 95% de largeur -->
             <div class="topbar-container">
                 <div class="logo-container w-3/12 h-full">
-                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
-                    <a href="../index.html" class="flex items-center">
-                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
-                        <span class="logo-text">BilletTigue</span>
-                    </a>
+                    <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
                 </div>
                 <nav class="nav-container w-5/12 h-full">
                     <ul class="nav-list">
-                        <!-- Les liens de navigation doivent être relatifs à la racine -->
-                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                        <li><a href="../index.html" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
+                        <li><a href="search-trajets.html" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-box-3-line"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-question-line"></i><span>Aide</span></a></li>
                     </ul>
                 </nav>
                 <div class="action-container-wrapper">
                     <!-- Le menu de langue reste identique -->
                     <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
-                            <span id="current-lang-text">Français</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <span id="current-lang-text" class="lang-text">Français</span>
+                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                            <i class="ri-global-line lang-icon" style="display:none;"></i>
                         </label>
                         <ul id="lang-options" tabindex="0" class="lang-options-list">
                             <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
                             <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
                         </ul>
                     </div>
-
-                    <!-- Bouton pour se connecter -->
-                    <a href="./login.html" class="btn-login">S'inscrire</a>
+                    <div id="auth-section" class="flex items-center">
+                        <a href="./login.html" class="btn-login">Se connecter</a>
+                    </div>
+                    <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -72,6 +76,9 @@
                     </div>
                     <div class="form-field">
                         <input type="text" id="first-name" name="first-name" placeholder="Prénom" required>
+                    </div>
+                    <div class="form-field">
+                        <input type="tel" id="user-phone" name="user-phone" placeholder="Numéro de téléphone" required>
                     </div>
                 </div>
 
@@ -138,6 +145,16 @@
             </p>
         </div>
     </main>
+
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="mobile-menu" style="display:none;">
+        <ul class="nav-list">
+            <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
+            <li><a href="search-trajets.html" class="nav-link"><i class="fas fa-bus"></i><span>Trajets</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+        </ul>
+    </nav>
 
     <footer>
         <!-- Le pied de page (liens, copyright, etc.) ira ici -->

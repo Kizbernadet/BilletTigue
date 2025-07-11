@@ -1,0 +1,279 @@
+/* ==========================================================================
+   EFFETS VISUELS AVANCÉS POUR LE MENU PROFIL
+   ========================================================================== */
+
+/* Particules flottantes en arrière-plan */
+.profile-dropdown-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.profile-dropdown-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-10px) rotate(180deg);
+        opacity: 0.7;
+    }
+}
+
+/* Effet de néon pour le bouton profil */
+.profile-btn::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+    border-radius: 27px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-btn:hover::after {
+    opacity: 0.5;
+    animation: neonPulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+    0%, 100% {
+        opacity: 0.5;
+        filter: blur(1px);
+    }
+    50% {
+        opacity: 0.8;
+        filter: blur(2px);
+    }
+}
+
+/* Effet de ripple pour les liens du menu */
+.profile-dropdown-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-dropdown-link .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Effet de glitch pour le nom d'utilisateur */
+.profile-details span:first-child {
+    position: relative;
+}
+
+.profile-details span:first-child::before,
+.profile-details span:first-child::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profile-details span:first-child::before {
+    color: #ff6b6b;
+    animation: glitch 0.3s ease-in-out infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.profile-details span:first-child::after {
+    color: #4ecdc4;
+    animation: glitch 0.3s ease-in-out infinite reverse;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+.profile-details span:first-child:hover::before,
+.profile-details span:first-child:hover::after {
+    opacity: 0.8;
+}
+
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+}
+
+/* Effet de morphing pour les icônes */
+.profile-dropdown-link i {
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.profile-dropdown-link:hover i {
+    animation: morphIcon 0.6s ease-in-out;
+}
+
+@keyframes morphIcon {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+    }
+    100% {
+        transform: scale(1.2) rotate(5deg);
+    }
+}
+
+/* Effet de perspective 3D pour le menu */
+.profile-dropdown-menu {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.profile-dropdown-menu li {
+    transform: translateZ(0);
+    transition: transform 0.3s ease;
+}
+
+.profile-dropdown-menu li:hover {
+    transform: translateZ(20px) rotateX(5deg);
+}
+
+/* Effet de particules pour le bouton de déconnexion */
+.profile-dropdown-link.logout-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.profile-dropdown-link.logout-link:hover::after {
+    opacity: 1;
+    animation: particleExplosion 0.6s ease-out;
+}
+
+@keyframes particleExplosion {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(20);
+        opacity: 0;
+    }
+}
+
+/* Effet de focus amélioré */
+.profile-btn:focus-visible {
+    outline: 3px solid rgba(102, 126, 234, 0.8);
+    outline-offset: 3px;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+}
+
+.profile-dropdown-link:focus-visible {
+    outline: 3px solid rgba(102, 126, 234, 0.8);
+    outline-offset: -3px;
+    box-shadow: inset 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Animation de chargement personnalisée */
+.profile-dropdown-menu.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    animation: loadingShimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Effet de glassmorphism amélioré */
+.profile-dropdown-menu {
+    backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Effet de hover pour le wrapper */
+.profile-dropdown-wrapper:hover .profile-btn {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation de notification pour les nouveaux éléments */
+.profile-dropdown-link.new-item {
+    animation: notificationPulse 2s ease-in-out infinite;
+}
+
+@keyframes notificationPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+    }
+} 

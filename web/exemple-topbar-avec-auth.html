@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemple Top Bar avec Auth - BilletTigue</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS personnalisé -->
+    <link href="./public/assets/css/style.css" rel="stylesheet">
+    <link href="./public/assets/css/auth-state.css" rel="stylesheet">
+    
+    <style>
+        /* Styles de base pour l'exemple */
+        body {
+            font-family: 'Comfortaa', sans-serif;
+        }
+        
+        .topbar-container {
+            @apply w-full max-w-7xl mx-auto flex items-center justify-between px-4 py-3 bg-white shadow-sm;
+        }
+        
+        .logo-container {
+            @apply flex items-center space-x-2;
+        }
+        
+        .logo-image {
+            @apply w-8 h-8;
+        }
+        
+        .logo-text {
+            @apply text-xl font-bold text-gray-800;
+        }
+        
+        .nav-container {
+            @apply hidden md:flex items-center space-x-6;
+        }
+        
+        .nav-link {
+            @apply flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors duration-200;
+        }
+        
+        .btn-login {
+            @apply flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar avec système d'authentification -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="topbar-container">
+            <!-- Logo -->
+            <div class="logo-container">
+                <img src="./public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                <span class="logo-text">BilletTigue</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="nav-container">
+                <a href="./index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-bus"></i>
+                    <span>Bus</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-box"></i>
+                    <span>Colis</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Aide</span>
+                </a>
+            </nav>
+            
+            <!-- Section d'authentification - C'EST ICI QUE TOUT SE PASSE ! -->
+            <div id="auth-section" class="flex items-center">
+                <!-- Le contenu sera injecté dynamiquement par AuthStateManager -->
+                <!-- Avant connexion : bouton "Se connecter" -->
+                <!-- Après connexion : bouton profil avec dropdown -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu de démonstration -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">
+            🎯 Système d'État de Connexion - Démonstration
+        </h1>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold text-blue-800 mb-4">
+                📋 Instructions de test
+            </h2>
+            <ol class="list-decimal list-inside space-y-2 text-blue-700">
+                <li>Connectez-vous depuis la page de login</li>
+                <li>Revenez sur cette page - le bouton profil devrait apparaître</li>
+                <li>Cliquez sur le bouton profil pour ouvrir le menu</li>
+                <li>Testez les liens du menu</li>
+                <li>Cliquez sur "Déconnexion" pour revenir au bouton "Se connecter"</li>
+            </ol>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- État actuel -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    🔍 État actuel
+                </h3>
+                <div id="current-state" class="text-sm text-gray-600">
+                    Vérification en cours...
+                </div>
+            </div>
+
+            <!-- Actions de test -->
+            <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    🧪 Actions de test
+                </h3>
+                <div class="space-y-3">
+                    <button onclick="simulateLogin()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        Simuler une connexion
+                    </button>
+                    <button onclick="simulateLogout()" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Simuler une déconnexion
+                    </button>
+                    <button onclick="checkAuthState()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Vérifier l'état
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations techniques -->
+        <div class="mt-8 bg-gray-50 border border-gray-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                ⚙️ Informations techniques
+            </h3>
+            <div class="text-sm text-gray-600 space-y-2">
+                <p><strong>Fichiers utilisés :</strong></p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li><code>auth-state-manager.js</code> - Gestionnaire d'état</li>
+                    <li><code>auth-state.css</code> - Styles du bouton et dropdown</li>
+                    <li><code>#auth-section</code> - Conteneur HTML</li>
+                </ul>
+                <p class="mt-4"><strong>Stockage :</strong> sessionStorage pour userData et authToken</p>
+                <p><strong>Persistance :</strong> L'état reste entre les pages et onglets</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="./src/js/auth-state-manager.js"></script>
+    
+    <script>
+        // Fonctions de test
+        function simulateLogin() {
+            const userData = {
+                first_name: "Aïssata",
+                last_name: "Diallo",
+                role: "user",
+                email: "aissata@example.com"
+            };
+            
+            sessionStorage.setItem('userData', JSON.stringify(userData));
+            sessionStorage.setItem('authToken', 'fake-token-123');
+            
+            // Mettre à jour l'interface
+            if (window.authStateManager) {
+                window.authStateManager.checkAuthState();
+            }
+            
+            updateCurrentState();
+            console.log('✅ Connexion simulée');
+        }
+
+        function simulateLogout() {
+            sessionStorage.removeItem('userData');
+            sessionStorage.removeItem('authToken');
+            
+            // Mettre à jour l'interface
+            if (window.authStateManager) {
+                window.authStateManager.checkAuthState();
+            }
+            
+            updateCurrentState();
+            console.log('🔓 Déconnexion simulée');
+        }
+
+        function checkAuthState() {
+            updateCurrentState();
+        }
+
+        function updateCurrentState() {
+            const userData = sessionStorage.getItem('userData');
+            const authToken = sessionStorage.getItem('authToken');
+            const stateDiv = document.getElementById('current-state');
+            
+            if (userData && authToken) {
+                try {
+                    const user = JSON.parse(userData);
+                    stateDiv.innerHTML = `
+                        <div class="space-y-2">
+                            <p><strong>✅ Connecté</strong></p>
+                            <p>Nom: ${user.first_name} ${user.last_name}</p>
+                            <p>Rôle: ${user.role}</p>
+                            <p>Email: ${user.email}</p>
+                        </div>
+                    `;
+                } catch (e) {
+                    stateDiv.innerHTML = '<p class="text-red-600">❌ Erreur de parsing des données</p>';
+                }
+            } else {
+                stateDiv.innerHTML = '<p class="text-gray-500">❌ Non connecté</p>';
+            }
+        }
+
+        // Mettre à jour l'état au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCurrentState();
+        });
+    </script>
+</body>
+</html> 

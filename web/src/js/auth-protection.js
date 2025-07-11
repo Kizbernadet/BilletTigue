@@ -124,15 +124,24 @@ class AuthProtection {
         
         // Déterminer le formulaire de connexion approprié selon la page
         const currentPage = window.location.pathname;
-        let loginUrl = './login.html';
-        
+        let loginUrl;
+
+        // Construire le chemin correct selon la page actuelle
+        if (window.location.pathname.includes('/pages/')) {
+            // Si on est dans le dossier pages, aller vers login.html dans le même dossier
+            loginUrl = './login.html';
+        } else {
+            // Sinon, aller vers pages/login.html
+            loginUrl = './pages/login.html';
+        }
+
         if (currentPage.includes('transporter-')) {
             // Pages transporteur → formulaire de connexion transporteur
-            loginUrl = './login.html?role=transporter';
+            loginUrl += '?role=transporter';
             console.log('🚛 Redirection vers connexion transporteur');
         } else if (currentPage.includes('admin-') || currentPage.includes('user-')) {
             // Pages admin et user → formulaire de connexion utilisateur
-            loginUrl = './login.html?role=user';
+            loginUrl += '?role=user';
             console.log('👤 Redirection vers connexion utilisateur/admin');
         }
         

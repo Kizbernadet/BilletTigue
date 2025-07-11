@@ -51,31 +51,31 @@
           <!-- Section profil -->
           <div class="profile-dropdown-wrapper">
             <button id="profileBtn" onclick="toggleProfileMenu()">
-              <i class="fa-solid fa-user-shield"></i>
+              <i class="ri-shield-user-line"></i>
               <span>Administrateur</span>
             </button>
             <ul class="profile-dropdown-menu" id="profileDropdown">
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-user"></i>
+                  <i class="ri-user-settings-line"></i>
                   Mon Profil
                 </a>
               </li>
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-cog"></i>
+                  <i class="ri-settings-3-line"></i>
                   Paramètres
                 </a>
               </li>
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-bell"></i>
+                  <i class="ri-notification-3-line"></i>
                   Notifications
                 </a>
               </li>
               <li>
                 <a href="../index.html" class="profile-dropdown-link logout-link">
-                  <i class="fa-solid fa-sign-out-alt"></i>
+                  <i class="ri-logout-box-r-line"></i>
                   Déconnexion
                 </a>
               </li>
@@ -134,7 +134,7 @@
               <h3><i class="fa-solid fa-euro-sign"></i> Revenus</h3>
               <p>Suivi financier de la plateforme</p>
               <div class="card-stats">
-                <span class="stat-number">45,720€</span>
+                <span class="stat-number">45,720 FCFA</span>
                 <span class="stat-label">Ce mois</span>
               </div>
             </div>
@@ -155,6 +155,8 @@
   </div>
 
   <!-- Scripts de sécurité -->
+  <script src="../src/js/login-redirect-utils.js"></script>
+  <script src="../src/js/auth-redirect-utils.js"></script>
   <script src="../src/js/secure-logout.js"></script>
   <script src="../src/js/profile-display.js"></script>
   <!-- Gestionnaire de statistiques dynamiques -->
@@ -183,13 +185,13 @@
       
       if (!token) {
         console.log('🔐 Aucun token trouvé, redirection vers login');
-        window.location.href = 'login.html';
+        AuthRedirectUtils.redirectToAdminLogin();
         return false;
       }
       
       if (!userData) {
         console.log('🔐 Aucune donnée utilisateur trouvée, redirection vers login');
-        window.location.href = 'login.html';
+        AuthRedirectUtils.redirectToAdminLogin();
         return false;
       }
       
@@ -207,7 +209,7 @@
           } else if (user.role === 'user') {
             window.location.href = 'user-dashboard.html';
           } else {
-            window.location.href = 'login.html';
+            AuthRedirectUtils.redirectToLoginWithUserRole();
           }
           return false;
         }
@@ -217,7 +219,7 @@
         
       } catch (error) {
         console.error('❌ Erreur lors du parsing des données utilisateur:', error);
-        window.location.href = 'login.html';
+        AuthRedirectUtils.redirectToAdminLogin();
         return false;
       }
     }

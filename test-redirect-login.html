@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Redirection Login - Billettigue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }ntr
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #45a049;
+        }
+        .test-button.transporter {
+            background: #2196F3;
+        }
+        .test-button.transporter:hover {
+            background: #1976D2;
+        }
+        .test-button.admin {
+            background: #FF9800;
+        }
+        .test-button.admin:hover {
+            background: #F57C00;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test des Redirections vers Login</h1>
+    
+    <div class="test-section">
+        <h2>📍 Page Actuelle</h2>
+        <div class="info">
+            <strong>URL actuelle :</strong> <span id="current-url"></span><br>
+            <strong>Chemin :</strong> <span id="current-path"></span><br>
+            <strong>Est dans /pages/ :</strong> <span id="is-in-pages"></span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔗 Test des Redirections AuthRedirectUtils</h2>
+        <p>Testez les redirections vers la page de connexion avec les nouveaux utilitaires :</p>
+        
+        <button class="test-button" onclick="testRedirect('user')">
+            🔐 Redirection Utilisateur
+        </button>
+        <button class="test-button transporter" onclick="testRedirect('transporter')">
+            🔐 Redirection Transporteur
+        </button>
+        <button class="test-button admin" onclick="testRedirect('admin')">
+            🔐 Redirection Admin
+        </button>
+        
+        <div id="redirect-result" class="info" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔗 Test des Redirections Directes</h2>
+        <p>Testez les redirections directes pour comparaison :</p>
+        
+        <button class="test-button" onclick="testDirectRedirect('user')">
+            🔗 Redirection Directe Utilisateur
+        </button>
+        <button class="test-button transporter" onclick="testDirectRedirect('transporter')">
+            🔗 Redirection Directe Transporteur
+        </button>
+        
+        <div id="direct-result" class="info" style="display: none;"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../src/js/auth-redirect-utils.js"></script>
+    
+    <script>
+        // Afficher les informations de la page actuelle
+        function updatePageInfo() {
+            document.getElementById('current-url').textContent = window.location.href;
+            document.getElementById('current-path').textContent = window.location.pathname;
+            document.getElementById('is-in-pages').textContent = window.location.pathname.includes('/pages/') ? 'Oui' : 'Non';
+        }
+        
+        // Test des redirections avec AuthRedirectUtils
+        function testRedirect(role) {
+            const resultDiv = document.getElementById('redirect-result');
+            
+            try {
+                let expectedUrl;
+                if (window.location.pathname.includes('/pages/')) {
+                    expectedUrl = `./login.html?role=${role}`;
+                } else {
+                    expectedUrl = `./pages/login.html?role=${role}`;
+                }
+                
+                resultDiv.innerHTML = `
+                    <strong>Test AuthRedirectUtils - ${role}</strong><br>
+                    URL attendue : ${expectedUrl}<br>
+                    <em>Cliquez sur le bouton pour tester la redirection réelle</em>
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'info';
+                
+                // Optionnel : redirection réelle
+                if (confirm(`Voulez-vous tester la redirection vers ${expectedUrl} ?`)) {
+                    switch(role) {
+                        case 'user':
+                            AuthRedirectUtils.redirectToUserLogin();
+                            break;
+                        case 'transporter':
+                            AuthRedirectUtils.redirectToTransporterLogin();
+                            break;
+                        case 'admin':
+                            AuthRedirectUtils.redirectToAdminLogin();
+                            break;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <strong>❌ Erreur lors du test</strong><br>
+                    Erreur : ${error.message}
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'error';
+            }
+        }
+        
+        // Test des redirections directes
+        function testDirectRedirect(role) {
+            const resultDiv = document.getElementById('direct-result');
+            
+            try {
+                let directUrl;
+                if (window.location.pathname.includes('/pages/')) {
+                    directUrl = `./login.html?role=${role}`;
+                } else {
+                    directUrl = `./pages/login.html?role=${role}`;
+                }
+                
+                resultDiv.innerHTML = `
+                    <strong>Test Redirection Directe - ${role}</strong><br>
+                    URL : ${directUrl}<br>
+                    <em>Cliquez sur le bouton pour tester la redirection réelle</em>
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'info';
+                
+                // Optionnel : redirection réelle
+                if (confirm(`Voulez-vous tester la redirection directe vers ${directUrl} ?`)) {
+                    window.location.href = directUrl;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <strong>❌ Erreur lors du test</strong><br>
+                    Erreur : ${error.message}
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'error';
+            }
+        }
+        
+        // Initialiser l'affichage
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePageInfo();
+        });
+    </script>
+</body>
+</html> 

@@ -18,7 +18,15 @@ class AuthAPI {
      */
     static async register(userData) {
         try {
-            const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/auth/register`, {
+            // Déterminer l'endpoint selon le rôle
+            let endpoint;
+            if (userData.role === 'transporter') {
+                endpoint = `${API_CONFIG.BASE_URL}/auth/register-transporter`;
+            } else {
+                endpoint = `${API_CONFIG.BASE_URL}/auth/register-user`;
+            }
+
+            const { response, data } = await apiRequest(endpoint, {
                 method: 'POST',
                 headers: API_CONFIG.DEFAULT_HEADERS,
                 body: JSON.stringify(userData)
@@ -97,6 +105,13 @@ class AuthAPI {
                 // Nettoyer localStorage pour éviter les conflits
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('userData');
+                // Rafraîchir les données utilisateur depuis le serveur
+                try {
+                    const { default: ProfileAPI } = await import('./profileApi.js');
+                    await ProfileAPI.refreshUserData();
+                } catch (error) {
+                    console.warn('⚠️ Impossible de rafraîchir les données utilisateur après connexion:', error);
+                }
             }
 
             return {
@@ -141,6 +156,13 @@ class AuthAPI {
                 // Nettoyer localStorage pour éviter les conflits
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('userData');
+                // Rafraîchir les données utilisateur depuis le serveur
+                try {
+                    const { default: ProfileAPI } = await import('./profileApi.js');
+                    await ProfileAPI.refreshUserData();
+                } catch (error) {
+                    console.warn('⚠️ Impossible de rafraîchir les données utilisateur après connexion:', error);
+                }
             }
 
             return {

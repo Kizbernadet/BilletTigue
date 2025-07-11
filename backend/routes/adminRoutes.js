@@ -17,12 +17,14 @@ router.use(admin);
 // ========== Routes de gestion des transporteurs ==========
 router.post('/create-transporter', adminController.createTransporter);
 router.get('/transporters', adminController.getAllTransporters);
+router.get('/transporters/:id', adminController.getTransporterById); // ✅ NOUVELLE ROUTE
 router.put('/transporters/:id', adminController.updateTransporter);
 router.delete('/transporters/:id', adminController.deleteTransporter);
 router.put('/transporters/:id/status', adminController.updateTransporterStatus);
 
 // ========== Routes de gestion des utilisateurs ==========
 router.get('/users', adminController.getAllUsers);
+router.get('/users/:id', adminController.getUserById); // ✅ NOUVELLE ROUTE
 router.put('/users/:id/status', adminController.updateUserStatus);
 router.delete('/users/:id', adminController.deleteUser);
 

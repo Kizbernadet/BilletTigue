@@ -32,71 +32,8 @@
                     </ul>
                 </nav>
                 <div class="action-container-wrapper">
-                    <!-- Menu utilisateur -->
-                    <div class="dropdown dropdown-end dropdown-hover user-dropdown flex justify-center items-center">
-                        <label tabindex="0" class="btn-user">
-                            <i class="fas fa-user-circle text-xl"></i>
-                            <span id="user-name">Utilisateur</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </label>
-                        <ul id="user-options" tabindex="0" class="user-options-list">
-                            <li><a class="user-option" href="./profile.html"><i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a class="user-option" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Bouton burger menu -->
-                    <div id="burger-menu" class="burger-menu">
-                        <button class="burger-btn" id="burger-btn">
-                            <i class="fas fa-bars"></i>
-                        </button>
-                        <div class="burger-dropdown" id="burger-dropdown">
-                            <!-- En-tête du menu burger -->
-                            <div class="burger-header">
-                                <div class="user-info">
-                                    <div class="user-avatar" id="burger-user-avatar">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="user-details">
-                                        <div class="user-name" id="burger-user-name">Nom Utilisateur</div>
-                                        <div class="user-email" id="burger-user-email">email@example.com</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Options du menu burger -->
-                            <a class="burger-option" href="./profile.html">
-                                <i class="fas fa-user"></i> Mon Profil
-                            </a>
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-cog"></i> Paramètres du compte
-                            </a>
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-bell"></i> Notifications
-                            </a>
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-ticket-alt"></i> Mes Réservations
-                            </a>
-                            
-                            <div class="burger-separator"></div>
-                            
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-credit-card"></i> Méthodes de paiement
-                            </a>
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-shield-alt"></i> Sécurité
-                            </a>
-                            <a class="burger-option" href="#">
-                                <i class="fas fa-question-circle"></i> Aide & Support
-                            </a>
-                            
-                            <div class="burger-separator"></div>
-                            
-                            <button class="burger-option logout" id="burger-logout-btn">
-                                <i class="fas fa-sign-out-alt"></i> Déconnexion
-                            </button>
-                        </div>
-                    </div>
+                    <!-- Section d'authentification dynamique -->
+                    <div id="auth-section"></div>
                 </div>
             </div>
         </div>
@@ -190,6 +127,14 @@
 
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
+    <script src="../src/js/login-redirect-utils.js"></script>
+    <script src="../src/js/auth-state-manager.js"></script>
     <script type="module" src="../src/js/profile.js"></script>
+    <script>
+        // Initialiser les utilitaires de redirection
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoginRedirectUtils();
+        });
+    </script>
 </body>
 </html> 

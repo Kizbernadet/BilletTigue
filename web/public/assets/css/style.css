@@ -1461,7 +1461,7 @@ html {
    ========================================================================== */
 
 .topbar-container {
-  width: 95%;
+  width: 98%;
   max-width: 1200px;
   height: 70px;
   display: flex;
@@ -1539,8 +1539,7 @@ html {
   height: 100%;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  /* gap-4 */
+  gap: 0.5rem; /* réduit l'espace entre les liens */
   position: relative;
   z-index: 2;
 }
@@ -1550,14 +1549,14 @@ html {
   color: var(--font-color-base);
   font-weight: 500;
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.35rem 0.7rem; /* padding réduit */
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
   border-radius: 20px;
   overflow: hidden;
-  margin: 0 0.5rem;
+  margin: 0 0.2rem;
   z-index: 2;
   animation: slideInFromTop 0.6s ease forwards;
   opacity: 0;
@@ -1657,18 +1656,19 @@ html {
 }
 
 .action-container-wrapper {
-  width: 33.333333%;
+  width: 30%;
   /* w-4/12 */
   height: 100%;
   display: flex;
   align-items: center;
   /* Change pour un centrage vertical robuste */
-  justify-content: flex-end;
-  padding-right: 1rem;
+  justify-content: center;
+  /* padding-left: 1rem; */
   /* pr-4 */
   gap: 1rem;
   /* Espace légèrement augmenté pour correspondre à l'image */
   position: relative;
+
 }
 
 /* ==========================================================================
@@ -1680,8 +1680,8 @@ html {
 .btn-login {
   background-color: var(--primary-color);
   color: var(--color-white);
-  padding: 0.625rem 1.25rem;
-  /* 10px 20px */
+  padding: 0.5rem 0.75rem;
+  /* Même padding que btn-lang pour cohérence */
   border-radius: 9999px;
   /* rounded-full */
   font-weight: 500;
@@ -1690,11 +1690,83 @@ html {
   /* shadow-sm */
   border: 1px solid transparent;
   /* Ajout pour garantir un alignement parfait */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  min-height: 44px;
+  /* Hauteur minimale pour l'accessibilité */
 }
 
 .btn-login:hover {
   background-color: var(--accent-color);
   transform: scale(1.05);
+}
+
+/* --- Bouton Hamburger Mobile --- */
+
+.mobile-hamburger {
+  display: none;
+  /* Caché par défaut sur desktop */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  padding: 0.625rem 1rem;
+  /* Même padding que btn-lang */
+  border-radius: 9999px;
+  /* rounded-full */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  /* Même hauteur minimale */
+  min-width: 44px;
+  /* Largeur minimale pour l'accessibilité */
+  gap: 0.25rem;
+}
+
+.mobile-hamburger:hover {
+  background-color: rgba(24, 60, 74, 0.05);
+  /* Même effet hover que btn-lang */
+  transform: scale(1.05);
+}
+
+.hamburger-bar {
+  width: 20px;
+  height: 2px;
+  background-color: var(--primary-color);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.mobile-hamburger:hover .hamburger-bar {
+  background-color: var(--accent-color);
+}
+
+/* Animation du hamburger quand ouvert */
+.mobile-hamburger.active .hamburger-bar:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-hamburger.active .hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-hamburger.active .hamburger-bar:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Affichage du hamburger sur mobile */
+@media (max-width: 768px) {
+  .mobile-hamburger {
+    display: flex;
+  }
+  
+  .nav-container {
+    display: none;
+    /* Cache la navigation sur mobile */
+  }
 }
 
 .btn-primary-custom {
@@ -1705,6 +1777,14 @@ html {
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  padding: 0.625rem 1rem;
+  /* Même padding que btn-lang */
+  border-radius: 9999px;
+  /* rounded-full */
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  /* Même hauteur minimale */
 }
 
 .btn-primary-custom:hover {
@@ -1718,12 +1798,25 @@ html {
   background-color: var(--color-white);
   border-color: var(--color-white);
   color: var(--font-color-primary);
+  padding: 0.625rem 1rem;
+  /* Même padding que btn-lang */
+  border-radius: 9999px;
+  /* rounded-full */
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  /* Même hauteur minimale */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .btn-white:hover {
   background-color: #f8f9fa;
   border-color: #e9ecef;
   color: var(--font-color-primary);
+  transform: scale(1.05);
 }
 
 .btn-outline.btn-white {
@@ -1792,11 +1885,14 @@ html {
   /* Texte avec la couleur primaire */
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 44px;
+  /* Hauteur minimale pour l'accessibilité */
 }
 
 .btn-lang:hover {
   background-color: rgba(24, 60, 74, 0.05);
   /* Teinte légère au survol */
+  transform: scale(1.05);
 }
 
 /* ==========================================================================
@@ -2243,4 +2339,247 @@ body {
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto;
+}
+
+/* === Bouton profil utilisateur (style dashboard admin) === */
+.profile-button {
+    margin-left: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--accent-color, #EF9846);
+    padding: 0.6rem 1rem;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: var(--accent-color, #EF9846);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    min-height: 40px;
+    font-family: 'Comfortaa', cursive, Arial, sans-serif;
+    font-size: 0.9rem;
+    justify-content: center;
+}
+.profile-button:hover, .profile-button:focus {
+    background-color: var(--accent-color, #EF9846);
+    border-color: var(--accent-color, #EF9846);
+    color: #fff;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(239,152,70,0.08);
+}
+.profile-button i {
+    font-size: 1.2rem;
+}
+
+/* Responsive pour le bouton profil */
+@media (max-width: 768px) {
+    .profile-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+        min-width: 45px;
+        min-height: 38px;
+    }
+    
+    .profile-button span {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+        min-width: 40px;
+        min-height: 35px;
+    }
+}
+
+/* === Dropdown menu profil utilisateur (style dashboard admin) === */
+.profile-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    min-width: 200px;
+    z-index: 1000;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+.profile-dropdown-menu li {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: block;
+    background: transparent;
+}
+.profile-dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    color: #374151;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f0f0f0;
+    background: transparent;
+}
+.profile-dropdown-link:last-child {
+    border-bottom: none;
+}
+.profile-dropdown-link:hover {
+    background: var(--accent-color, #EF9846);
+    color: #fff;
+    transform: translateX(2px);
+}
+.profile-dropdown-link.logout-link {
+    background-color: #dc3545;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+.profile-dropdown-link.logout-link:hover {
+    background-color: #dc3545;
+    color: #fff;
+    transform: translateX(2px);
+}
+
+/* Uniformisation de la topbar sur toutes les pages */
+.topbar-container, .topbar-container * {
+  font-family: 'Comfortaa', cursive, Arial, sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.topbar-container {
+  background-color: var(--color-white);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0 1.5rem;
+  min-height: 70px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Uniformisation des boutons d'action de la topbar */
+.topbar-container .btn-lang,
+.topbar-container .btn-login,
+.topbar-container .btn-primary-custom,
+.topbar-container .btn-white {
+  padding: 0.45rem 0.8rem;
+  min-height: 36px;
+  border-radius: 9999px;
+  font-family: 'Comfortaa', cursive, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+
+.topbar-container .btn-lang {
+  padding: 0.35rem 0.7rem;
+  min-height: 32px;
+  border-radius: 9999px;
+  font-family: 'Comfortaa', cursive, Arial, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  transition: all 0.2s;
+}
+.topbar-container .btn-lang:hover {
+  background: rgba(24, 60, 74, 0.05);
+  color: var(--accent-color);
+}
+
+.topbar-container .btn-login {
+  padding: 0.35rem 1.2rem;
+  min-height: 32px;
+  border-radius: 9999px;
+  font-family: 'Comfortaa', cursive, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  white-space: nowrap;
+  background-color: brown;
+}
+.topbar-container .btn-login:hover {
+  background: rgba(24, 60, 74, 0.05);
+  color: var(--accent-color);
+}
+
+.topbar-container .btn-primary-custom {
+  background: var(--primary-color);
+  color: var(--color-white);
+  border: 1.5px solid var(--primary-color);
+}
+.topbar-container .btn-primary-custom:hover {
+  background: #14323e;
+  color: var(--color-white);
+}
+
+.topbar-container .btn-white {
+  background: var(--color-white);
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+}
+.topbar-container .btn-white:hover {
+  background: #f8f9fa;
+  color: var(--accent-color);
+}
+
+/* Uniformisation des icônes dans la topbar */
+.topbar-container i,
+.topbar-container .nav-link i,
+.topbar-container .btn-lang i,
+.topbar-container .btn-login i {
+  font-size: 1.4em;
+  /* Taille augmentée pour toutes les icônes */
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  color: var(--font-color-base);
+  transition: color 0.2s, transform 0.2s;
+  margin-right: 0.5em;
+}
+
+/* Si l'icône est après le texte, inverser le margin */
+.topbar-container .nav-link i:last-child,
+.topbar-container .btn-lang i:last-child,
+.topbar-container .btn-login i:last-child {
+  margin-right: 0;
+  margin-left: 0.5em;
+}
+
+/* Couleur d'accent au hover sur le lien parent */
+.topbar-container .nav-link:hover i,
+.topbar-container .btn-lang:hover i,
+.topbar-container .btn-login:hover i {
+  color: var(--accent-color);
+  transform: scale(1.15) rotate(-5deg);
+}
+
+/* Couleur d'accent si le lien est actif */
+.topbar-container .nav-link.active i {
+  color: var(--accent-color);
 }

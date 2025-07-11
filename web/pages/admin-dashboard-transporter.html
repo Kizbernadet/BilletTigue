@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
     <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="../public/assets/css/admin-transporters.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -47,31 +48,31 @@
           <!-- Section profil -->
           <div class="profile-dropdown-wrapper">
             <button id="profileBtn" onclick="toggleProfileMenu()">
-              <i class="fa-solid fa-user-shield"></i>
+              <i class="ri-shield-user-line"></i>
               <span>Administrateur</span>
             </button>
             <ul class="profile-dropdown-menu" id="profileDropdown">
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-user"></i>
+                  <i class="ri-user-settings-line"></i>
                   Mon Profil
                 </a>
               </li>
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-cog"></i>
+                  <i class="ri-settings-3-line"></i>
                   Paramètres
                 </a>
               </li>
               <li>
                 <a href="#" class="profile-dropdown-link">
-                  <i class="fa-solid fa-bell"></i>
+                  <i class="ri-notification-3-line"></i>
                   Notifications
                 </a>
               </li>
               <li>
                 <a href="../index.html" class="profile-dropdown-link logout-link">
-                  <i class="fa-solid fa-sign-out-alt"></i>
+                  <i class="ri-logout-box-r-line"></i>
                   Déconnexion
                 </a>
               </li>
@@ -165,24 +166,42 @@
     <script src="../src/js/admin-stats-manager.js"></script>
   
   <!-- Scripts JavaScript -->
-      <script>
-        // Activer la protection d'authentification
-        AuthProtection.protect();
-        
-        // Initialiser l'affichage personnalisé du profil
-        ProfileDisplay.init();
-        
-        // Initialiser les statistiques dynamiques
-        (async function() {
-          if (window.AdminStatsManager) {
-            console.log('📊 Initialisation des statistiques transporteurs dynamiques...');
-            window.adminStatsManager = new AdminStatsManager();
-            await window.adminStatsManager.init();
-          } else {
-            console.warn('⚠️ Gestionnaire de statistiques non disponible, valeurs statiques conservées');
-          }
-        })();
-  </script>
   <script src="../src/js/admin-dashboard-transporter.js"></script>
+  <script>
+    // Attendre que le DOM soit chargé
+    document.addEventListener('DOMContentLoaded', function() {
+      // Activer la protection d'authentification
+      if (window.AuthProtection) {
+        AuthProtection.protect();
+      }
+      
+      // Initialiser l'affichage personnalisé du profil
+      if (window.ProfileDisplay) {
+        ProfileDisplay.init();
+      }
+      
+      // Initialiser les statistiques dynamiques
+      (async function() {
+        if (window.AdminStatsManager) {
+          console.log('📊 Initialisation des statistiques transporteurs dynamiques...');
+          window.adminStatsManager = new AdminStatsManager();
+          await window.adminStatsManager.init();
+        } else {
+          console.warn('⚠️ Gestionnaire de statistiques non disponible, valeurs statiques conservées');
+        }
+      })();
+      
+      // Vérifier que les fonctions sont disponibles
+      console.log('🔍 Vérification des fonctions admin transporteurs...');
+      const requiredFunctions = ['createTransporter', 'readTransporters', 'updateTransporter', 'deleteTransporter', 'editTransporter'];
+      requiredFunctions.forEach(func => {
+        if (typeof window[func] === 'function') {
+          console.log(`✅ ${func} disponible`);
+        } else {
+          console.error(`❌ ${func} non disponible`);
+        }
+      });
+    });
+  </script>
 </body>
 </html> 

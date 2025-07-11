@@ -154,13 +154,13 @@ class AdminStatsManager {
 
         // Chercher et mettre à jour chaque statistique par icône
         const statMappings = [
-            { icon: 'fa-users', value: stats.users?.active || 0 },
-            { icon: 'fa-truck', value: stats.transporters?.validated || 0 },
-            { icon: 'fa-route', value: stats.trajets?.active || 0 },
-            { icon: 'fa-box', value: stats.colis?.inTransit || 0 },
-            { icon: 'fa-euro-sign', value: this.formatCurrency(stats.revenue?.monthly || 0) },
-            { icon: 'fa-chart-line', value: `${stats.satisfaction?.rate || 0}%` },
-            { icon: 'fa-shield-alt', value: stats.security?.incidents || 0 }
+            { icon: 'ri-user-3-line', value: stats.users?.active || 0 },
+            { icon: 'ri-truck-line', value: stats.transporters?.validated || 0 },
+            { icon: 'ri-route-line', value: stats.trajets?.active || 0 },
+            { icon: 'ri-box-3-line', value: stats.colis?.inTransit || 0 },
+            { icon: 'ri-currency-euro-line', value: this.formatCurrency(stats.revenue?.monthly || 0) },
+            { icon: 'ri-line-chart-line', value: `${stats.satisfaction?.rate || 0}%` },
+            { icon: 'ri-shield-check-line', value: stats.security?.incidents || 0 }
         ];
 
         statMappings.forEach(mapping => {
@@ -178,10 +178,10 @@ class AdminStatsManager {
 
         // Mapping des statistiques par icône pour un ciblage précis
         const statMappings = [
-            { icon: 'fa-truck', value: stats.total || 0, label: 'Total transporteurs' },
-            { icon: 'fa-check-circle', value: stats.validated || 0, label: 'Transporteurs validés' },
-            { icon: 'fa-clock', value: stats.pending || 0, label: 'Transporteurs en attente' },
-            { icon: 'fa-ban', value: stats.suspended || 0, label: 'Transporteurs suspendus' }
+            { icon: 'ri-truck-line', value: stats.total || 0, label: 'Total transporteurs' },
+            { icon: 'ri-checkbox-circle-line', value: stats.validated || 0, label: 'Transporteurs validés' },
+            { icon: 'ri-time-line', value: stats.pending || 0, label: 'Transporteurs en attente' },
+            { icon: 'ri-forbid-line', value: stats.suspended || 0, label: 'Transporteurs suspendus' }
         ];
 
         // Mettre à jour chaque statistique en ciblant par icône

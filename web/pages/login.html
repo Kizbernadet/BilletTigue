@@ -9,6 +9,7 @@
     <link href="../public/assets/css/auth.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
       .checkbox-container {
         display: flex;
@@ -28,45 +29,85 @@
         cursor: pointer;
         user-select: none;
       }
+      
+      /* Styles pour le sélecteur de rôle */
+      .role-selector {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+      }
+      
+      .role-selector input[type="radio"] {
+        display: none;
+      }
+      
+      .role-selector label {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.8);
+        color: #333;
+      }
+      
+      .role-selector input[type="radio"]:checked + label {
+        background: var(--primary-color, #4CAF50);
+        color: white;
+        border-color: var(--primary-color, #4CAF50);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+      }
+      
+      .role-selector label:hover {
+        background: rgba(76, 175, 80, 0.1);
+        border-color: var(--primary-color, #4CAF50);
+      }
     </style>
 </head>
 <body class="min-h-screen bg-custom">
     <header>
         <!-- Container pour centrer la topbar -->
         <div class="w-full flex justify-center p-4">
-            <!-- Topbar avec 95% de largeur -->
             <div class="topbar-container">
                 <div class="logo-container w-3/12 h-full">
-                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
-                    <a href="../index.html" class="flex items-center">
-                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
-                        <span class="logo-text">BilletTigue</span>
-                    </a>
+                    <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
                 </div>
                 <nav class="nav-container w-5/12 h-full">
                     <ul class="nav-list">
-                        <!-- Les liens de navigation doivent être relatifs à la racine -->
-                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+                        <li><a href="../index.html" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
+                        <li><a href="search-trajets.html" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-box-3-line"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-question-line"></i><span>Aide</span></a></li>
                     </ul>
                 </nav>
                 <div class="action-container-wrapper">
-                    <!-- Le menu de langue reste identique -->
                     <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
                         <label tabindex="0" class="btn-lang">
-                            <span id="current-lang-text">Français</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <span id="current-lang-text" class="lang-text">Français</span>
+                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                            <i class="ri-global-line lang-icon" style="display:none;"></i>
                         </label>
                         <ul id="lang-options" tabindex="0" class="lang-options-list">
                             <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
                             <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
                         </ul>
                     </div>
-
-                    <!-- Bouton pour s'inscrire -->
-                    <a href="./register.html" class="btn-login">S'inscrire</a>
+                    <div id="auth-section" class="flex items-center">
+                        <button class="btn-login">Se connecter</button>
+                    </div>
+                    <button id="mobile-hamburger" class="mobile-hamburger" aria-label="Ouvrir le menu" type="button">
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                        <span class="hamburger-bar"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -76,6 +117,21 @@
         <div class="auth-card">
             <h2 class="auth-title">Connectez-vous</h2>
             <p class="auth-subtitle">Accédez à votre espace pour gérer vos réservations.</p>
+            
+            <!-- Sélecteur de rôle -->
+            <div class="role-selector">
+                <input type="radio" id="role-user" name="role" value="user" checked>
+                <label for="role-user">
+                    <i class="fas fa-user"></i>
+                    Utilisateur
+                </label>
+                <input type="radio" id="role-transporter" name="role" value="transporter">
+                <label for="role-transporter">
+                    <i class="fas fa-truck"></i>
+                    Transporteur
+                </label>
+            </div>
+            
             <form id="loginForm" class="auth-form">
                 <div class="form-field">
                     <input type="email" id="email" placeholder="Adresse e-mail" required>
@@ -104,6 +160,44 @@
 
     <!-- Le script JS doit pointer vers la racine du site -->
     <script src="../src/js/main.js"></script>
+    <script src="../src/js/login-redirect-utils.js"></script>
     <script type="module" src="../src/js/auth.js"></script>
+    
+    <script>
+    // Script pour gérer le sélecteur de rôle et synchroniser avec l'URL
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleUserRadio = document.getElementById('role-user');
+        const roleTransporterRadio = document.getElementById('role-transporter');
+        
+        // Fonction pour mettre à jour l'URL selon le rôle sélectionné
+        function updateURL() {
+            const selectedRole = roleTransporterRadio && roleTransporterRadio.checked ? 'transporter' : 'user';
+            const url = new URL(window.location);
+            url.searchParams.set('role', selectedRole);
+            window.history.replaceState({}, '', url);
+        }
+        
+        // Fonction pour sélectionner le rôle selon l'URL
+        function selectRoleFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            
+            if (roleParam === 'transporter' && roleTransporterRadio) {
+                roleTransporterRadio.checked = true;
+            } else if (roleUserRadio) {
+                roleUserRadio.checked = true;
+            }
+        }
+        
+        // Écouter les changements de rôle
+        if (roleUserRadio && roleTransporterRadio) {
+            roleUserRadio.addEventListener('change', updateURL);
+            roleTransporterRadio.addEventListener('change', updateURL);
+        }
+        
+        // Initialiser selon l'URL
+        selectRoleFromURL();
+    });
+    </script>
 </body>
 </html> 

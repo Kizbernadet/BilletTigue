@@ -11,10 +11,13 @@ const { protect } = require('../middlewares/authMiddleware');
 // Toutes les routes de profil nécessitent une authentification
 router.use(protect);
 
-// GET /api/user/profile - Récupérer le profil de l'utilisateur connecté
-router.get('/user/profile', profileController.getProfile);
+// GET /api/profile - Récupérer le profil complet de l'utilisateur connecté
+router.get('/', profileController.getCurrentUserProfile);
 
-// PUT /api/user/profile - Mettre à jour le profil de l'utilisateur connecté
-router.put('/user/profile', profileController.updateProfile);
+// PUT /api/profile - Mettre à jour le profil de l'utilisateur connecté
+router.put('/', profileController.updateUserProfile);
+
+// POST /api/profile/change-password - Changer le mot de passe
+router.post('/change-password', profileController.changePassword);
 
 module.exports = router; 

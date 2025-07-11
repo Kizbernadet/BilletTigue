@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // ========== Initialisation du système de redirection ==========
+    if (window.LoginRedirectUtils) {
+        console.log('✅ Système de redirection initialisé sur toutes les pages');
+        // Initialiser les utilitaires de redirection si disponibles
+        if (window.initLoginRedirectUtils) {
+            window.initLoginRedirectUtils();
+        }
+    }
+
     // ========== Gestion de l'état d'authentification ==========
     const loginMenu = document.getElementById('login-menu');
     
@@ -785,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Rediriger vers la page de connexion après un court délai
                     setTimeout(() => {
-                        window.location.href = './login.html';
+                        window.location.href = './pages/login.html';
                     }, 1000);
                 })
                 .catch(error => {

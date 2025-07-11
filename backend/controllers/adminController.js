@@ -64,15 +64,40 @@ async function createTransporter(req, res) {
 }
 
 // ========== Fonction : getAllTransporters ==========
-// Description : Récupérer tous les transporteurs
+// Description : Récupérer tous les transporteurs avec pagination et filtres
 async function getAllTransporters(req, res) {
   try {
-    const transporters = await Transporteur.findAll({
+    const { page = 1, limit = 10, search, status, company_type } = req.query;
+    const offset = (page - 1) * limit;
+    
+    // Construire les conditions de recherche
+    const whereConditions = {};
+    const transporterWhereConditions = {};
+    
+    if (search) {
+      whereConditions.email = { [Op.like]: `%${search}%` };
+      transporterWhereConditions[Op.or] = [
+        { company_name: { [Op.like]: `%${search}%` } },
+        { phone_number: { [Op.like]: `%${search}%` } }
+      ];
+    }
+    
+    if (status) {
+      whereConditions.status = status;
+    }
+    
+    if (company_type) {
+      transporterWhereConditions.company_type = company_type;
+    }
+    
+    const { count, rows: transporters } = await Transporteur.findAndCountAll({
+      where: transporterWhereConditions,
       include: [
         {
           model: Compte,
           as: 'compte',
-          attributes: ['id', 'email', 'status', 'created_at'],
+          where: whereConditions,
+          attributes: ['id', 'email', 'status', 'created_at', 'last_login'],
           include: [
             {
               model: Role,
@@ -82,9 +107,13 @@ async function getAllTransporters(req, res) {
           ]
         }
       ],
-      order: [['created_at', 'DESC']]
+      order: [['created_at', 'DESC']],
+      limit: parseInt(limit),
+      offset: parseInt(offset)
     });
-
+    
+    const totalPages = Math.ceil(count / limit);
+    
     res.json({
       transporters: transporters.map(t => ({
         id: t.id,
@@ -94,8 +123,15 @@ async function getAllTransporters(req, res) {
         company_type: t.company_type,
         status: t.compte.status,
         role: t.compte.role.name,
-        created_at: t.created_at
-      }))
+        created_at: t.created_at,
+        last_login: t.compte.last_login
+      })),
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalItems: count,
+        itemsPerPage: parseInt(limit)
+      }
     });
 
   } catch (error) {
@@ -104,16 +140,107 @@ async function getAllTransporters(req, res) {
   }
 }
 
-// ========== Fonction : getAllUsers ==========
-// Description : Récupérer tous les utilisateurs
-async function getAllUsers(req, res) {
+// ========== Fonction : getTransporterById ==========
+// Description : Récupérer un transporteur par son ID avec toutes ses informations
+async function getTransporterById(req, res) {
   try {
-    const users = await Utilisateur.findAll({
+    const { id } = req.params;
+    
+    const transporteur = await Transporteur.findByPk(id, {
       include: [
         {
           model: Compte,
           as: 'compte',
-          attributes: ['id', 'email', 'status', 'created_at'],
+          attributes: ['id', 'email', 'status', 'created_at', 'last_login', 'email_verified', 'phone_verified'],
+          include: [
+            {
+              model: Role,
+              as: 'role',
+              attributes: ['name', 'description']
+            }
+          ]
+        }
+      ]
+    });
+    
+    if (!transporteur) {
+      return res.status(404).json({ message: 'Transporteur non trouvé.' });
+    }
+    
+    // TODO: Récupérer les statistiques réelles depuis les tables appropriées
+    // Pour l'instant, on utilise des données factices
+    const transporterData = {
+      id: transporteur.id,
+      company_name: transporteur.company_name,
+      company_type: transporteur.company_type,
+      email: transporteur.compte.email,
+      phone_number: transporteur.phone_number,
+      status: transporteur.compte.status,
+      created_at: transporteur.compte.created_at,
+      last_login: transporteur.compte.last_login,
+      email_verified: transporteur.compte.email_verified,
+      phone_verified: transporteur.compte.phone_verified,
+      // Statistiques (à remplacer par de vraies données)
+      total_trips: 0,
+      active_trips: 0,
+      completed_trips: 0,
+      cancelled_trips: 0,
+      average_rating: 0,
+      total_reviews: 0,
+      total_revenue: '0€',
+      // Données de sécurité
+      account_locked: false,
+      login_attempts: 0,
+      failed_logins: 0,
+      last_failed_login: null,
+      last_profile_update: transporteur.updated_at,
+      password_changed_at: null,
+      // Données supplémentaires
+      service_areas: [],
+      vehicles_count: 0,
+      vehicle_types: []
+    };
+    
+    res.json(transporterData);
+
+  } catch (error) {
+    console.error('Erreur récupération transporteur:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération du transporteur.' });
+  }
+}
+
+// ========== Fonction : getAllUsers ==========
+// Description : Récupérer tous les utilisateurs avec pagination et filtres
+async function getAllUsers(req, res) {
+  try {
+    const { page = 1, limit = 10, search, status } = req.query;
+    const offset = (page - 1) * limit;
+    
+    // Construire les conditions de recherche
+    const whereConditions = {};
+    const userWhereConditions = {};
+    
+    if (search) {
+      whereConditions.email = { [Op.like]: `%${search}%` };
+      userWhereConditions[Op.or] = [
+        { first_name: { [Op.like]: `%${search}%` } },
+        { last_name: { [Op.like]: `%${search}%` } },
+        { phone_number: { [Op.like]: `%${search}%` } }
+      ];
+    }
+    
+    if (status) {
+      whereConditions.status = status;
+    }
+    
+    const { count, rows: users } = await Utilisateur.findAndCountAll({
+      where: userWhereConditions,
+      include: [
+        {
+          model: Compte,
+          as: 'compte',
+          where: whereConditions,
+          attributes: ['id', 'email', 'status', 'created_at', 'last_login'],
           include: [
             {
               model: Role,
@@ -123,9 +250,13 @@ async function getAllUsers(req, res) {
           ]
         }
       ],
-      order: [['created_at', 'DESC']]
+      order: [['created_at', 'DESC']],
+      limit: parseInt(limit),
+      offset: parseInt(offset)
     });
-
+    
+    const totalPages = Math.ceil(count / limit);
+    
     res.json({
       users: users.map(u => ({
         id: u.id,
@@ -135,13 +266,66 @@ async function getAllUsers(req, res) {
         phone_number: u.phone_number,
         status: u.compte.status,
         role: u.compte.role.name,
-        created_at: u.created_at
-      }))
+        created_at: u.created_at,
+        last_login: u.compte.last_login
+      })),
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages,
+        totalItems: count,
+        itemsPerPage: parseInt(limit)
+      }
     });
 
   } catch (error) {
     console.error('Erreur récupération utilisateurs:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération des utilisateurs.' });
+  }
+}
+
+// ========== Fonction : getUserById ==========
+// Description : Récupérer un utilisateur par son ID
+async function getUserById(req, res) {
+  try {
+    const { id } = req.params;
+    
+    const utilisateur = await Utilisateur.findByPk(id, {
+      include: [
+        {
+          model: Compte,
+          as: 'compte',
+          attributes: ['id', 'email', 'status', 'created_at', 'last_login', 'email_verified', 'phone_verified'],
+          include: [
+            {
+              model: Role,
+              as: 'role',
+              attributes: ['name', 'description']
+            }
+          ]
+        }
+      ]
+    });
+    
+    if (!utilisateur) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+    
+    res.json({
+      id: utilisateur.id,
+      email: utilisateur.compte.email,
+      first_name: utilisateur.first_name,
+      last_name: utilisateur.last_name,
+      phone_number: utilisateur.phone_number,
+      status: utilisateur.compte.status,
+      created_at: utilisateur.compte.created_at,
+      last_login: utilisateur.compte.last_login,
+      email_verified: utilisateur.compte.email_verified,
+      phone_verified: utilisateur.compte.phone_verified
+    });
+
+  } catch (error) {
+    console.error('Erreur récupération utilisateur:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération de l\'utilisateur.' });
   }
 }
 
@@ -264,10 +448,11 @@ async function updateUserStatus(req, res) {
 }
 
 // ========== Fonction : deleteTransporter ==========
-// Description : Supprimer un transporteur
+// Description : Supprimer ou désactiver un transporteur
 async function deleteTransporter(req, res) {
   try {
     const { id } = req.params;
+    const { action, reason, notify } = req.body;
 
     const transporteur = await Transporteur.findByPk(id, {
       include: [{ model: Compte, as: 'compte' }]
@@ -277,15 +462,54 @@ async function deleteTransporter(req, res) {
       return res.status(404).json({ message: 'Transporteur non trouvé.' });
     }
 
-    // Supprimer le transporteur et son compte
-    await transporteur.destroy();
-    await transporteur.compte.destroy();
+    let resultMessage = '';
 
-    res.json({ message: 'Transporteur supprimé avec succès' });
+    switch (action) {
+      case 'suspend':
+        // Suspendre le compte
+        await transporteur.compte.update({ status: 'suspended' });
+        resultMessage = 'Transporteur suspendu avec succès';
+        break;
+        
+      case 'deactivate':
+        // Désactiver temporairement
+        await transporteur.compte.update({ status: 'inactive' });
+        resultMessage = 'Transporteur désactivé avec succès';
+        break;
+        
+      case 'delete':
+        // Supprimer définitivement
+        await transporteur.destroy();
+        await transporteur.compte.destroy();
+        resultMessage = 'Transporteur supprimé définitivement';
+        break;
+        
+      default:
+        return res.status(400).json({ message: 'Action invalide. Actions autorisées: suspend, deactivate, delete' });
+    }
+
+    // TODO: Envoyer une notification email si demandé
+    if (notify) {
+      console.log(`Notification email à envoyer à ${transporteur.compte.email} pour l'action: ${action}`);
+      // Implémenter l'envoi d'email ici
+    }
+
+    // TODO: Logger l'action admin
+    console.log(`Admin action: ${action} on transporter ${id}, reason: ${reason}`);
+
+    res.json({ 
+      message: resultMessage,
+      action: action,
+      transporter: {
+        id: transporteur.id,
+        company_name: transporteur.company_name,
+        email: transporteur.compte.email
+      }
+    });
 
   } catch (error) {
-    console.error('Erreur suppression transporteur:', error);
-    res.status(500).json({ message: 'Erreur lors de la suppression du transporteur.' });
+    console.error('Erreur suppression/désactivation transporteur:', error);
+    res.status(500).json({ message: 'Erreur lors de la suppression/désactivation du transporteur.' });
   }
 }
 
@@ -322,16 +546,61 @@ async function updateTransporter(req, res) {
     const { id } = req.params;
     const updateData = req.body;
 
-    const transporteur = await Transporteur.findByPk(id);
+    const transporteur = await Transporteur.findByPk(id, {
+      include: [{ model: Compte, as: 'compte' }]
+    });
+    
     if (!transporteur) {
       return res.status(404).json({ message: 'Transporteur non trouvé.' });
     }
 
-    await transporteur.update(updateData);
+    // Validation des données
+    const allowedFields = ['company_name', 'company_type', 'phone_number'];
+    const transporterUpdates = {};
+    const compteUpdates = {};
+
+    // Séparer les champs du transporteur et du compte
+    Object.keys(updateData).forEach(key => {
+      if (allowedFields.includes(key)) {
+        transporterUpdates[key] = updateData[key];
+      } else if (['email', 'status'].includes(key)) {
+        compteUpdates[key] = updateData[key];
+      }
+    });
+
+    // Mettre à jour le transporteur
+    if (Object.keys(transporterUpdates).length > 0) {
+      await transporteur.update(transporterUpdates);
+    }
+
+    // Mettre à jour le compte
+    if (Object.keys(compteUpdates).length > 0) {
+      await transporteur.compte.update(compteUpdates);
+    }
+
+    // Mettre à jour le mot de passe si fourni
+    if (updateData.password && updateData.password.trim()) {
+      console.log('🔑 Mise à jour du mot de passe pour le compte', transporteur.compte.id);
+      const hashedPassword = await bcrypt.hash(updateData.password, 10);
+      transporteur.compte.password_hash = hashedPassword;
+      await transporteur.compte.save();
+    }
+
+    // Récupérer les données mises à jour
+    const updatedTransporter = await Transporteur.findByPk(id, {
+      include: [{ model: Compte, as: 'compte' }]
+    });
 
     res.json({
       message: 'Transporteur mis à jour avec succès',
-      transporter: transporteur
+      transporter: {
+        id: updatedTransporter.id,
+        company_name: updatedTransporter.company_name,
+        company_type: updatedTransporter.company_type,
+        phone_number: updatedTransporter.phone_number,
+        email: updatedTransporter.compte.email,
+        status: updatedTransporter.compte.status
+      }
     });
 
   } catch (error) {
@@ -430,7 +699,9 @@ async function getTransporterStats(req, res) {
 module.exports = {
   createTransporter,
   getAllTransporters,
+  getTransporterById,
   getAllUsers,
+  getUserById,
   getAdminStats,
   updateTransporterStatus,
   updateUserStatus,

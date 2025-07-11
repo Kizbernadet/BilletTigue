@@ -23,14 +23,14 @@ class ProfileMenuInjector {
             const profileMenuHTML = `
                 <div id="profile-menu" class="profile-dropdown-wrapper" style="display: none;">
                     <button id="profileBtn" onclick="toggleProfileMenu()" class="profile-btn">
-                        <i class="fa-solid fa-user-circle"></i>
+                        <i class="ri-user-3-line"></i>
                         <span id="profile-name">Utilisateur</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
+                        <i class="ri-arrow-down-s-line"></i>
                     </button>
                     <ul class="profile-dropdown-menu" id="profileDropdown">
                         <li class="profile-info">
                             <div class="profile-header">
-                                <i class="fa-solid fa-user"></i>
+                                <i class="ri-user-line"></i>
                                 <div class="profile-details">
                                     <span id="profile-full-name">Prénom Nom</span>
                                     <span id="profile-role" class="profile-role">Utilisateur</span>
@@ -39,25 +39,25 @@ class ProfileMenuInjector {
                         </li>
                         <li>
                             <a href="profile.html" class="profile-dropdown-link">
-                                <i class="fa-solid fa-user"></i>
+                                <i class="ri-user-settings-line"></i>
                                 Mon Profil
                             </a>
                         </li>
                         <li>
                             <a href="user-dashboard.html" class="profile-dropdown-link">
-                                <i class="fa-solid fa-tachometer-alt"></i>
+                                <i class="ri-dashboard-line"></i>
                                 Mes Réservations
                             </a>
                         </li>
                         <li>
                             <a href="#" class="profile-dropdown-link">
-                                <i class="fa-solid fa-bell"></i>
+                                <i class="ri-notification-3-line"></i>
                                 Notifications
                             </a>
                         </li>
                         <li>
                             <a href="#" class="profile-dropdown-link" onclick="logout()">
-                                <i class="fa-solid fa-sign-out-alt"></i>
+                                <i class="ri-logout-box-r-line"></i>
                                 Déconnexion
                             </a>
                         </li>

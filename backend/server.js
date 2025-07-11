@@ -60,11 +60,11 @@ app.use('/api/auth', require('./routes/authRoutes'));
 
 // ========== Intégration des routes de trajets ========== 
 // Routes pour la gestion des trajets (PUBLIC - doit être avant profileRoutes)
-app.use('/api', require('./routes/trajetRoutes'));
+app.use('/api/trajets', require('./routes/trajetRoutes'));
 
 // ========== Intégration des routes de profil ========== 
-// Routes pour la gestion du profil utilisateur (PROTÉGÉ - doit être après trajets)
-app.use('/api', require('./routes/profileRoutes'));
+// Routes pour la gestion du profil utilisateur (PROTÉGÉ)
+app.use('/api/profile', require('./routes/profileRoutes'));
 
 // ========== Intégration des routes de réservations ========== 
 // Routes pour la gestion des réservations de trajets (PROTÉGÉ)

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Routes d'Authentification - Billettigue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #45a049;
+        }
+        .test-button.transporter {
+            background: #2196F3;
+        }
+        .test-button.transporter:hover {
+            background: #1976D2;
+        }
+        .test-button.admin {
+            background: #FF9800;
+        }
+        .test-button.admin:hover {
+            background: #F57C00;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test des Routes d'Authentification</h1>
+    
+    <div class="test-section">
+        <h2>🔗 Test des Redirections</h2>
+        <p>Testez les redirections vers la page de connexion avec différents rôles :</p>
+        
+        <button class="test-button" onclick="testRedirect('user')">
+            🔗 Redirection Utilisateur
+        </button>
+        <button class="test-button transporter" onclick="testRedirect('transporter')">
+            🔗 Redirection Transporteur
+        </button>
+        <button class="test-button admin" onclick="testRedirect('admin')">
+            🔗 Redirection Admin
+        </button>
+        
+        <div id="redirect-result" class="result info" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔐 Test des Routes API</h2>
+        <p>Testez les appels API d'authentification avec des credentials de test :</p>
+        
+        <button class="test-button" onclick="testLoginUser()">
+            🔐 Test Login User
+        </button>
+        <button class="test-button transporter" onclick="testLoginTransporter()">
+            🔐 Test Login Transporteur
+        </button>
+        
+        <div id="api-result" class="result info" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 État Actuel</h2>
+        <div id="current-state" class="result info">
+            Chargement...
+        </div>
+    </div>
+
+    <script>
+        // Configuration API
+        const API_BASE = 'http://localhost:3000/api';
+        
+        // Fonction pour tester les redirections
+        function testRedirect(role) {
+            const resultDiv = document.getElementById('redirect-result');
+            const loginUrl = `./pages/login.html?role=${role}`;
+            
+            resultDiv.innerHTML = `
+                <strong>Redirection testée :</strong><br>
+                URL: ${loginUrl}<br>
+                Rôle: ${role}<br>
+                <em>Cliquez sur le bouton pour tester la redirection réelle</em>
+            `;
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            
+            // Optionnel : redirection réelle
+            if (confirm(`Voulez-vous tester la redirection vers ${loginUrl} ?`)) {
+                window.location.href = loginUrl;
+            }
+        }
+        
+        // Fonction pour tester login user
+        async function testLoginUser() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '🔄 Test en cours...';
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'testpassword'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <strong>✅ Login User - Succès</strong><br>
+                        Status: ${response.status}<br>
+                        Token: ${data.token ? 'Présent' : 'Absent'}<br>
+                        User: ${JSON.stringify(data.user, null, 2)}
+                    `;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.innerHTML = `
+                        <strong>❌ Login User - Erreur</strong><br>
+                        Status: ${response.status}<br>
+                        Message: ${data.message || 'Erreur inconnue'}
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <strong>❌ Login User - Erreur réseau</strong><br>
+                    Erreur: ${error.message}
+                `;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        // Fonction pour tester login transporter
+        async function testLoginTransporter() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = '🔄 Test en cours...';
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login-transporter`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'kiztrans@test.com',
+                        password: 'testpassword'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <strong>✅ Login Transporteur - Succès</strong><br>
+                        Status: ${response.status}<br>
+                        Token: ${data.token ? 'Présent' : 'Absent'}<br>
+                        User: ${JSON.stringify(data.user, null, 2)}
+                    `;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.innerHTML = `
+                        <strong>❌ Login Transporteur - Erreur</strong><br>
+                        Status: ${response.status}<br>
+                        Message: ${data.message || 'Erreur inconnue'}
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <strong>❌ Login Transporteur - Erreur réseau</strong><br>
+                    Erreur: ${error.message}
+                `;
+                resultDiv.className = 'result error';
+            }
+        }
+        
+        // Fonction pour afficher l'état actuel
+        function updateCurrentState() {
+            const stateDiv = document.getElementById('current-state');
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            const token = sessionStorage.getItem('authToken');
+            const userData = sessionStorage.getItem('userData');
+            
+            let state = `
+                <strong>État actuel :</strong><br>
+                URL Role: ${roleParam || 'Aucun'}<br>
+                Token: ${token ? 'Présent' : 'Absent'}<br>
+                User Data: ${userData ? 'Présent' : 'Absent'}<br>
+            `;
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    state += `User Role: ${user.role || 'Inconnu'}<br>`;
+                    state += `User Email: ${user.email || 'Inconnu'}<br>`;
+                } catch (error) {
+                    state += `Erreur parsing user data: ${error.message}<br>`;
+                }
+            }
+            
+            stateDiv.innerHTML = state;
+        }
+        
+        // Initialiser l'affichage
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentState();
+            
+            // Mettre à jour l'état toutes les 2 secondes
+            setInterval(updateCurrentState, 2000);
+        });
+    </script>
+</body>
+</html> 

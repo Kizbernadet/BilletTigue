@@ -55,6 +55,19 @@
         
         <script>
             function deconnecter() {
+                // Récupérer les données utilisateur avant de nettoyer
+                const userData = sessionStorage.getItem('userData');
+                let role = 'user';
+                
+                if (userData) {
+                    try {
+                        const user = JSON.parse(userData);
+                        role = user.role || 'user';
+                    } catch (error) {
+                        console.warn('⚠️ Erreur lors du parsing des données utilisateur:', error);
+                    }
+                }
+                
                 // Nettoyer le stockage
                 sessionStorage.clear();
                 
@@ -62,9 +75,10 @@
                 document.getElementById('status').innerHTML = 
                     '<p style="color: #2ed573;">✅ Déconnexion réussie !</p>';
                 
-                // Rediriger vers la page de connexion
+                // Rediriger vers la page de connexion avec le bon rôle
                 setTimeout(() => {
-                    window.location.href = './pages/login.html';
+                    const loginUrl = `./pages/login.html?role=${role}`;
+                    window.location.href = loginUrl;
                 }, 2000);
             }
             

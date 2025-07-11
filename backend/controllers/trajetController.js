@@ -9,6 +9,7 @@ const createTrajet = async (req, res) => {
             departure_city,
             arrival_city,
             departure_time,
+            departure_dates, // Nouveau: tableau de dates
             price,
             seats_count,
             available_seats,
@@ -20,10 +21,18 @@ const createTrajet = async (req, res) => {
         } = req.body;
 
         // Validation des champs obligatoires selon le modèle Trajet
-        if (!departure_city || !arrival_city || !departure_time || !price || !seats_count) {
+        if (!departure_city || !arrival_city || !price || !seats_count) {
             return res.status(400).json({
                 success: false,
-                message: 'Les champs departure_city, arrival_city, departure_time, price et seats_count sont obligatoires'
+                message: 'Les champs departure_city, arrival_city, price et seats_count sont obligatoires'
+            });
+        }
+
+        // Vérifier qu'on a au moins une date (departure_time ou departure_dates)
+        if (!departure_time && (!departure_dates || departure_dates.length === 0)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Au moins une date de départ est requise (departure_time ou departure_dates)'
             });
         }
 
@@ -39,13 +48,37 @@ const createTrajet = async (req, res) => {
             });
         }
 
-        // Vérifier que la date de départ est dans le futur
-        const departureDateTime = new Date(departure_time);
-        if (departureDateTime <= new Date()) {
-            return res.status(400).json({
-                success: false,
-                message: 'La date de départ doit être dans le futur'
+        // Préparer les dates de départ
+        let datesToProcess = [];
+        
+        if (departure_dates && departure_dates.length > 0) {
+            // Utiliser le tableau de dates et les combiner avec l'heure
+            datesToProcess = departure_dates.map(dateStr => {
+                // Extraire l'heure de departure_time (format HH:MM)
+                const timeParts = departure_time.split(':');
+                const hours = parseInt(timeParts[0]);
+                const minutes = parseInt(timeParts[1]);
+                
+                // Créer une nouvelle date avec la date et l'heure
+                const dateTime = new Date(dateStr);
+                dateTime.setHours(hours, minutes, 0, 0);
+                
+                return dateTime;
             });
+        } else if (departure_time) {
+            // Utiliser la date unique
+            datesToProcess = [new Date(departure_time)];
+        }
+
+        // Vérifier que toutes les dates sont dans le futur
+        const now = new Date();
+        for (const date of datesToProcess) {
+            if (date <= now) {
+                return res.status(400).json({
+                    success: false,
+                    message: `La date de départ ${date.toISOString()} doit être dans le futur`
+                });
+            }
         }
 
         // Validation des valeurs numériques
@@ -86,26 +119,37 @@ const createTrajet = async (req, res) => {
             }
         }
 
-        // Créer le trajet selon le modèle réel
-        const trajet = await Trajet.create({
-            departure_city,
-            arrival_city,
-            departure_time: departureDateTime,
-            price: parsedPrice,
-            seats_count: parsedSeatsCount,
-            available_seats: parsedAvailableSeats,
-            status: status || 'active',
-            accepts_packages: accepts_packages || false,
-            max_package_weight: parsedMaxPackageWeight,
-            departure_point: departure_point || null,
-            arrival_point: arrival_point || null,
-            transporteur_id: transporteur.id
-        });
+        // Créer les trajets pour chaque date
+        const trajetsCrees = [];
+        
+        for (const departureDateTime of datesToProcess) {
+            const trajet = await Trajet.create({
+                departure_city,
+                arrival_city,
+                departure_time: departureDateTime,
+                price: parsedPrice,
+                seats_count: parsedSeatsCount,
+                available_seats: parsedAvailableSeats,
+                status: status || 'active',
+                accepts_packages: accepts_packages || false,
+                max_package_weight: parsedMaxPackageWeight,
+                departure_point: departure_point || null,
+                arrival_point: arrival_point || null,
+                transporteur_id: transporteur.id
+            });
+            
+            trajetsCrees.push(trajet);
+        }
+
+        const message = trajetsCrees.length === 1 
+            ? 'Trajet créé avec succès' 
+            : `${trajetsCrees.length} trajets créés avec succès`;
 
         res.status(201).json({
             success: true,
-            message: 'Trajet créé avec succès',
-            data: trajet
+            message: message,
+            data: trajetsCrees,
+            count: trajetsCrees.length
         });
 
     } catch (error) {
