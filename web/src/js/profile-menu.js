@@ -105,12 +105,13 @@ function toggleProfileMenu() {
 
 // Fonction globale pour la déconnexion
 function logout() {
-    // Supprimer les données de session
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('userData');
-    
-    // Rediriger vers la page d'accueil
-    window.location.href = '../index.html';
+    if (window.SecureLogout) {
+        window.SecureLogout.logout();
+    } else {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.replace('../index.html?fallback=true');
+    }
 }
 
 // Initialisation automatique au chargement de la page

@@ -125,13 +125,17 @@ class TransporterDashboard {
      */
     async handleLogout() {
         try {
-            await AuthAPI.logout();
-            this.showMessage('Déconnexion réussie', 'success');
-            setTimeout(() => {
-                window.location.href = './pages/login.html';
-            }, 1000);
+            if (window.SecureLogout) {
+                await SecureLogout.logout();
+            } else {
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.replace('./pages/login.html?fallback=true');
+            }
         } catch (error) {
-            this.showMessage('Erreur lors de la déconnexion', 'error');
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace('./pages/login.html?emergency=true');
         }
     }
 

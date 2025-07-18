@@ -549,9 +549,13 @@ function closeModal(modalId) {
 
 // Déconnexion
 function logout() {
-    sessionStorage.removeItem('authToken');
-    sessionStorage.removeItem('userData');
-    window.location.href = 'login.html';
+    if (window.SecureLogout) {
+        window.SecureLogout.logout();
+    } else {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.replace('login.html?fallback=true');
+    }
 }
 
 // Fermer les modals en cliquant à l'extérieur

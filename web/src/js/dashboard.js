@@ -181,24 +181,18 @@ class DashboardManager {
      */
     async handleLogout() {
         try {
-            const result = await AuthAPI.logout();
-            
-            if (result.success) {
-                this.showMessage('Déconnexion réussie', 'success');
-                setTimeout(() => {
-                    window.location.href = '../index.html';
-                }, 1500);
+            if (window.SecureLogout) {
+                await SecureLogout.logout();
             } else {
-                this.showMessage('Erreur lors de la déconnexion', 'error');
+                // Fallback : suppression manuelle et redirection
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.replace('../index.html?fallback=true');
             }
         } catch (error) {
-            // Même en cas d'erreur, supprimer les données locales
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            this.showMessage('Déconnexion effectuée', 'success');
-            setTimeout(() => {
-                window.location.href = '../index.html';
-            }, 1500);
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace('../index.html?emergency=true');
         }
     }
 

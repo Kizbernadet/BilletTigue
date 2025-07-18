@@ -1,0 +1,1054 @@
+RAPPORT DÉTAILLÉ : RÉALISATION TECHNIQUE ET LOGIQUE DE PROGRAMMATION DE BILLETTIGUÈ
+
+---
+
+1. Introduction
+---------------
+Ce rapport détaille l'ensemble du travail réalisé pour la plateforme BilletTiguè, en expliquant la logique de programmation adoptée et l'ordre de réalisation des différentes parties pour chaque couche de l'architecture (backend, frontend web, frontend mobile). L'objectif est de présenter une vue exhaustive du processus de développement, des choix techniques, des patterns utilisés et de la méthodologie suivie pour garantir la robustesse, la modularité et l'évolutivité de la solution.
+
+2. Travail exécuté par couche
+-----------------------------
+2.1. Backend (Node.js/Express, PostgreSQL, Sequelize)
+- Mise en place d'une API RESTful complète, découpée en modules métiers (authentification, trajets, réservations, profils, administration, statistiques, notifications).
+- Définition de 12 modèles de données Sequelize représentant les entités principales (compte, utilisateur, transporteur, administrateur, trajet, réservation, paiement, envoi, colis, zones desservies, rôle, token révoqué).
+- Gestion de la sécurité : authentification JWT, gestion des rôles, hachage des mots de passe, validation des entrées, protection contre les attaques courantes (XSS, CSRF, injections SQL).
+- Implémentation de middlewares pour la gestion des droits d'accès, la validation des requêtes et la gestion des erreurs.
+- Création de migrations et seeders pour la gestion de l'évolution du schéma de base de données et l'initialisation des données.
+- Mise en place de tests unitaires et d'intégration pour garantir la fiabilité des modules critiques.
+
+Exemple de modèle Sequelize (utilisateur.js) :
+```javascript
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
+
+module.exports = (sequelize) => {
+  const Utilisateur = sequelize.define('Utilisateur', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    nom: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [2, 50]
+      }
+    },
+    prenom: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [2, 50]
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true
+      }
+    },
+    telephone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [8, 15]
+      }
+    },
+    mot_de_passe: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  }, {
+    hooks: {
+      beforeCreate: async (utilisateur) => {
+        utilisateur.mot_de_passe = await bcrypt.hash(utilisateur.mot_de_passe, 10);
+      }
+    }
+  });
+
+  Utilisateur.associate = (models) => {
+    Utilisateur.belongsTo(models.Compte);
+    Utilisateur.hasMany(models.Reservation);
+  };
+
+  return Utilisateur;
+};
+```
+
+Exemple de contrôleur (authController.js) :
+```javascript
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { Utilisateur, Compte } = require('../models');
+
+exports.login = async (req, res) => {
+  try {
+    const { email, mot_de_passe } = req.body;
+    
+    // Validation des entrées
+    if (!email || !mot_de_passe) {
+      return res.status(400).json({ 
+        message: 'Email et mot de passe requis' 
+      });
+    }
+
+    // Recherche de l'utilisateur
+    const utilisateur = await Utilisateur.findOne({
+      where: { email },
+      include: [{ model: Compte, include: ['Role'] }]
+    });
+
+    if (!utilisateur) {
+      return res.status(401).json({ 
+        message: 'Identifiants invalides' 
+      });
+    }
+
+    // Vérification du mot de passe
+    const motDePasseValide = await bcrypt.compare(
+      mot_de_passe, 
+      utilisateur.mot_de_passe
+    );
+
+    if (!motDePasseValide) {
+      return res.status(401).json({ 
+        message: 'Identifiants invalides' 
+      });
+    }
+
+    // Génération du token JWT
+    const token = jwt.sign(
+      { 
+        id: utilisateur.id, 
+        role: utilisateur.Compte.Role.nom 
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      message: 'Connexion réussie',
+      token,
+      utilisateur: {
+        id: utilisateur.id,
+        nom: utilisateur.nom,
+        prenom: utilisateur.prenom,
+        email: utilisateur.email,
+        role: utilisateur.Compte.Role.nom
+      }
+    });
+
+  } catch (error) {
+    console.error('Erreur de connexion:', error);
+    res.status(500).json({ 
+      message: 'Erreur interne du serveur' 
+    });
+  }
+};
+```
+
+Exemple de middleware d'authentification :
+```javascript
+const jwt = require('jsonwebtoken');
+const { Compte, Role } = require('../models');
+
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(401).json({ 
+        message: 'Token d\'authentification requis' 
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const compte = await Compte.findOne({
+      where: { id: decoded.id },
+      include: [{ model: Role }]
+    });
+
+    if (!compte) {
+      return res.status(401).json({ 
+        message: 'Token invalide' 
+      });
+    }
+
+    req.utilisateur = compte;
+    next();
+  } catch (error) {
+    return res.status(401).json({ 
+      message: 'Token invalide' 
+    });
+  }
+};
+
+module.exports = authMiddleware;
+```
+
+2.2. Frontend Web (HTML5, CSS3, JavaScript, Tailwind CSS, DaisyUI)
+- Conception d'une interface utilisateur responsive, adaptée à tous les supports, avec Tailwind CSS et DaisyUI pour accélérer le prototypage et garantir la cohérence visuelle.
+- Développement de pages modulaires pour chaque fonctionnalité (authentification, recherche de trajets, réservation, gestion de profil, administration, etc.).
+- Organisation du code JavaScript en modules indépendants (25+ modules), chacun responsable d'une fonctionnalité précise (gestion d'état, appels API, affichage dynamique, protection des routes, etc.).
+- Intégration complète avec l'API backend via des services JavaScript dédiés.
+- Gestion de l'état d'authentification et des sessions utilisateur via localStorage/sessionStorage.
+- Mise en place de tests manuels et automatisés (Cypress) pour valider les parcours critiques.
+
+Exemple de service API (authApi.js) :
+```javascript
+class AuthApi {
+  constructor() {
+    this.baseUrl = 'http://localhost:5000/api';
+  }
+
+  async login(email, password) {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, mot_de_passe: password })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.utilisateur));
+      
+      return data;
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+      throw error;
+    }
+  }
+
+  async register(userData) {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/register-user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erreur d\'inscription:', error);
+      throw error;
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login.html';
+  }
+
+  isAuthenticated() {
+    return !!localStorage.getItem('token');
+  }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
+  getUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+}
+
+const authApi = new AuthApi();
+export default authApi;
+```
+
+Exemple de gestionnaire d'état (auth-state-manager.js) :
+```javascript
+class AuthStateManager {
+  constructor() {
+    this.isAuthenticated = false;
+    this.user = null;
+    this.token = null;
+    this.init();
+  }
+
+  init() {
+    this.token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (this.token && userData) {
+      this.user = JSON.parse(userData);
+      this.isAuthenticated = true;
+      this.updateUI();
+    }
+  }
+
+  setAuthState(token, user) {
+    this.token = token;
+    this.user = user;
+    this.isAuthenticated = true;
+    
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    
+    this.updateUI();
+  }
+
+  clearAuthState() {
+    this.token = null;
+    this.user = null;
+    this.isAuthenticated = false;
+    
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    
+    this.updateUI();
+  }
+
+  updateUI() {
+    const authElements = document.querySelectorAll('[data-auth]');
+    const guestElements = document.querySelectorAll('[data-guest]');
+    const userElements = document.querySelectorAll('[data-user]');
+
+    if (this.isAuthenticated) {
+      // Afficher les éléments pour utilisateurs connectés
+      authElements.forEach(el => el.style.display = 'block');
+      guestElements.forEach(el => el.style.display = 'none');
+      
+      // Mettre à jour les informations utilisateur
+      userElements.forEach(el => {
+        if (el.dataset.user === 'name') {
+          el.textContent = `${this.user.prenom} ${this.user.nom}`;
+        } else if (el.dataset.user === 'email') {
+          el.textContent = this.user.email;
+        }
+      });
+    } else {
+      // Afficher les éléments pour visiteurs
+      authElements.forEach(el => el.style.display = 'none');
+      guestElements.forEach(el => el.style.display = 'block');
+    }
+  }
+
+  getAuthHeaders() {
+    return {
+      'Authorization': `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    };
+  }
+}
+
+const authStateManager = new AuthStateManager();
+export default authStateManager;
+```
+
+2.3. Frontend Mobile (Flutter, Dart, Provider)
+- Développement d'une application mobile multiplateforme (Android/iOS) avec Flutter.
+- Structuration de l'application en écrans (splash, onboarding, login, home, trajets, réservations, profil, historique, colis, tickets).
+- Utilisation du pattern Provider pour la gestion d'état globale et la réactivité de l'interface.
+- Création de services Dart pour la communication avec l'API backend.
+- Modélisation des entités métier côté mobile (user, trajet, réservation, etc.).
+- Implémentation de la navigation modulaire et de la gestion des routes.
+- Réalisation de tests unitaires et d'intégration avec le framework Flutter test.
+
+Exemple de modèle Dart (user.dart) :
+```dart
+class User {
+  final int id;
+  final String nom;
+  final String prenom;
+  final String email;
+  final String telephone;
+  final String role;
+
+  User({
+    required this.id,
+    required this.nom,
+    required this.prenom,
+    required this.email,
+    required this.telephone,
+    required this.role,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
+      nom: json['nom'],
+      prenom: json['prenom'],
+      email: json['email'],
+      telephone: json['telephone'],
+      role: json['role'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nom': nom,
+      'prenom': prenom,
+      'email': email,
+      'telephone': telephone,
+      'role': role,
+    };
+  }
+
+  String get fullName => '$prenom $nom';
+}
+```
+
+Exemple de service API (auth_service.dart) :
+```dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/user.dart';
+import '../constants/api.dart';
+
+class AuthService {
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/auth/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'email': email,
+          'mot_de_passe': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return {
+          'success': true,
+          'token': data['token'],
+          'user': User.fromJson(data['utilisateur']),
+        };
+      } else {
+        final error = json.decode(response.body);
+        return {
+          'success': false,
+          'message': error['message'],
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur de connexion: $e',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> register(Map<String, dynamic> userData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConstants.baseUrl}/auth/register-user'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(userData),
+      );
+
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+        return {
+          'success': true,
+          'message': data['message'],
+        };
+      } else {
+        final error = json.decode(response.body);
+        return {
+          'success': false,
+          'message': error['message'],
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Erreur d\'inscription: $e',
+      };
+    }
+  }
+}
+```
+
+Exemple de Provider pour la gestion d'état (auth_provider.dart) :
+```dart
+import 'package:flutter/foundation.dart';
+import '../models/user.dart';
+import '../services/auth_service.dart';
+
+class AuthProvider with ChangeNotifier {
+  User? _user;
+  String? _token;
+  bool _isLoading = false;
+  final AuthService _authService = AuthService();
+
+  User? get user => _user;
+  String? get token => _token;
+  bool get isLoading => _isLoading;
+  bool get isAuthenticated => _token != null;
+
+  Future<bool> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await _authService.login(email, password);
+      
+      if (result['success']) {
+        _token = result['token'];
+        _user = result['user'];
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> register(Map<String, dynamic> userData) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final result = await _authService.register(userData);
+      
+      _isLoading = false;
+      notifyListeners();
+      
+      return result['success'];
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  void logout() {
+    _user = null;
+    _token = null;
+    notifyListeners();
+  }
+
+  void setUser(User user) {
+    _user = user;
+    notifyListeners();
+  }
+}
+```
+
+3. Logique de programmation
+---------------------------
+3.1. Architecture en couches
+- Présentation (Frontend) : Interface utilisateur (web/mobile), gestion de l'affichage, capture des actions utilisateur, communication avec l'API.
+- Métier (Backend) : Logique applicative, orchestration des processus métier, gestion des droits, validation, sécurité.
+- Données (Base de données) : Persistance des informations, gestion des relations, intégrité des données.
+
+3.2. Pattern MVC
+- Modèles : Définissent la structure des données, les validations, les relations et les opérations CRUD.
+- Contrôleurs : Reçoivent les requêtes, orchestrent la logique métier, appellent les services et renvoient les réponses.
+- Vues : Pages HTML (web) ou écrans Flutter (mobile), affichent les données et capturent les interactions utilisateur.
+
+Exemple de structure MVC dans le backend :
+```javascript
+// Modèle (models/trajet.js)
+const Trajet = sequelize.define('Trajet', {
+  depart: DataTypes.STRING,
+  arrivee: DataTypes.STRING,
+  date_depart: DataTypes.DATE,
+  prix: DataTypes.DECIMAL,
+  places_disponibles: DataTypes.INTEGER
+});
+
+// Contrôleur (controllers/trajetController.js)
+exports.getTrajets = async (req, res) => {
+  try {
+    const trajets = await Trajet.findAll();
+    res.json(trajets);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Vue (réponse JSON de l'API)
+{
+  "trajets": [
+    {
+      "id": 1,
+      "depart": "Dakar",
+      "arrivee": "Thiès",
+      "date_depart": "2024-01-15T10:00:00Z",
+      "prix": 1500,
+      "places_disponibles": 4
+    }
+  ]
+}
+```
+
+3.3. Modularité
+- Chaque fonctionnalité (auth, trajets, réservations, etc.) est isolée dans un module indépendant, facilitant la maintenance, l'évolution et les tests.
+- Les services métier sont réutilisables et testables indépendamment.
+- Les routes API sont clairement séparées par domaine fonctionnel.
+
+Exemple d'organisation modulaire :
+```javascript
+// Structure des modules
+backend/
+├── routes/
+│   ├── authRoutes.js      // Routes d'authentification
+│   ├── trajetRoutes.js    // Routes des trajets
+│   ├── reservationRoutes.js // Routes des réservations
+│   └── adminRoutes.js     // Routes d'administration
+├── controllers/
+│   ├── authController.js
+│   ├── trajetController.js
+│   ├── reservationController.js
+│   └── adminController.js
+├── services/
+│   ├── authService.js
+│   ├── trajetService.js
+│   └── reservationService.js
+└── models/
+    ├── utilisateur.js
+    ├── trajet.js
+    └── reservation.js
+```
+
+4. Ordre de réalisation détaillé
+-------------------------------
+4.1. Phase 1 : Fondations
+- Initialisation du repository Git, configuration des outils de développement, définition des conventions de code.
+- Mise en place de la base de données, création des modèles principaux et des migrations initiales.
+- Configuration de l'environnement backend (Express, middlewares, gestion des erreurs).
+
+Exemple de configuration Express (server.js) :
+```javascript
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const app = express();
+
+// Middlewares
+app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5500'],
+  credentials: true
+}));
+app.use(morgan('dev'));
+
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/trajets', require('./routes/trajetRoutes'));
+app.use('/api/reservations', require('./routes/reservationRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+// Gestion des erreurs
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Erreur interne du serveur' });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
+});
+```
+
+4.2. Phase 2 : Backend
+- Développement des modèles Sequelize et des relations.
+- Implémentation de l'authentification (JWT, rôles, hachage).
+- Création des premiers contrôleurs et routes pour les entités principales (utilisateurs, trajets, réservations).
+- Ajout des services métier pour la logique applicative complexe.
+- Mise en place des tests unitaires et d'intégration.
+- Ajout des modules secondaires (paiements, notifications, administration, statistiques).
+
+Exemple de test unitaire (tests/auth.test.js) :
+```javascript
+const request = require('supertest');
+const app = require('../server');
+const { User } = require('../models');
+
+describe('Auth API', () => {
+  beforeEach(async () => {
+    await User.destroy({ where: {} });
+  });
+
+  describe('POST /api/auth/register-user', () => {
+    it('should register a new user', async () => {
+      const userData = {
+        nom: 'Dupont',
+        prenom: 'Jean',
+        email: 'jean@example.com',
+        telephone: '0123456789',
+        mot_de_passe: 'password123'
+      };
+
+      const response = await request(app)
+        .post('/api/auth/register-user')
+        .send(userData)
+        .expect(201);
+
+      expect(response.body.message).toBe('Utilisateur créé avec succès');
+    });
+
+    it('should not register user with existing email', async () => {
+      // Créer un utilisateur existant
+      await User.create({
+        nom: 'Dupont',
+        prenom: 'Jean',
+        email: 'jean@example.com',
+        telephone: '0123456789',
+        mot_de_passe: 'password123'
+      });
+
+      const userData = {
+        nom: 'Martin',
+        prenom: 'Pierre',
+        email: 'jean@example.com', // Email déjà utilisé
+        telephone: '0987654321',
+        mot_de_passe: 'password456'
+      };
+
+      const response = await request(app)
+        .post('/api/auth/register-user')
+        .send(userData)
+        .expect(400);
+
+      expect(response.body.message).toContain('Email déjà utilisé');
+    });
+  });
+});
+```
+
+4.3. Phase 3 : Frontend Web
+- Création de la structure des pages HTML et de la navigation.
+- Intégration de Tailwind CSS et DaisyUI pour le design.
+- Développement des modules JavaScript pour chaque fonctionnalité.
+- Intégration des appels API et gestion de l'état utilisateur.
+- Tests manuels et automatisés des parcours critiques.
+
+Exemple de page HTML avec Tailwind CSS :
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilletTiguè - Connexion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.0/dist/full.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl font-bold text-center mb-6">
+                    Connexion
+                </h2>
+                
+                <form id="loginForm" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="email" id="email" name="email" 
+                               class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Mot de passe</span>
+                        </label>
+                        <input type="password" id="password" name="password" 
+                               class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control mt-6">
+                        <button type="submit" class="btn btn-primary">
+                            Se connecter
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <a href="register.html" class="link link-primary">
+                        Pas encore de compte ? S'inscrire
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="../src/js/auth.js"></script>
+</body>
+</html>
+```
+
+4.4. Phase 4 : Frontend Mobile
+- Initialisation du projet Flutter, configuration des dépendances.
+- Développement des modèles Dart et des services API.
+- Création des écrans principaux et de la navigation.
+- Intégration de la gestion d'état avec Provider.
+- Tests unitaires et d'intégration.
+
+Exemple d'écran Flutter (login_screen.dart) :
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/custom_button.dart';
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.blue[50]!, Colors.indigo[100]!],
+          ),
+        ),
+        child: Center(
+          child: Card(
+            margin: EdgeInsets.all(20),
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Connexion',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 24),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer votre email';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Mot de passe',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer votre mot de passe';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 24),
+                    CustomButton(
+                      text: 'Se connecter',
+                      onPressed: _isLoading ? null : _handleLogin,
+                      isLoading: _isLoading,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final success = await authProvider.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+
+      if (success) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Échec de la connexion')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+}
+```
+
+4.5. Phase 5 : Tests, optimisation et déploiement
+- Renforcement de la sécurité (validation, protection contre les attaques).
+- Optimisation des performances (caching, indexation, pooling).
+- Mise en place du monitoring et de la journalisation.
+- Déploiement avec Docker, préparation à l'orchestration (Kubernetes).
+- Collecte des retours utilisateurs, ajustements UX/UI, documentation finale.
+
+Exemple de configuration Docker (Dockerfile) :
+```dockerfile
+# Backend Dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm ci --only=production
+
+# Copier le code source
+COPY . .
+
+# Exposer le port
+EXPOSE 5000
+
+# Commande de démarrage
+CMD ["npm", "start"]
+```
+
+Exemple de docker-compose.yml :
+```yaml
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=billettigue
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_DB=billettigue
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build: ./web
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+```
+
+5. Principes de développement
+----------------------------
+- Approche incrémentale : Développement par itérations, ajout progressif des fonctionnalités.
+- Séparation des responsabilités : Chaque couche et chaque module a un rôle précis.
+- Tests continus : Validation à chaque étape pour garantir la fiabilité.
+- Documentation : Code commenté, guides d'utilisation, schémas d'architecture.
+- Qualité et maintenabilité : Code modulaire, réutilisable, facile à faire évoluer.
+
+Exemple de conventions de code :
+```javascript
+// Conventions de nommage
+const userService = new UserService();        // camelCase pour les variables
+const USER_ROLES = ['admin', 'user'];         // UPPER_CASE pour les constantes
+class UserController {}                       // PascalCase pour les classes
+
+// Structure des fichiers
+controllers/
+├── authController.js     // Nom du module + Controller
+├── userController.js
+└── trajetController.js
+
+services/
+├── authService.js        // Nom du module + Service
+├── userService.js
+└── trajetService.js
+
+// Commentaires et documentation
+/**
+ * Authentifie un utilisateur avec email et mot de passe
+ * @param {string} email - Email de l'utilisateur
+ * @param {string} password - Mot de passe de l'utilisateur
+ * @returns {Promise<Object>} Résultat de l'authentification
+ */
+async function authenticateUser(email, password) {
+  // Logique d'authentification
+}
+```
+
+6. Conclusion
+-------------
+L'approche suivie a permis de construire une plateforme robuste, modulaire et évolutive, avec une séparation claire des responsabilités, une sécurité renforcée et une expérience utilisateur optimale sur web et mobile. L'architecture mise en place prépare la solution à une évolution future vers les microservices, l'intégration d'IA et le déploiement cloud natif.
+
+Les extraits de code fournis illustrent les bonnes pratiques de développement, la structure modulaire, la gestion de la sécurité et l'intégration entre les différentes couches de l'application. Cette documentation technique servira de référence pour la maintenance et l'évolution future de la plateforme BilletTiguè. 

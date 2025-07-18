@@ -152,6 +152,20 @@
     </nav>
 
     <script>
+    // Nettoyage préventif si retour d'une déconnexion
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('logout') || params.has('emergency') || params.has('fallback')) {
+        if (window.SecureLogout && typeof window.SecureLogout.clearAllAuthData === 'function') {
+          window.SecureLogout.clearAllAuthData();
+        } else {
+          sessionStorage.clear();
+          localStorage.clear();
+        }
+        // Optionnel : forcer un reload pour éviter tout cache
+        // window.location.replace(window.location.pathname);
+      }
+    })();
     // Menu mobile hamburger
     const hamburger = document.getElementById('mobile-hamburger');
     const mobileMenu = document.getElementById('mobile-menu');

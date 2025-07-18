@@ -93,9 +93,13 @@ class ProfileMenuInjector {
         };
 
         window.logout = function() {
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            window.location.href = '../index.html';
+            if (window.SecureLogout) {
+                window.SecureLogout.logout();
+            } else {
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.replace('../index.html?fallback=true');
+            }
         };
     }
 }

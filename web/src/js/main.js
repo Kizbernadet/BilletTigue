@@ -72,16 +72,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (burgerLogoutBtn) {
         burgerLogoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Supprimer les données d'authentification
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            
-            // Fermer le menu burger
-            burgerMenu.classList.remove('active');
-            
-            // Rediriger vers la page d'accueil
-            window.location.href = '/';
+            if (window.SecureLogout) {
+                window.SecureLogout.logout();
+            } else {
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.replace('/?fallback=true');
+            }
         });
     }
 

@@ -290,19 +290,17 @@ window.initLoginRedirectUtils = function() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Nettoyer les données de connexion
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            
-            console.log('🔓 Déconnexion effectuée');
-            
-            // Déterminer le chemin vers l'accueil selon la page actuelle
-            let homePath = '../index.html'; // Pour les pages dans le dossier pages
-            if (!window.location.pathname.includes('/pages/')) {
-                homePath = './index.html'; // Pour les autres pages
+            if (window.SecureLogout) {
+                window.SecureLogout.logout();
+            } else {
+                sessionStorage.clear();
+                localStorage.clear();
+                let homePath = '../index.html?fallback=true';
+                if (!window.location.pathname.includes('/pages/')) {
+                    homePath = './index.html?fallback=true';
+                }
+                window.location.href = homePath;
             }
-            window.location.href = homePath;
         });
     }
     

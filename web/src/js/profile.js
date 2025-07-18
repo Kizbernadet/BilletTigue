@@ -371,16 +371,17 @@ class ProfileManager {
      */
     async handleLogout() {
         try {
-            await AuthAPI.logout();
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            window.location.href = './pages/login.html';
+            if (window.SecureLogout) {
+                await SecureLogout.logout();
+            } else {
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.replace('./pages/login.html?fallback=true');
+            }
         } catch (error) {
-            console.error('Erreur lors de la déconnexion:', error);
-            // Forcer la déconnexion locale
-            sessionStorage.removeItem('authToken');
-            sessionStorage.removeItem('userData');
-            window.location.href = './pages/login.html';
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.replace('./pages/login.html?emergency=true');
         }
     }
 
