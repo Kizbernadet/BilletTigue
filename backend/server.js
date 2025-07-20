@@ -10,6 +10,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const { testConnection, sequelize } = require('./config/database');
 const authService = require('./services/authService');
+const TrajetStatusService = require('./services/trajetStatusService');
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -28,20 +29,17 @@ app.use(express.json());
 
 // Configuration CORS plus explicite
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://localhost:5500',
-        'http://127.0.0.1:5500',
-        'http://localhost:8080',
-        'http://127.0.0.1:8080',
-        'http://localhost:5000',
-        'http://127.0.0.1:5000'
-    ],
+    origin: true, // Permettre toutes les origines temporairement
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
+
+// Middleware pour logger les requêtes CORS
+app.use((req, res, next) => {
+    console.log(`🌐 ${req.method} ${req.path} - Origin: ${req.headers.origin}`);
+    next();
+});
 
 app.use(morgan('dev'));
 
@@ -112,8 +110,24 @@ const cleanupExpiredTokens = async () => {
     }
 };
 
+// ========== Fonction de mise à jour automatique des trajets expirés ==========
+// Met à jour automatiquement les statuts des trajets expirés toutes les 30 minutes
+const updateExpiredTrajets = async () => {
+    try {
+        const result = await TrajetStatusService.updateExpiredTrajets();
+        if (result.updatedCount > 0) {
+            console.log(`🔄 ${result.updatedCount} trajets expirés mis à jour automatiquement`);
+        }
+    } catch (error) {
+        console.error('❌ Erreur lors de la mise à jour des trajets expirés:', error);
+    }
+};
+
 // Démarrer le nettoyage automatique (toutes les heures)
 setInterval(cleanupExpiredTokens, 60 * 60 * 1000); // 1 heure
+
+// Démarrer la mise à jour automatique des trajets expirés (toutes les 30 minutes)
+setInterval(updateExpiredTrajets, 30 * 60 * 1000); // 30 minutes
 
 // Synchroniser la base de données et démarrer le serveur
 const startServer = async () => {
@@ -125,10 +139,14 @@ const startServer = async () => {
         // Nettoyer les tokens expirés au démarrage
         await cleanupExpiredTokens();
         
+        // Mettre à jour les trajets expirés au démarrage
+        await updateExpiredTrajets();
+        
         // Démarrer le serveur
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 Serveur en cours d'exécution sur http://0.0.0.0:${PORT}`);
             console.log(`🧹 Nettoyage automatique des tokens configuré (toutes les heures)`);
+            console.log(`🔄 Mise à jour automatique des trajets expirés configurée (toutes les 30 minutes)`);
         });
     } catch (error) {
         console.error('❌ Erreur lors du démarrage du serveur:', error);

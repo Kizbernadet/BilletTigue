@@ -86,19 +86,54 @@ class GlobalProfileMenu {
 function toggleProfileMenu() {
     const dropdown = document.getElementById('profileDropdown');
     if (dropdown) {
-        const isVisible = dropdown.classList.contains('show');
+        const isVisible = dropdown.style.display === 'block' || dropdown.classList.contains('show');
         
         if (isVisible) {
             // Fermer le menu
             dropdown.classList.remove('show');
-            setTimeout(() => {
-                dropdown.style.display = 'none';
-            }, 300);
+            dropdown.style.display = 'none';
+            console.log('🔽 Menu profil fermé');
         } else {
             // Ouvrir le menu
             dropdown.style.display = 'block';
-            dropdown.offsetHeight; // Force reflow
+            // Force reflow pour que l'animation fonctionne
+            dropdown.offsetHeight;
             dropdown.classList.add('show');
+            console.log('🔼 Menu profil ouvert');
+        }
+    }
+}
+
+// Fonction unifiée pour tous les boutons profil
+function toggleAnyProfileMenu(buttonId, dropdownId) {
+    const button = document.getElementById(buttonId);
+    const dropdown = document.getElementById(dropdownId);
+    
+    if (button && dropdown) {
+        const isVisible = dropdown.style.display === 'block' || dropdown.classList.contains('show');
+        
+        if (isVisible) {
+            // Fermer le menu
+            dropdown.classList.remove('show');
+            dropdown.style.display = 'none';
+            dropdown.style.pointerEvents = 'none';
+            console.log(`🔽 Menu profil fermé (${dropdownId})`);
+        } else {
+            // Positionner le menu par rapport au bouton si c'est un menu fixe
+            if (dropdown.style.position === 'fixed' || dropdown.classList.contains('profile-dropdown-menu')) {
+                const btnRect = button.getBoundingClientRect();
+                dropdown.style.position = 'fixed';
+                dropdown.style.top = (btnRect.bottom + 5) + 'px';
+                dropdown.style.right = (window.innerWidth - btnRect.right) + 'px';
+            }
+            
+            // Ouvrir le menu
+            dropdown.style.display = 'block';
+            // Force reflow pour que l'animation fonctionne
+            dropdown.offsetHeight;
+            dropdown.classList.add('show');
+            dropdown.style.pointerEvents = 'auto';
+            console.log(`🔼 Menu profil ouvert (${dropdownId})`);
         }
     }
 }
@@ -114,9 +149,15 @@ function logout() {
     }
 }
 
+// Exposer les fonctions globalement
+window.toggleProfileMenu = toggleProfileMenu;
+window.toggleAnyProfileMenu = toggleAnyProfileMenu;
+window.logout = logout;
+
 // Initialisation automatique au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
     new GlobalProfileMenu();
+    console.log('✅ Menu profil initialisé avec interactions');
 });
 
 // Export pour utilisation dans d'autres modules

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bouton Connexion</title>
+    <link href="./public/assets/css/style.css" rel="stylesheet">
+    <link href="./public/assets/css/profile-menu.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .test-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999999;
+            max-width: 300px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h4>🔍 Test Bouton Connexion</h4>
+        <div id="status">En attente...</div>
+        <button class="test-button" onclick="clearStorage()">Nettoyer Storage</button>
+        <button class="test-button" onclick="checkAuthState()">Vérifier État</button>
+    </div>
+
+    <header>
+        <div class="w-full flex justify-center p-4">
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <img src="./public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-box-3-line"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-question-line"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span class="lang-text">Français</span>
+                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                        </label>
+                        <ul tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm">Anglais</a></li>
+                            <li><a class="lang-option text-sm">Français</a></li>
+                        </ul>
+                    </div>
+                    <div id="auth-section" class="flex items-center">
+                        <button class="btn-login">Se connecter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px;">
+        <h1>Test du bouton de connexion</h1>
+        <p>Cette page teste le fonctionnement du bouton "Se connecter"</p>
+        
+        <div style="margin: 20px 0;">
+            <h3>Instructions :</h3>
+            <ol>
+                <li>Cliquez sur "Nettoyer Storage" pour simuler une déconnexion</li>
+                <li>Vérifiez que le bouton "Se connecter" apparaît</li>
+                <li>Cliquez sur le bouton pour voir le menu dropdown</li>
+                <li>Testez les liens "Utilisateur" et "Transporteur"</li>
+            </ol>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="./src/js/main.js"></script>
+    <script src="./src/js/login-redirect-utils.js"></script>
+    <script src="./src/js/profile-menu.js"></script>
+    <script src="./src/js/auth-state-manager.js"></script>
+
+    <script>
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        function clearStorage() {
+            sessionStorage.clear();
+            localStorage.clear();
+            updateStatus('🔓 Storage nettoyé');
+            
+            if (window.authStateManager) {
+                window.authStateManager.checkAuthState();
+                updateStatus('🔄 État vérifié - Bouton connexion affiché');
+            }
+        }
+
+        function checkAuthState() {
+            const userData = sessionStorage.getItem('userData');
+            if (userData) {
+                updateStatus('👤 Utilisateur connecté');
+            } else {
+                updateStatus('🔓 Aucun utilisateur connecté');
+            }
+        }
+
+        // Intercepter les clics sur les liens de connexion
+        document.addEventListener('click', function(e) {
+            if (e.target.textContent === 'Utilisateur' || e.target.textContent === 'Transporteur') {
+                e.preventDefault();
+                const role = e.target.textContent === 'Utilisateur' ? 'user' : 'transporter';
+                updateStatus(`🔄 Redirection vers login (${role})`);
+                
+                // Simuler la redirection
+                setTimeout(() => {
+                    updateStatus(`✅ Redirection simulée vers login ${role}`);
+                }, 1000);
+            }
+        });
+
+        // Vérifier l'état au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('🚀 Page chargée');
+            checkAuthState();
+            
+            // Nettoyer automatiquement au chargement pour tester
+            setTimeout(() => {
+                clearStorage();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

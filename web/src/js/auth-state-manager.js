@@ -102,7 +102,7 @@ class AuthStateManager {
     showLoginButton() {
         this.authSection.innerHTML = `
             <div id="login-menu" class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
-                <label tabindex="0" class="btn-lang">
+                <label tabindex="0" class="btn-login">
                     <span class="login-text">Se connecter</span>
                     <i class="fas fa-chevron-down text-xs login-arrow"></i>
                     <i class="fa-solid fa-user login-icon" style="display:none;"></i>
@@ -132,29 +132,71 @@ class AuthStateManager {
                     <span>${userName}</span>
                     <i class="ri-arrow-down-s-line" style="margin-left: 0.3em;"></i>
                 </button>
-                <ul id="profile-dropdown-menu" class="profile-dropdown-menu" style="display: none;">
-                    <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-user-settings-line"></i> Mon profil</a></li>
-                    <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-user-edit-line"></i> Modifier le profil</a></li>
-                    <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-lock-password-line"></i> Changer le mot de passe</a></li>
-                    <li><a href="./pages/reservation.html" class="profile-dropdown-link"><i class="ri-ticket-line"></i> Mes réservations</a></li>
-                    <li><button class="profile-dropdown-link logout-link" onclick="logout()"><i class="ri-logout-box-r-line"></i> Déconnexion</button></li>
-                </ul>
             </div>
         `;
 
+        // Créer le menu dropdown en dehors du header pour éviter les problèmes de z-index
+        const dropdownMenu = document.createElement('ul');
+        dropdownMenu.id = 'profile-dropdown-menu';
+        dropdownMenu.className = 'profile-dropdown-menu';
+        dropdownMenu.style.display = 'none';
+        dropdownMenu.innerHTML = `
+            <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-user-settings-line"></i> Mon profil</a></li>
+            <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-user-edit-line"></i> Modifier le profil</a></li>
+            <li><a href="./pages/profile.html" class="profile-dropdown-link"><i class="ri-lock-password-line"></i> Changer le mot de passe</a></li>
+            <li><a href="./pages/reservation.html" class="profile-dropdown-link"><i class="ri-ticket-line"></i> Mes réservations</a></li>
+            <li><button class="profile-dropdown-link logout-link" onclick="logout()"><i class="ri-logout-box-r-line"></i> Déconnexion</button></li>
+        `;
+        
+        // Ajouter le menu au body pour éviter les problèmes de contexte de pile
+        document.body.appendChild(dropdownMenu);
+
         // JS pour ouvrir/fermer le menu
         const profileBtn = document.getElementById('profile-button');
-        const dropdownMenu = document.getElementById('profile-dropdown-menu');
         if (profileBtn && dropdownMenu) {
             profileBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                const isOpen = dropdownMenu.style.display === 'block';
-                dropdownMenu.style.display = isOpen ? 'none' : 'block';
+                e.preventDefault();
+                
+                // Utiliser la fonction unifiée si disponible, sinon fallback
+                if (window.toggleAnyProfileMenu) {
+                    window.toggleAnyProfileMenu('profile-button', 'profile-dropdown-menu');
+                } else {
+                    const isOpen = dropdownMenu.style.display === 'block' || dropdownMenu.classList.contains('show');
+                    if (isOpen) {
+                        dropdownMenu.classList.remove('show');
+                        dropdownMenu.style.display = 'none';
+                        dropdownMenu.style.pointerEvents = 'none';
+                    } else {
+                        // Positionner le menu par rapport au bouton
+                        const btnRect = profileBtn.getBoundingClientRect();
+                        dropdownMenu.style.position = 'fixed';
+                        dropdownMenu.style.top = (btnRect.bottom + 5) + 'px';
+                        dropdownMenu.style.right = (window.innerWidth - btnRect.right) + 'px';
+                        
+                        dropdownMenu.style.display = 'block';
+                        dropdownMenu.offsetHeight; // Force reflow
+                        dropdownMenu.classList.add('show');
+                        dropdownMenu.style.pointerEvents = 'auto';
+                    }
+                }
             });
+            
             // Fermer le menu si on clique ailleurs
             document.addEventListener('click', function(event) {
                 if (!profileBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove('show');
                     dropdownMenu.style.display = 'none';
+                    dropdownMenu.style.pointerEvents = 'none';
+                }
+            });
+            
+            // Fermer avec la touche Échap
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    dropdownMenu.classList.remove('show');
+                    dropdownMenu.style.display = 'none';
+                    dropdownMenu.style.pointerEvents = 'none';
                 }
             });
         }

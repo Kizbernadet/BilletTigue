@@ -746,6 +746,15 @@ class SearchFormManager {
                     return;
                 }
                 
+                // Validation des dates avec le gestionnaire de validation
+                if (window.dateValidationManager) {
+                    const isDateValid = window.dateValidationManager.validateForm(bookingForm);
+                    if (!isDateValid) {
+                        console.log('❌ Validation des dates échouée');
+                        return;
+                    }
+                }
+                
                 // Mettre à jour l'URL avec les nouveaux paramètres
                 const params = new URLSearchParams({
                     departure: departure,

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Z-Index Fix - Menu Profil</title>
+    <link href="./public/assets/css/style.css" rel="stylesheet">
+    <link href="./public/assets/css/profile-menu.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .test-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999999;
+            max-width: 300px;
+        }
+        .z-index-display {
+            background: rgba(255,255,255,0.1);
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h4>🔍 Test Z-Index</h4>
+        <div class="z-index-display">
+            <strong>Header:</strong> z-index: 10000
+        </div>
+        <div class="z-index-display">
+            <strong>Menu Profil:</strong> z-index: 999999
+        </div>
+        <div class="z-index-display">
+            <strong>Position:</strong> fixed (hors header)
+        </div>
+        <div class="z-index-display">
+            <strong>Status:</strong> <span id="status">En attente...</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="w-full flex justify-center p-4">
+            <div class="topbar-container">
+                <div class="logo-container w-3/12 h-full">
+                    <img src="./public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
+                    <span class="logo-text">BilletTigue</span>
+                </div>
+                <nav class="nav-container w-5/12 h-full">
+                    <ul class="nav-list">
+                        <li><a href="#" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-box-3-line"></i><span>Colis</span></a></li>
+                        <li><a href="#" class="nav-link"><i class="ri-question-line"></i><span>Aide</span></a></li>
+                    </ul>
+                </nav>
+                <div class="action-container-wrapper">
+                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                        <label tabindex="0" class="btn-lang">
+                            <span class="lang-text">Français</span>
+                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                        </label>
+                        <ul tabindex="0" class="lang-options-list">
+                            <li><a class="lang-option text-sm">Anglais</a></li>
+                            <li><a class="lang-option text-sm">Français</a></li>
+                        </ul>
+                    </div>
+                    <div id="auth-section" class="flex items-center">
+                        <button class="btn-login">Se connecter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero-container">
+            <h1 class="hero-title">Voyagez en toute sérénité à travers le Mali<br>grâce à notre plateforme de réservation</h1>
+        </div>
+
+        <section class="booking-section">
+            <div class="booking-form-container">
+                <h3>Formulaire de réservation</h3>
+                <p>Ce formulaire a z-index: 1</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="./src/js/main.js"></script>
+    <script src="./src/js/login-redirect-utils.js"></script>
+    <script src="./src/js/profile-menu.js"></script>
+    <script src="./src/js/auth-state-manager.js"></script>
+
+    <script>
+        // Simuler une connexion pour tester
+        function simulateLogin() {
+            const userData = {
+                id: 1,
+                first_name: 'John',
+                last_name: 'Doe',
+                email: 'john.doe@example.com',
+                role: 'user'
+            };
+            
+            sessionStorage.setItem('userData', JSON.stringify(userData));
+            sessionStorage.setItem('authToken', 'fake-token-123');
+            
+            if (window.authStateManager) {
+                window.authStateManager.checkAuthState();
+            }
+            
+            updateStatus('✅ Utilisateur connecté - Menu profil affiché');
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Vérifier le z-index des éléments
+        function checkZIndex() {
+            const header = document.querySelector('header');
+            const menu = document.getElementById('profile-dropdown-menu');
+            
+            if (header) {
+                const headerZIndex = window.getComputedStyle(header).zIndex;
+                console.log('Header z-index:', headerZIndex);
+            }
+            
+            if (menu) {
+                const menuZIndex = window.getComputedStyle(menu).zIndex;
+                console.log('Menu z-index:', menuZIndex);
+                updateStatus(`Menu z-index: ${menuZIndex}`);
+            }
+        }
+
+        // Attendre que la page soit chargée
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('🚀 Page chargée');
+            
+            // Simuler la connexion après 2 secondes
+            setTimeout(() => {
+                simulateLogin();
+                setTimeout(checkZIndex, 1000);
+            }, 2000);
+        });
+
+        // Vérifier périodiquement
+        setInterval(checkZIndex, 3000);
+    </script>
+</body>
+</html> 

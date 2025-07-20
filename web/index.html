@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="./public/images/logo/logo.png">
     <link href="./public/assets/css/style.css" rel="stylesheet">
     <link href="./public/assets/css/auth-state.css" rel="stylesheet">
+    <link href="./public/assets/css/profile-menu.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome 5.15.4 (stable) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -136,10 +137,16 @@
         <!-- Le pied de page (liens, copyright, etc.) ira ici -->
     </footer>
 
+    <!-- CSS pour la validation des dates -->
+    <link href="./public/assets/css/date-validation.css" rel="stylesheet">
+    
     <!-- JavaScript -->
     <script src="./src/js/main.js"></script>
     <script src="./src/js/login-redirect-utils.js"></script>
+    <script src="./src/js/profile-menu.js"></script>
     <script src="./src/js/auth-state-manager.js"></script>
+    <script src="./src/js/date-validation.js"></script>
+    <script src="./src/js/index-form-handler.js"></script>
 
     <!-- Menu mobile (slide) -->
     <nav id="mobile-menu" class="mobile-menu" style="display:none;">
@@ -166,6 +173,33 @@
         // window.location.replace(window.location.pathname);
       }
     })();
+
+    // Vérification du menu profil au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Page index chargée');
+        
+        // Vérifier que les scripts sont chargés
+        if (window.authStateManager) {
+            console.log('✅ AuthStateManager disponible sur index');
+        } else {
+            console.warn('⚠️ AuthStateManager non disponible sur index');
+        }
+        
+        if (window.toggleAnyProfileMenu) {
+            console.log('✅ toggleAnyProfileMenu disponible sur index');
+        } else {
+            console.warn('⚠️ toggleAnyProfileMenu non disponible sur index');
+        }
+
+        // Vérifier l'état d'authentification initial
+        const userData = sessionStorage.getItem('userData');
+        if (userData) {
+            console.log('👤 Utilisateur connecté détecté sur index');
+        } else {
+            console.log('🔓 Aucun utilisateur connecté sur index');
+        }
+    });
+
     // Menu mobile hamburger
     const hamburger = document.getElementById('mobile-hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -187,8 +221,6 @@
     mobileMenu.addEventListener('click', function(e) {
         if (e.target === mobileMenu) toggleMobileMenu();
     });
-
-
     </script>
 </body>
 </html> 

@@ -296,7 +296,7 @@ window.initLoginRedirectUtils = function() {
                 sessionStorage.clear();
                 localStorage.clear();
                 let homePath = '../index.html?fallback=true';
-                if (!window.location.pathname.includes('/pages/')) {
+            if (!window.location.pathname.includes('/pages/')) {
                     homePath = './index.html?fallback=true';
                 }
                 window.location.href = homePath;

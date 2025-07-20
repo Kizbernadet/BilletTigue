@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Connexion Réservation - Billettigue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test de Connexion Front-Back - Réservation Billettigue</h1>
+    
+    <!-- Test 1: Vérification du serveur -->
+    <div class="test-section">
+        <h2>1. Test de Connectivité du Serveur</h2>
+        <button class="test-button" onclick="testServerConnection()">Tester la connexion serveur</button>
+        <div id="server-result" class="result"></div>
+    </div>
+
+    <!-- Test 2: Test des routes de réservation -->
+    <div class="test-section">
+        <h2>2. Test des Routes de Réservation</h2>
+        <button class="test-button" onclick="testReservationRoutes()">Tester les routes de réservation</button>
+        <div id="routes-result" class="result"></div>
+    </div>
+
+    <!-- Test 3: Test de réservation invité -->
+    <div class="test-section">
+        <h2>3. Test de Réservation Invité</h2>
+        <div class="form-group">
+            <label for="test-trajet-id">ID du Trajet:</label>
+            <input type="number" id="test-trajet-id" value="1" min="1">
+        </div>
+        <div class="form-group">
+            <label for="test-first-name">Prénom:</label>
+            <input type="text" id="test-first-name" value="Test">
+        </div>
+        <div class="form-group">
+            <label for="test-last-name">Nom:</label>
+            <input type="text" id="test-last-name" value="User">
+        </div>
+        <div class="form-group">
+            <label for="test-phone">Téléphone:</label>
+            <input type="text" id="test-phone" value="65123456">
+        </div>
+        <div class="form-group">
+            <label for="test-seats">Nombre de places:</label>
+            <input type="number" id="test-seats" value="1" min="1" max="10">
+        </div>
+        <div class="form-group">
+            <label for="test-amount">Montant total:</label>
+            <input type="number" id="test-amount" value="15000" step="100">
+        </div>
+        <button class="test-button" onclick="testGuestReservation()">Tester réservation invité</button>
+        <div id="guest-result" class="result"></div>
+    </div>
+
+    <!-- Test 4: Test de réservation utilisateur connecté -->
+    <div class="test-section">
+        <h2>4. Test de Réservation Utilisateur Connecté</h2>
+        <div class="form-group">
+            <label for="test-token">Token d'authentification:</label>
+            <input type="text" id="test-token" placeholder="Collez votre token JWT ici">
+        </div>
+        <button class="test-button" onclick="testUserReservation()">Tester réservation utilisateur</button>
+        <div id="user-result" class="result"></div>
+    </div>
+
+    <!-- Test 5: Test de configuration frontend -->
+    <div class="test-section">
+        <h2>5. Test de Configuration Frontend</h2>
+        <button class="test-button" onclick="testFrontendConfig()">Tester la configuration frontend</button>
+        <div id="config-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+
+        function showLoading(elementId) {
+            showResult(elementId, '⏳ Test en cours...', 'loading');
+        }
+
+        async function testServerConnection() {
+            showLoading('server-result');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/trajets`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('server-result', 
+                        `✅ Serveur accessible!\n` +
+                        `Status: ${response.status}\n` +
+                        `URL: ${API_BASE_URL}\n` +
+                        `Réponse: ${JSON.stringify(data, null, 2)}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('server-result', 
+                        `❌ Serveur accessible mais erreur API\n` +
+                        `Status: ${response.status}\n` +
+                        `Message: ${data.message || 'Erreur inconnue'}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('server-result', 
+                    `❌ Impossible de se connecter au serveur\n` +
+                    `Erreur: ${error.message}\n` +
+                    `Vérifiez que le serveur backend est démarré sur le port 5000`, 
+                    'error'
+                );
+            }
+        }
+
+        async function testReservationRoutes() {
+            showLoading('routes-result');
+            
+            const tests = [
+                { name: 'GET /reservations (sans token)', url: '/reservations', method: 'GET', auth: false },
+                { name: 'POST /reservations/guest', url: '/reservations/guest', method: 'POST', auth: false }
+            ];
+            
+            let results = '';
+            
+            for (const test of tests) {
+                try {
+                    const options = {
+                        method: test.method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                    
+                    if (test.method === 'POST') {
+                        options.body = JSON.stringify({
+                            trajet_id: 1,
+                            passenger_first_name: 'Test',
+                            passenger_last_name: 'Route',
+                            phone_number: '65123456',
+                            seats_reserved: 1,
+                            total_amount: 15000
+                        });
+                    }
+                    
+                    const response = await fetch(`${API_BASE_URL}${test.url}`, options);
+                    const data = await response.json();
+                    
+                    if (response.status === 401 && !test.auth) {
+                        results += `✅ ${test.name}: Route accessible (401 attendu sans auth)\n`;
+                    } else if (response.ok) {
+                        results += `✅ ${test.name}: Succès (${response.status})\n`;
+                    } else {
+                        results += `⚠️ ${test.name}: ${response.status} - ${data.message || 'Erreur'}\n`;
+                    }
+                } catch (error) {
+                    results += `❌ ${test.name}: Erreur réseau - ${error.message}\n`;
+                }
+            }
+            
+            showResult('routes-result', results, 'info');
+        }
+
+        async function testGuestReservation() {
+            showLoading('guest-result');
+            
+            const formData = {
+                trajet_id: parseInt(document.getElementById('test-trajet-id').value),
+                passenger_first_name: document.getElementById('test-first-name').value,
+                passenger_last_name: document.getElementById('test-last-name').value,
+                phone_number: document.getElementById('test-phone').value,
+                seats_reserved: parseInt(document.getElementById('test-seats').value),
+                refundable_option: false,
+                total_amount: parseInt(document.getElementById('test-amount').value)
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservations/guest`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('guest-result', 
+                        `✅ Réservation invité créée avec succès!\n` +
+                        `Status: ${response.status}\n` +
+                        `Référence: ${data.data?.reference || 'N/A'}\n` +
+                        `Réservation ID: ${data.data?.reservation?.id || 'N/A'}\n` +
+                        `Réponse complète:\n${JSON.stringify(data, null, 2)}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('guest-result', 
+                        `❌ Erreur lors de la création de la réservation invité\n` +
+                        `Status: ${response.status}\n` +
+                        `Message: ${data.message || 'Erreur inconnue'}\n` +
+                        `Détails: ${JSON.stringify(data, null, 2)}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('guest-result', 
+                    `❌ Erreur réseau lors de la réservation invité\n` +
+                    `Erreur: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        async function testUserReservation() {
+            showLoading('user-result');
+            
+            const token = document.getElementById('test-token').value.trim();
+            
+            if (!token) {
+                showResult('user-result', 
+                    `❌ Token d'authentification requis\n` +
+                    `Veuillez vous connecter et copier le token depuis sessionStorage`, 
+                    'error'
+                );
+                return;
+            }
+            
+            const formData = {
+                trajet_id: parseInt(document.getElementById('test-trajet-id').value),
+                passenger_first_name: document.getElementById('test-first-name').value,
+                passenger_last_name: document.getElementById('test-last-name').value,
+                phone_number: document.getElementById('test-phone').value,
+                seats_reserved: parseInt(document.getElementById('test-seats').value),
+                refundable_option: false,
+                total_amount: parseInt(document.getElementById('test-amount').value)
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult('user-result', 
+                        `✅ Réservation utilisateur créée avec succès!\n` +
+                        `Status: ${response.status}\n` +
+                        `Réservation ID: ${data.data?.reservation?.id || 'N/A'}\n` +
+                        `Prochaine étape: ${data.data?.next_step || 'N/A'}\n` +
+                        `Réponse complète:\n${JSON.stringify(data, null, 2)}`, 
+                        'success'
+                    );
+                } else {
+                    showResult('user-result', 
+                        `❌ Erreur lors de la création de la réservation utilisateur\n` +
+                        `Status: ${response.status}\n` +
+                        `Message: ${data.message || 'Erreur inconnue'}\n` +
+                        `Détails: ${JSON.stringify(data, null, 2)}`, 
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult('user-result', 
+                    `❌ Erreur réseau lors de la réservation utilisateur\n` +
+                    `Erreur: ${error.message}`, 
+                    'error'
+                );
+            }
+        }
+
+        function testFrontendConfig() {
+            let results = '';
+            
+            // Test de la configuration API
+            results += `🔧 Configuration API:\n`;
+            results += `URL de base: ${API_BASE_URL}\n`;
+            results += `Mode développement: ${window.location.hostname === 'localhost' ? 'Oui' : 'Non'}\n`;
+            
+            // Test des modules ES6
+            results += `\n📦 Modules ES6:\n`;
+            try {
+                // Test d'import dynamique
+                import('./src/js/api/config.js').then(() => {
+                    results += `✅ Import de config.js: Succès\n`;
+                }).catch(error => {
+                    results += `❌ Import de config.js: ${error.message}\n`;
+                });
+            } catch (error) {
+                results += `❌ Test d'import: ${error.message}\n`;
+            }
+            
+            // Test de sessionStorage
+            results += `\n💾 SessionStorage:\n`;
+            try {
+                const token = sessionStorage.getItem('authToken');
+                results += `Token d'auth: ${token ? 'Présent' : 'Absent'}\n`;
+                
+                const userData = sessionStorage.getItem('userData');
+                results += `Données utilisateur: ${userData ? 'Présentes' : 'Absentes'}\n`;
+            } catch (error) {
+                results += `❌ Erreur sessionStorage: ${error.message}\n`;
+            }
+            
+            // Test de fetch API
+            results += `\n🌐 Fetch API:\n`;
+            if (typeof fetch !== 'undefined') {
+                results += `✅ Fetch API disponible\n`;
+            } else {
+                results += `❌ Fetch API non disponible\n`;
+            }
+            
+            showResult('config-result', results, 'info');
+        }
+
+        // Auto-test au chargement
+        window.addEventListener('load', () => {
+            console.log('🚀 Test de connexion réservation chargé');
+            console.log('📡 URL API:', API_BASE_URL);
+        });
+    </script>
+</body>
+</html> 

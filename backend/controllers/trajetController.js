@@ -182,7 +182,11 @@ const getAllTrajets = async (req, res) => {
 
         // Construire les conditions de filtrage avec les vrais noms de champs
         const whereClause = {
-            status: { [Op.ne]: 'cancelled' } // Exclure les trajets annulés par défaut
+            status: { [Op.ne]: 'cancelled' }, // Exclure les trajets annulés par défaut
+            // Exclure automatiquement les trajets expirés (date passée)
+            departure_time: {
+                [Op.gt]: new Date() // Seulement les trajets avec une date de départ dans le futur
+            }
         };
 
         // Support des anciens et nouveaux noms de paramètres

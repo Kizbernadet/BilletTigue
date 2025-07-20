@@ -1,0 +1,138 @@
+/**
+ * Styles pour la validation des dates
+ */
+
+/* Messages d'erreur de validation */
+.date-validation-error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.date-validation-error i {
+    font-size: 0.75rem;
+    color: #dc2626;
+}
+
+/* Input avec erreur */
+.date-input-error {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px #dc2626 !important;
+    background-color: #fef2f2 !important;
+}
+
+.date-input-error:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles pour les inputs de date */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]:invalid {
+    border-color: #dc2626;
+}
+
+/* Indicateur visuel pour les dates valides */
+input[type="date"]:valid:not(.date-input-error) {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+/* Tooltip d'aide pour les dates */
+.date-help-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #1f2937;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    max-width: 200px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.date-help-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .date-validation-error {
+        font-size: 0.75rem;
+    }
+    
+    .date-help-tooltip {
+        max-width: 150px;
+        font-size: 0.7rem;
+    }
+}
+
+/* Styles pour les formulaires de recherche */
+.booking-form .form-group {
+    position: relative;
+}
+
+.booking-form .form-group input[type="date"] {
+    transition: all 0.2s ease-in-out;
+}
+
+.booking-form .form-group input[type="date"]:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Indicateur de progression pour les dates */
+.date-progress-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+    transition: width 0.3s ease-in-out;
+    width: 0;
+}
+
+.date-progress-indicator.active {
+    width: 100%;
+}
+
+/* Styles pour les messages de succès */
+.date-validation-success {
+    color: #10b981;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.date-validation-success i {
+    font-size: 0.75rem;
+    color: #10b981;
+} 
