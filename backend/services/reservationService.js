@@ -196,6 +196,18 @@ function checkCancellationPolicy(departureTime, cancellationHours = 2) {
 // ========== FONCTIONS MÉTIER PRINCIPALES ==========
 
 /**
+ * Helper pour générer un numéro de réservation unique
+ * Format : BT-YYYYMMDD-<id> (après création)
+ */
+function generateBookingNumber(reservationId) {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `BT-${y}${m}${d}-${String(reservationId).padStart(6, '0')}`;
+}
+
+/**
  * Fonction : createReservation
  * Description : Créer une nouvelle réservation avec paiement associé
  * Paramètres :
@@ -218,7 +230,7 @@ async function createReservation(data, userId) {
         );
 
         // 3. Vérification des réservations existantes de l'utilisateur
-        await checkUserExistingReservation(userId, validatedData.trajet_id, transaction);
+        // await checkUserExistingReservation(userId, validatedData.trajet_id, transaction);
 
         // 4. Calcul et validation du montant total
         const baseAmount = calculateReservationAmount(trajet.price, validatedData.seats_reserved);
@@ -243,6 +255,10 @@ async function createReservation(data, userId) {
             refund_supplement_amount: validatedData.refund_supplement_amount,
             total_amount: validatedData.total_amount
         }, { transaction });
+
+        // Ajout booking_number unique
+        const bookingNumber = generateBookingNumber(reservation.id);
+        await reservation.update({ booking_number: bookingNumber }, { transaction });
 
         // 6. Création du paiement associé
         const paiement = await Paiement.create({
@@ -342,6 +358,10 @@ async function createGuestReservation(data) {
             refund_supplement_amount: validatedData.refund_supplement_amount,
             total_amount: validatedData.total_amount
         }, { transaction });
+
+        // Ajout booking_number unique
+        const bookingNumber = generateBookingNumber(reservation.id);
+        await reservation.update({ booking_number: bookingNumber }, { transaction });
 
         // 5. Création du paiement associé
         const paiement = await Paiement.create({

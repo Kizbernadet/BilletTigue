@@ -43,6 +43,13 @@ app.use((req, res, next) => {
 
 app.use(morgan('dev'));
 
+const path = require('path');
+
+// ... (autres middlewares)
+
+app.use(express.static(path.join(__dirname, '../web')));
+// Exemple : http://localhost:3000/pages/profile.html affichera le fichier web/pages/profile.html
+
 // ========== Gestion des erreurs de parsing JSON ========== 
 // Si le body JSON est mal formé, cette gestion d'erreur renverra une réponse claire
 app.use((err, req, res, next) => {
@@ -133,7 +140,7 @@ setInterval(updateExpiredTrajets, 30 * 60 * 1000); // 30 minutes
 const startServer = async () => {
     try {
         // Synchroniser les modèles avec la base de données
-        await sequelize.sync({ alter: true });
+        // await sequelize.sync({ alter: true });
         console.log('✅ Modèles synchronisés avec la base de données');
         
         // Nettoyer les tokens expirés au démarrage

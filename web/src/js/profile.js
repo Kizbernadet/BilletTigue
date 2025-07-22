@@ -1,5 +1,3 @@
-import { AuthAPI } from './api/index.js';
-
 /**
  * Gestionnaire de profil pour la page de profil utilisateur
  */
@@ -94,14 +92,18 @@ class ProfileManager {
      * Remplit le formulaire avec les données utilisateur
      */
     populateForm(user) {
-        // Remplir les champs avec les données existantes
-        document.getElementById('firstName').value = user.firstName || user.prenom || '';
-        document.getElementById('lastName').value = user.lastName || user.nom || '';
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('phone').value = user.phoneNumber || user.phone || '';
-        document.getElementById('address').value = user.address || '';
-        
-        // Mettre à jour le nom d'utilisateur dans la topbar
+        // Helper pour récupérer la bonne valeur d'un champ
+        function getField(obj, ...keys) {
+            for (const key of keys) {
+                if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
+            }
+            return '';
+        }
+        document.getElementById('firstName').value = getField(user, 'firstName', 'prenom', 'first_name');
+        document.getElementById('lastName').value = getField(user, 'lastName', 'nom', 'last_name');
+        document.getElementById('email').value = getField(user, 'email');
+        document.getElementById('phone').value = getField(user, 'phoneNumber', 'phone', 'phone_number');
+        document.getElementById('address').value = getField(user, 'address', 'adresse');
         this.updateUserName();
     }
 
@@ -114,26 +116,26 @@ class ProfileManager {
         const burgerUserName = document.getElementById('burger-user-name');
         const burgerUserEmail = document.getElementById('burger-user-email');
         const burgerUserAvatar = document.getElementById('burger-user-avatar');
-        
+        function getField(obj, ...keys) {
+            for (const key of keys) {
+                if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
+            }
+            return '';
+        }
         if (user && userNameElement) {
-            const displayName = user.firstName || user.prenom || user.email.split('@')[0];
+            const displayName = getField(user, 'firstName', 'prenom', 'first_name') || (user.email ? user.email.split('@')[0] : '');
             userNameElement.textContent = displayName;
         }
-
-        // Mettre à jour les informations du menu burger
         if (user) {
-            const firstName = user.firstName || user.prenom || '';
-            const lastName = user.lastName || user.nom || '';
-            
+            const firstName = getField(user, 'firstName', 'prenom', 'first_name');
+            const lastName = getField(user, 'lastName', 'nom', 'last_name');
             if (burgerUserName) {
-                const fullName = `${firstName} ${lastName}`.trim() || user.email.split('@')[0];
+                const fullName = `${firstName} ${lastName}`.trim() || (user.email ? user.email.split('@')[0] : '');
                 burgerUserName.textContent = fullName;
             }
-
             if (burgerUserEmail) {
-                burgerUserEmail.textContent = user.email || '';
+                burgerUserEmail.textContent = getField(user, 'email');
             }
-
             if (burgerUserAvatar) {
                 this.updateUserAvatar(burgerUserAvatar, firstName, lastName);
             }
@@ -453,7 +455,52 @@ class ProfileManager {
     }
 }
 
-// Initialiser la gestion du profil
-document.addEventListener('DOMContentLoaded', () => {
-    new ProfileManager();
+function getUserInitials(user) {
+    if (!user) return '?';
+    const first = user.first_name ? user.first_name.charAt(0).toUpperCase() : '';
+    const last = user.last_name ? user.last_name.charAt(0).toUpperCase() : '';
+    return (first + last) || (user.email ? user.email.charAt(0).toUpperCase() : '?');
+}
+
+function renderProfile() {
+    const container = document.getElementById('profileContainer');
+    if (!container) return; // Sécurise l'appel
+    const userData = sessionStorage.getItem('userData');
+    if (!userData) {
+        container.innerHTML = `<div style="padding:2rem 0; color:#764ba2; font-size:1.1rem;">Vous n'êtes pas connecté.<br><a href='../index.html' style='color:#667eea;text-decoration:underline;'>Retour à l'accueil</a></div>`;
+        return;
+    }
+    const user = JSON.parse(userData);
+    function getField(obj, ...keys) {
+        for (const key of keys) {
+            if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
+        }
+        return '';
+    }
+    container.innerHTML = `
+        <div class="profile-avatar">${getUserInitials(user)}</div>
+        <div class="profile-info">
+            <h2>${getField(user, 'firstName', 'prenom', 'first_name')} ${getField(user, 'lastName', 'nom', 'last_name')}</h2>
+            <div class="profile-role">${user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Utilisateur'}</div>
+            <div class="profile-email"><i class="ri-mail-line"></i> ${getField(user, 'email')}</div>
+            ${getField(user, 'phoneNumber', 'phone', 'phone_number') ? `<div class="profile-phone"><i class="ri-phone-line"></i> ${getField(user, 'phoneNumber', 'phone', 'phone_number')}</div>` : ''}
+        </div>
+        <div class="profile-actions">
+            <button class="edit-btn" onclick="openEditProfileModal()"><i class="ri-user-settings-line"></i> Modifier le profil</button>
+            <button class="pwd-btn" onclick="openChangePwdModal()"><i class="ri-lock-password-line"></i> Changer le mot de passe</button>
+        </div>
+    `;
+}
+
+// Placeholders pour les modales (à implémenter ensuite)
+function openEditProfileModal() {
+    alert('Modale "Modifier le profil" à implémenter.');
+}
+function openChangePwdModal() {
+    alert('Modale "Changer le mot de passe" à implémenter.');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderProfile();
+    if (window.authStateManager) window.authStateManager.checkAuthState();
 }); 

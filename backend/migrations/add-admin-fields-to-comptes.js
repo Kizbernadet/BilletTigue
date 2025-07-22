@@ -7,11 +7,12 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn('comptes', 'email_verified', {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    });
+    // await queryInterface.addColumn('comptes', 'email_verified', {
+    //   type: Sequelize.BOOLEAN,
+    //   allowNull: false,
+    //   defaultValue: false,
+    //   comment: 'Indique si l\'email du compte a été vérifié'
+    // });
 
     await queryInterface.addColumn('comptes', 'phone_verified', {
       type: Sequelize.BOOLEAN,

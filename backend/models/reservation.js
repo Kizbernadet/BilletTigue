@@ -58,6 +58,12 @@ const Reservation = sequelize.define('Reservation', {
         allowNull: false,
         comment: 'Montant total de la réservation (base + supplément remboursable)'
     },
+    booking_number: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+        comment: 'Numéro unique de réservation pour différencier chaque réservation utilisateur/trajet'
+    },
     trajet_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

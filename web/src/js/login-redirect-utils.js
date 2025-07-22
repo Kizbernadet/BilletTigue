@@ -278,10 +278,7 @@ window.initLoginRedirectUtils = function() {
     // Configurer les liens de profil selon la page actuelle
     const profileLink = document.getElementById('profile-link');
     if (profileLink) {
-        let profilePath = './pages/profile.html'; // Pour la page d'accueil
-        if (window.location.pathname.includes('/pages/')) {
-            profilePath = './profile.html'; // Pour les pages dans le dossier pages
-        }
+        let profilePath = '/pages/profile.html'; // Toujours chemin absolu
         profileLink.href = profilePath;
     }
     
@@ -295,10 +292,7 @@ window.initLoginRedirectUtils = function() {
             } else {
                 sessionStorage.clear();
                 localStorage.clear();
-                let homePath = '../index.html?fallback=true';
-            if (!window.location.pathname.includes('/pages/')) {
-                    homePath = './index.html?fallback=true';
-                }
+                let homePath = '/index.html?fallback=true';
                 window.location.href = homePath;
             }
         });

@@ -127,13 +127,7 @@ class AuthProtection {
         let loginUrl;
 
         // Construire le chemin correct selon la page actuelle
-        if (window.location.pathname.includes('/pages/')) {
-            // Si on est dans le dossier pages, aller vers login.html dans le même dossier
-            loginUrl = './login.html';
-        } else {
-            // Sinon, aller vers pages/login.html
-            loginUrl = './pages/login.html';
-        }
+        loginUrl = '/pages/login.html';
 
         if (currentPage.includes('transporter-')) {
             // Pages transporteur → formulaire de connexion transporteur

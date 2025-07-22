@@ -3,138 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - BilletTigue</title>
-    <!-- Les liens CSS doivent pointer vers la racine du site -->
+    <title>Mon Profil - Billettigue</title>
+    <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
+    <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="../public/assets/css/profile.css" rel="stylesheet">
+    <link href="../public/assets/css/profile-page.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="min-h-screen bg-custom">
-    <header>
-        <!-- Container pour centrer la topbar -->
-        <div class="w-full flex justify-center p-4">
-            <!-- Topbar avec 95% de largeur -->
-            <div class="topbar-container">
-                <div class="logo-container w-3/12 h-full">
-                    <!-- Le lien du logo doit pointer vers la page d'accueil -->
-                    <a href="../index.html" class="flex items-center">
-                        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
-                        <span class="logo-text">BilletTigue</span>
-                    </a>
+<body class="min-h-screen overflow-x-hidden">
+  <div class="user-dashboard-container">
+    <div class="user-dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="user-sidebar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" style="height:48px; width:auto;">
+        <span>BilletTiguè</span>
                 </div>
-                <nav class="nav-container w-5/12 h-full">
-                    <ul class="nav-list">
-                        <!-- Les liens de navigation doivent être relatifs à la racine -->
-                        <li><a href="../index.html" class="nav-link"><i class="fas fa-home"></i><span>Accueil</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-bus"></i><span>Bus</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-box"></i><span>Colis</span></a></li>
-                        <li><a href="#" class="nav-link"><i class="fas fa-question-circle"></i><span>Aide</span></a></li>
+      <!-- Menu -->
+      <nav class="menu">
+        <ul>
+          <li><a href="/index.html"><i class="fa-solid fa-home"></i> <span class="menu-label">Accueil</span></a></li>
+          <li><a href="/pages/profile.html" class="active"><i class="fa-solid fa-user"></i> <span class="menu-label">Mon Profil</span></a></li>
+          <li><a href="/pages/reservation-history.html"><i class="fa-solid fa-ticket"></i> <span class="menu-label">Mes Réservations</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-bell"></i> <span class="menu-label">Notifications</span></a></li>
+          <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
+          <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
                     </ul>
                 </nav>
-                <div class="action-container-wrapper">
-                    <!-- Section d'authentification dynamique -->
-                    <div id="auth-section"></div>
-                </div>
-            </div>
+    </aside>
+    <!-- Contenu principal -->
+    <main class="user-dashboard-main">
+      <div class="user-main-wrapper">
+        <div class="user-title-bar">
+          <h1>Mon Profil</h1>
+          <!-- Section profil rapide -->
+          <div class="profile-dropdown-wrapper">
+            <button id="profileBtn" type="button">
+              <i class="ri-user-3-line"></i>
+              <span id="profile-short-name">Utilisateur</span>
+            </button>
+            <ul class="profile-dropdown-menu" id="profileDropdown">
+              <li>
+                <a href="/pages/profile.html" class="profile-dropdown-link">
+                  <i class="ri-user-settings-line"></i>
+                  Mon Profil
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="ri-settings-3-line"></i>
+                  Paramètres
+                </a>
+              </li>
+              <li>
+                <a href="#" class="profile-dropdown-link">
+                  <i class="ri-notification-3-line"></i>
+                  Notifications
+                </a>
+              </li>
+              <li>
+                <a href="../index.html" class="profile-dropdown-link logout-link">
+                  <i class="ri-logout-box-r-line"></i>
+                  Déconnexion
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </header>
-
-    <main class="profile-main">
-        <div class="profile-container">
-            <!-- En-tête du profil -->
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div class="profile-info">
-                    <h1 class="profile-title">Mon Profil</h1>
-                    <p class="profile-subtitle">Gérez vos informations personnelles</p>
-                </div>
+        <div class="user-main-content flex flex-col gap-6">
+          <!-- Section des statistiques utilisateur -->
+          <section class="user-stats-section flex flex-row w-full justify-evenly align-items-center bg-red-500 p-4">
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-ticket"></i> Réservations</h3>
+              <div class="card-stats">
+                <span class="stat-number" id="stat-reservations">0</span>
+                <span class="stat-label">Total</span>
+              </div>
             </div>
-
-            <!-- Formulaire de profil -->
-            <form id="profileForm" class="profile-form">
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-user"></i>
-                        Informations personnelles
-                    </h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-field">
-                            <label for="firstName">Prénom</label>
-                            <input type="text" id="firstName" name="firstName" required>
-                        </div>
-                        <div class="form-field">
-                            <label for="lastName">Nom</label>
-                            <input type="text" id="lastName" name="lastName" required>
-                        </div>
-                        <div class="form-field">
-                            <label for="email">Adresse e-mail</label>
-                            <input type="email" id="email" name="email" required readonly>
-                            <small class="field-note">L'email ne peut pas être modifié</small>
-                        </div>
-                        <div class="form-field">
-                            <label for="phone">Numéro de téléphone</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        <div class="form-field full-width">
-                            <label for="address">Adresse</label>
-                            <textarea id="address" name="address" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-lock"></i>
-                        Sécurité
-                    </h3>
-                    
-                    <div class="form-grid">
-                        <div class="form-field">
-                            <label for="currentPassword">Mot de passe actuel</label>
-                            <input type="password" id="currentPassword" name="currentPassword">
-                        </div>
-                        <div class="form-field">
-                            <label for="newPassword">Nouveau mot de passe</label>
-                            <input type="password" id="newPassword" name="newPassword">
-                        </div>
-                        <div class="form-field">
-                            <label for="confirmPassword">Confirmer le nouveau mot de passe</label>
-                            <input type="password" id="confirmPassword" name="confirmPassword">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary">
-                        <i class="fas fa-save"></i>
-                        Sauvegarder les modifications
-                    </button>
-                    <button type="button" class="btn-secondary" id="cancelBtn">
-                        <i class="fas fa-times"></i>
-                        Annuler
-                    </button>
-                </div>
-            </form>
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-check-circle"></i> Validées</h3>
+              <div class="card-stats">
+                <span class="stat-number" id="stat-valid">0</span>
+                <span class="stat-label">Validées</span>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-clock"></i> En attente</h3>
+              <div class="card-stats">
+                <span class="stat-number" id="stat-pending">0</span>
+                <span class="stat-label">En attente</span>
+              </div>
+            </div>
+            <div class="dashboard-card">
+              <h3><i class="fa-solid fa-ban"></i> Annulées</h3>
+              <div class="card-stats">
+                <span class="stat-number" id="stat-cancelled">0</span>
+                <span class="stat-label">Annulées</span>
+              </div>
+            </div>
+          </section>
+          <!-- Section des actions utilisateur -->
+          <section class="user-actions-section flex flex-row w-full justify-evenly align-items-center bg-yellow-400">
+            <div class="dashboard-card action-card view" id="viewAccountBtn">
+              <h3><i class="fa-solid fa-id-card"></i> Voir mon compte</h3>
+              <div class="action-description">
+                <span>Consulter mes informations</span>
+              </div>
+            </div>
+            <div class="dashboard-card action-card edit" id="editProfileBtn">
+              <h3><i class="fa-solid fa-user-edit"></i> Modifier</h3>
+              <div class="action-description">
+                <span>Éditer mes informations</span>
+              </div>
+            </div>
+            <div class="dashboard-card action-card pwd" id="changePwdBtn">
+              <h3><i class="fa-solid fa-key"></i> Mot de passe</h3>
+              <div class="action-description">
+                <span>Changer mon mot de passe</span>
+              </div>
+            </div>
+            <div class="dashboard-card action-card logout" id="logoutBtn">
+              <h3><i class="fa-solid fa-sign-out-alt"></i> Déconnexion</h3>
+              <div class="action-description">
+                <span>Se déconnecter du compte</span>
+              </div>
+            </div>
+          </section>
         </div>
+      </div>
     </main>
+    </div>
+  </div>
 
-    <footer>
-        <!-- Le pied de page (liens, copyright, etc.) ira ici -->
-    </footer>
-
-    <!-- Le script JS doit pointer vers la racine du site -->
-    <script src="../src/js/main.js"></script>
-    <script src="../src/js/login-redirect-utils.js"></script>
-    <script src="../src/js/auth-state-manager.js"></script>
-    <script type="module" src="../src/js/profile.js"></script>
-    <script>
-        // Initialiser les utilitaires de redirection
-        document.addEventListener('DOMContentLoaded', function() {
-            initLoginRedirectUtils();
-        });
-    </script>
+  <!-- Scripts JavaScript -->
+  <script src="../src/js/auth-protection.js"></script>
+  <script src="../src/js/secure-logout.js"></script>
+  <script src="../src/js/profile-display.js"></script>
+  <script src="../src/js/profile.js"></script>
+  <script src="../src/js/profile-menu.js"></script>
+  <script src="../src/js/profile-page.js"></script>
+  <!-- Modale Voir mon compte -->
+  <div id="viewAccountModal" class="modal-overlay" style="display:none;">
+    <div class="modal-container profile-modal-card">
+      <button class="modal-close" id="closeViewAccountModalBtn" title="Fermer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="profile-modal-avatar" id="modalProfileAvatar">AB</div>
+        <h2 id="modalProfileName">Prénom Nom</h2>
+        <div class="profile-modal-role" id="modalProfileRole">Utilisateur</div>
+        <div class="profile-modal-info">
+          <div><i class="fa-solid fa-user"></i> <span id="modalProfileFirstName">-</span> <span id="modalProfileLastName">-</span></div>
+          <div><i class="fa-solid fa-envelope"></i> <span id="modalProfileEmail">email@example.com</span></div>
+          <div><i class="fa-solid fa-phone"></i> <span id="modalProfilePhone">-</span></div>
+          <div><i class="fa-solid fa-calendar-alt"></i> <span id="modalProfileSince">-</span></div>
+          <div><i class="fa-solid fa-user-shield"></i> <span id="modalProfileStatus">-</span></div>
+          <div><i class="fa-solid fa-check-circle"></i> Email vérifié : <span id="modalProfileEmailVerified">-</span></div>
+          <div><i class="fa-solid fa-check-circle"></i> Téléphone vérifié : <span id="modalProfilePhoneVerified">-</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modale Modifier le profil -->
+  <div id="editProfileModal" class="modal-overlay" style="display:none;">
+    <div class="modal-container profile-modal-card">
+      <button class="modal-close" id="closeEditProfileModalBtn" title="Fermer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <form id="editProfileForm" class="modal-body" autocomplete="off" novalidate>
+        <h2>Modifier mon profil</h2>
+        <div class="profile-modal-info">
+          <div class="form-group">
+            <label for="editFirstName">Prénom</label>
+            <input type="text" id="editFirstName" name="firstName" required />
+          </div>
+          <div class="form-group">
+            <label for="editLastName">Nom</label>
+            <input type="text" id="editLastName" name="lastName" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email</label>
+            <input type="email" id="editEmail" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="editPhone">Téléphone</label>
+            <input type="tel" id="editPhone" name="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="editAddress">Adresse</label>
+            <input type="text" id="editAddress" name="address" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelEditProfileBtn">Annuler</button>
+          <button type="submit" class="btn-primary">Enregistrer</button>
+        </div>
+        <div id="editProfileError" style="color:#dc3545; margin-top:0.5rem; display:none;"></div>
+      </form>
+    </div>
+  </div>
+  <!-- Modale Changer le mot de passe -->
+  <div id="changePwdModal" class="modal-overlay" style="display:none;">
+    <div class="modal-container profile-modal-card">
+      <button class="modal-close" id="closeChangePwdModalBtn" title="Fermer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <form id="changePwdForm" class="modal-body" autocomplete="off" novalidate>
+        <h2>Changer mon mot de passe</h2>
+        <div class="profile-modal-info">
+          <div class="form-group">
+            <label for="currentPwd">Mot de passe actuel</label>
+            <input type="password" id="currentPwd" name="currentPwd" required autocomplete="current-password" />
+          </div>
+          <div class="form-group">
+            <label for="newPwd">Nouveau mot de passe</label>
+            <input type="password" id="newPwd" name="newPwd" required autocomplete="new-password" minlength="6" />
+          </div>
+          <div class="form-group">
+            <label for="confirmPwd">Confirmer le nouveau mot de passe</label>
+            <input type="password" id="confirmPwd" name="confirmPwd" required autocomplete="new-password" minlength="6" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelChangePwdBtn">Annuler</button>
+          <button type="submit" class="btn-primary">Valider</button>
+        </div>
+        <div id="changePwdError" style="color:#dc3545; margin-top:0.5rem; display:none;"></div>
+      </form>
+    </div>
+  </div>
 </body>
 </html> 

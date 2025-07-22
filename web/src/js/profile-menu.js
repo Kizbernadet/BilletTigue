@@ -36,18 +36,21 @@ class GlobalProfileMenu {
     }
 
     updateProfileInfo(userData) {
+        function getField(obj, ...keys) {
+            for (const key of keys) {
+                if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== '') return obj[key];
+            }
+            return '';
+        }
         const profileName = document.getElementById('profile-name');
         const profileFullName = document.getElementById('profile-full-name');
         const profileRole = document.getElementById('profile-role');
-        
         if (profileName) {
-            profileName.textContent = userData.first_name;
+            profileName.textContent = getField(userData, 'firstName', 'prenom', 'first_name');
         }
-        
         if (profileFullName) {
-            profileFullName.textContent = `${userData.first_name} ${userData.last_name}`;
+            profileFullName.textContent = `${getField(userData, 'firstName', 'prenom', 'first_name')} ${getField(userData, 'lastName', 'nom', 'last_name')}`.trim();
         }
-        
         if (profileRole) {
             profileRole.textContent = userData.role || 'Utilisateur';
         }
@@ -91,7 +94,7 @@ function toggleProfileMenu() {
         if (isVisible) {
             // Fermer le menu
             dropdown.classList.remove('show');
-            dropdown.style.display = 'none';
+                dropdown.style.display = 'none';
             console.log('🔽 Menu profil fermé');
         } else {
             // Ouvrir le menu
@@ -161,4 +164,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export pour utilisation dans d'autres modules
-export default GlobalProfileMenu; 
+// export default GlobalProfileMenu; 

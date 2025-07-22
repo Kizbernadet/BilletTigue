@@ -595,7 +595,7 @@ class ReservationManager {
         // Adapter le bouton d'action selon le type d'utilisateur
         const actionBtn = document.getElementById('dashboard-or-receipt-btn');
         if (isLoggedIn) {
-            actionBtn.onclick = () => window.location.href = 'user-dashboard.html';
+            actionBtn.onclick = () => window.location.href = 'reservation-history.html';
             actionBtn.innerHTML = '<i class="fas fa-tachometer-alt"></i><span>Mes réservations</span>';
         } else {
             actionBtn.onclick = () => this.downloadGuestReceipt(reservationId);

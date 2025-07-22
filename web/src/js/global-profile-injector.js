@@ -38,13 +38,13 @@ class ProfileMenuInjector {
                             </div>
                         </li>
                         <li>
-                            <a href="profile.html" class="profile-dropdown-link">
+                            <a href="/pages/profile.html" class="profile-dropdown-link">
                                 <i class="ri-user-settings-line"></i>
                                 Mon Profil
                             </a>
                         </li>
                         <li>
-                            <a href="user-dashboard.html" class="profile-dropdown-link">
+                            <a href="/web/pages/user-dashboard.html" class="profile-dropdown-link">
                                 <i class="ri-dashboard-line"></i>
                                 Mes Réservations
                             </a>

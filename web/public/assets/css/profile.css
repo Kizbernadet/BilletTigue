@@ -1,0 +1,82 @@
+.profile-container {
+    max-width: 480px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2.5rem 2rem 2rem 2rem;
+    text-align: center;
+}
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    background-color: #667eea;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 2px 8px rgba(102,126,234,0.12);
+}
+.profile-info {
+    margin-bottom: 1.5rem;
+}
+.profile-info h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+.profile-info .profile-role {
+    font-size: 0.95rem;
+    color: #764ba2;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+.profile-info .profile-email {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0.2rem;
+}
+.profile-info .profile-phone {
+    font-size: 0.98rem;
+    color: #888;
+}
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 1.5rem;
+}
+.profile-actions button {
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.profile-actions .edit-btn {
+    background: #667eea;
+    color: white;
+}
+.profile-actions .edit-btn:hover {
+    background: #4f5bd5;
+}
+.profile-actions .pwd-btn {
+    background: #f3f4f6;
+    color: #764ba2;
+}
+.profile-actions .pwd-btn:hover {
+    background: #e0e7ff;
+    color: #4f5bd5;
+}
+@media (max-width: 600px) {
+    .profile-container {
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+    }
+} 

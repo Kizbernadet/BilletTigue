@@ -9,21 +9,11 @@ class AuthRedirectUtils {
      * @param {string} role - Rôle de l'utilisateur ('user', 'transporter', 'admin')
      */
     static redirectToLogin(role = 'user') {
-        // Construire le chemin correct selon la page actuelle
-        let loginPath;
-        
-        if (window.location.pathname.includes('/pages/')) {
-            // Si on est dans le dossier pages, aller vers login.html dans le même dossier
-            loginPath = './login.html';
-        } else {
-            // Sinon, aller vers pages/login.html
-            loginPath = './pages/login.html';
-        }
-        
+        // Toujours utiliser le chemin absolu
+        let loginPath = '/pages/login.html';
         // Construire l'URL avec le paramètre de rôle
-        const url = new URL(loginPath, window.location.href);
+        const url = new URL(loginPath, window.location.origin);
         url.searchParams.set('role', role);
-        
         console.log('🔄 Redirection vers login:', url.href);
         window.location.href = url.href;
     }

@@ -1,5 +1,6 @@
-# Documentation et fichiers de test archivés
+# 📚 Dossier docs
 
-Ce dossier contient la documentation, les guides de test et les fichiers de test archivés du projet BilletTigue.
+Ce dossier contient toutes les documentations importantes du projet Billettigue (guides, bilans, analyses, rapports, etc.).
 
-Déplacez ici tout fichier de test ou documentation non utilisé en production mais utile pour référence ou historique. 
+- Placez ici toutes les docs techniques, guides d’utilisation, rapports d’implémentation, analyses fonctionnelles, etc.
+- Gardez ce dossier organisé pour faciliter la maintenance et le partage d’informations dans l’équipe. 
