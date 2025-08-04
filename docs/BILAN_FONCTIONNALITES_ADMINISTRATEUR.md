@@ -5,7 +5,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 
 ---
 
-## 🔐 **1. AUTHENTIFICATION & INSCRIPTION**
+## 🔐 **1. AUTHENTIFICATION & INSCRIPTION** (implémenté et testé)
 
 ### **Inscription Administrateur**
 - ✅ **Création automatique** via seeder backend
@@ -27,15 +27,15 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 ### **Dashboard Principal** (`admin-dashboard.html`)
 - ✅ **Vue d'ensemble** avec statistiques globales
 - ✅ **Menu de navigation** complet :
-  - Dashboard général
+  - Dashboard général (implémenté et testé)
   - Gestion des utilisateurs
-  - Gestion des transporteurs
-  - Monitoring des trajets
-  - Gestion des colis
-  - Suivi des paiements
-  - Statistiques avancées
-  - Paramètres système
-- ✅ **Cartes statistiques** :
+  - Gestion des transporteurs (implémenté et testé)
+  - Monitoring des trajets (pas implémenté)
+  - Gestion des colis (pas implémenté)
+  - Suivi des paiements (pas implémenté)
+  - Statistiques avancées (pas implémenté)
+  - Paramètres système (pas implémenté)
+- ✅ **Cartes statistiques** : (implémenté mais pas dynamique)
   - Utilisateurs actifs (128)
   - Transporteurs validés (24)
   - Trajets actifs (67)
@@ -44,14 +44,14 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
   - Revenus (45,720 FCFA)
   - Sécurité système (0 incidents)
 
-### **Dashboard Transporteurs** (`admin-dashboard-transporter.html`)
+### **Dashboard Transporteurs** (`admin-dashboard-transporter.html`) (implémenté mais pas dynamique)
 - ✅ **Gestion spécialisée** des transporteurs
 - ✅ **Statistiques transporteurs** :
   - Total (47)
   - Actifs/Validés (24)
   - En attente (18)
   - Suspendus (5)
-- ✅ **Actions CRUD** :
+- ✅ **Actions CRUD** : (implémenté et testé pas en totalité)
   - Créer un transporteur
   - Consulter la liste
   - Modifier les profils
@@ -59,7 +59,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 
 ---
 
-## 👥 **3. GESTION DES UTILISATEURS**
+## 👥 **3. GESTION DES UTILISATEURS** (pas implémenté)
 
 ### **Gestion des Comptes**
 - ✅ **API complète** pour la gestion utilisateurs
@@ -74,7 +74,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
   - Désactiver temporairement
   - Supprimer définitivement
 
-### **Supervision des Profils**
+### **Supervision des Profils** (pas implémenté)
 - ✅ **Accès aux données** personnelles
 - ✅ **Historique des connexions**
 - ✅ **Statistiques d'utilisation**
@@ -82,7 +82,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 
 ---
 
-## 🚛 **4. GESTION DES TRANSPORTEURS**
+## 🚛 **4. GESTION DES TRANSPORTEURS** (implémenté et testé)
 
 ### **Administration Transporteurs**
 - ✅ **Interface dédiée** (`admin-dashboard-transporter.html`)
@@ -114,7 +114,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 
 ---
 
-## 📊 **5. STATISTIQUES & ANALYTICS**
+## 📊 **5. STATISTIQUES & ANALYTICS** (pas implémenté)
 
 ### **Statistiques Globales**
 - ✅ **API dédiée** : `/api/stats/admin`
@@ -132,7 +132,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
   - Réservations
   - Paiements
 
-### **Gestionnaire de Statistiques**
+### **Gestionnaire de Statistiques** (pas implémenté)
 - ✅ **Classe AdminStatsManager** pour la gestion
 - ✅ **Actualisation automatique** des données
 - ✅ **Cache intelligent** pour optimiser les performances
@@ -165,7 +165,7 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 
 ---
 
-## 👤 **7. GESTION DU PROFIL**
+## 👤 **7. GESTION DU PROFIL** (pas implémenté)
 
 ### **Profil Administrateur**
 - ✅ **Affichage personnalisé** avec icône spéciale
@@ -281,17 +281,17 @@ L'acteur **Administrateur** est un super-utilisateur de la plateforme Billettigu
 | **🔴 CRITIQUE** | **Authentification Admin** | Connexion administrateur | ✅ **TERMINÉ** | JWT, rôle admin |
 | **🔴 CRITIQUE** | **Dashboard Principal** | Vue d'ensemble admin | ✅ **TERMINÉ** | Interface complète |
 | **🔴 CRITIQUE** | **Gestion Transporteurs** | CRUD transporteurs | ✅ **TERMINÉ** | Interface dédiée |
-| **🔴 CRITIQUE** | **Gestion Utilisateurs** | CRUD utilisateurs | ✅ **TERMINÉ** | API complète |
-| **🔴 CRITIQUE** | **Statistiques Globales** | Métriques système | ✅ **TERMINÉ** | API dédiée |
+| **🔴 CRITIQUE** | **Gestion Utilisateurs** | CRUD utilisateurs | ❌ **À FAIRE** | API complète |
+| **🔴 CRITIQUE** | **Statistiques Globales** | Métriques système | ❌ **À FAIRE** | API dédiée |
 | **🔴 CRITIQUE** | **API REST Admin** | Endpoints backend | ✅ **TERMINÉ** | Routes sécurisées |
 | **🟡 ÉLEVÉE** | **Interface Responsive** | Adaptation mobile/tablette | ✅ **TERMINÉ** | Design moderne |
 | **🟡 ÉLEVÉE** | **Sécurité & Permissions** | Contrôle d'accès | ✅ **TERMINÉ** | Middleware robuste |
 | **🟡 ÉLEVÉE** | **Actions de Modération** | Suspension/Désactivation | ✅ **TERMINÉ** | Système complet |
 | **🟡 ÉLEVÉE** | **Navigation Admin** | Menu et sidebar | ✅ **TERMINÉ** | UX optimisée |
-| **🟢 MOYENNE** | **Statistiques Détaillées** | Analytics avancés | ✅ **TERMINÉ** | Métriques temps réel |
-| **🟢 MOYENNE** | **Gestion Profil Admin** | Profil administrateur | ✅ **TERMINÉ** | Interface personnalisée |
-| **🟢 MOYENNE** | **Logging Actions** | Audit trail | ✅ **TERMINÉ** | Traçabilité |
-| **🔵 FAIBLE** | **Notifications Admin** | Messages système | ✅ **TERMINÉ** | Feedback utilisateur |
+| **🟢 MOYENNE** | **Statistiques Détaillées** | Analytics avancés | ❌ **À FAIRE** | Métriques temps réel |
+| **🟢 MOYENNE** | **Gestion Profil Admin** | Profil administrateur | ❌ **À FAIRE** | Interface personnalisée |
+| **🟢 MOYENNE** | **Logging Actions** | Audit trail | ❌ **À FAIRE**| Traçabilité |
+| **🔵 FAIBLE** | **Notifications Admin** | Messages système | ❌ **À FAIRE**| Feedback utilisateur |
 | **🔵 FAIBLE** | **Animations UI** | Transitions fluides | ✅ **TERMINÉ** | Expérience utilisateur |
 | **⚪ FUTUR** | **Monitoring Système** | Surveillance performance | ❌ **À FAIRE** | Développement futur |
 | **⚪ FUTUR** | **Export/Import Données** | Gestion données | ❌ **À FAIRE** | Développement futur |

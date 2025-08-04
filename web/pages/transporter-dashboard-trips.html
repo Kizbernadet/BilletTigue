@@ -35,11 +35,11 @@
       <!-- Menu -->
       <nav class="menu">
         <ul>
-                              <li><a href="transporter-dashboard.html"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
-          <li><a href="#" class="active"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="transporter-dashboard.html"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="transporter-dashboard-trips.html" class="active"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
           <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
           <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Clients</span></a></li>
-          <li><a href="#"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Factures</span></a></li>
+          <li><a href="transporter-dashboard-reservations.html"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Réservations</span></a></li>
           <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
           <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
           <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
@@ -145,7 +145,7 @@
             <!-- Liste des trajets -->
             <div class="trajets-list">
               <div class="trajet-item-mini trajet-message-empty">
-                <p class="size-10 capitalize border-black">Aucun trajet disponible</p>
+                <p class="capitalize border-black size-10">Aucun trajet disponible</p>
               </div>
             </div>
           </div>
@@ -270,7 +270,7 @@
           <i class="fa-solid fa-times"></i>
         </button>
       </div>
-      <div class="confirmation-content flex-row">
+      <div class="flex-row confirmation-content">
         <div class="confirmation-icon-large">
           <i class="fa-solid fa-trash-alt"></i>
         </div>

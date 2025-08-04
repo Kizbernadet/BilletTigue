@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
       const result = await response.json();
+      console.log(result);
       if (!result.success || !result.data || result.data.length === 0) {
         noReservationsMsg.style.display = 'block';
         tableBody.innerHTML = '';

@@ -25,9 +25,9 @@ Il est particulièrement utile pour :
 
 ---
 
-## 3. Exemple de diagramme d’activité (PlantUML)
+## 3. Exemples de diagrammes d’activité (PlantUML)
 
-### **Processus de réservation d’un trajet**
+### **A. Processus de réservation d’un trajet**
 
 ```plantuml
 @startuml
@@ -53,20 +53,119 @@ stop
 @enduml
 ```
 
----
-
-## 4. Description du diagramme
-
-Ce diagramme d’activité modélise le processus complet de réservation d’un trajet sur la plateforme BilletTigue :
-- L’utilisateur saisit ses critères de recherche
-- Le système affiche les trajets disponibles ou un message d’absence
-- L’utilisateur sélectionne un trajet, saisit ses informations
-- Le système vérifie la disponibilité et crée la réservation si possible
-- Les cas d’exception (aucun trajet, trajet complet) sont explicitement gérés
+**Description :**
+Ce diagramme modélise le processus complet de réservation d’un trajet, avec gestion des cas d’absence de trajet ou de places disponibles.
 
 ---
 
-## 5. Bonnes pratiques
+### **B. Processus de paiement d’une réservation**
+
+```plantuml
+@startuml
+start
+:Afficher réservation à payer;
+:Choisir mode de paiement;
+:Entrer infos paiement;
+:Envoyer demande de paiement;
+if (Paiement accepté ?) then (oui)
+  :Mettre à jour statut réservation;
+  :Afficher confirmation;
+else (non)
+  :Afficher message d'échec;
+endif
+stop
+@enduml
+```
+
+**Description :**
+Ce diagramme décrit le paiement d’une réservation, avec gestion du cas d’échec (paiement refusé, erreur technique).
+
+---
+
+### **C. Processus d’inscription et d’authentification**
+
+```plantuml
+@startuml
+start
+:Afficher formulaire d'inscription/connexion;
+:Entrer infos utilisateur;
+:Valider côté client;
+if (Données valides ?) then (oui)
+  :Envoyer au serveur;
+  :Valider côté serveur;
+  if (Succès ?) then (oui)
+    :Créer compte/session;
+    :Afficher tableau de bord;
+  else (non)
+    :Afficher erreur serveur;
+  endif
+else (non)
+  :Afficher erreur de saisie;
+endif
+stop
+@enduml
+```
+
+**Description :**
+Ce diagramme modélise l’inscription ou la connexion, avec gestion des erreurs côté client et serveur.
+
+---
+
+### **D. Processus d’envoi de colis**
+
+```plantuml
+@startuml
+start
+:Afficher formulaire envoi colis;
+:Entrer infos colis et destinataire;
+:Vérifier contraintes (poids, volume);
+if (Colis conforme ?) then (oui)
+  :Chercher trajets disponibles;
+  if (Trajet trouvé ?) then (oui)
+    :Affecter colis au trajet;
+    :Afficher confirmation;
+  else (non)
+    :Afficher message "Aucun trajet";
+  endif
+else (non)
+  :Afficher message "Colis non conforme";
+endif
+stop
+@enduml
+```
+
+**Description :**
+Ce diagramme décrit l’envoi d’un colis, avec gestion des contraintes et des cas d’absence de trajet ou de non-conformité du colis.
+
+---
+
+### **E. Cycle de vie d’une réservation**
+
+```plantuml
+@startuml
+start
+:Créer réservation;
+:Statut = "en attente";
+if (Paiement reçu ?) then (oui)
+  :Statut = "confirmée";
+  if (Annulation demandée ?) then (oui)
+    :Statut = "annulée";
+  else (non)
+    :Statut = "effectuée";
+  endif
+else (non)
+  :Attendre paiement;
+endif
+stop
+@enduml
+```
+
+**Description :**
+Ce diagramme modélise le cycle de vie d’une réservation, de la création à la confirmation, l’annulation ou la réalisation, en intégrant les transitions d’état clés.
+
+---
+
+## 4. Bonnes pratiques
 - **Clarté** : Utiliser des noms d’étapes explicites et des décisions claires
 - **Gestion des exceptions** : Toujours modéliser les cas d’échec ou d’alternative
 - **Mise à jour** : Adapter les diagrammes à chaque évolution des processus métier

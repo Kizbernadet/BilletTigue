@@ -556,7 +556,7 @@ async function getTransporterOwnStats(req, res) {
     const completedJourneys = await Trajet.count({
       where: { 
         transporteur_id: transporterId,
-        status: 'completed'
+        status: { [Op.in]: ['completed', 'expired'] }
       }
     });
 

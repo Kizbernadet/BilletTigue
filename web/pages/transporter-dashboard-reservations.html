@@ -3,29 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Transporteur - BilletTigue</title>
+    <title>Réservations - Dashboard Transporteur - BilletTigue</title>
     <link rel="icon" type="image/png" href="../public/images/logo/logo.png">
     <link href="../public/assets/css/style.css" rel="stylesheet">
     <link href="../public/assets/css/dashboard.css" rel="stylesheet">
+    <link href="../public/assets/css/transporter-reservations.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Protection d'authentification -->
-    <script src="../src/js/login-redirect-utils.js"></script>
-    <script src="../src/js/auth-protection.js"></script>
-    <!-- Déconnexion sécurisée -->
-    <script src="../src/js/secure-logout.js"></script>
-    <!-- Affichage personnalisé du profil -->
-    <script src="../src/js/profile-display.js"></script>
-    <!-- Gestionnaire de statistiques transporteur -->
-    <script src="../src/js/transporter-stats-manager.js"></script>
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      .trajets-list {
-        padding-right: 12px;
-      }
-    </style>
 </head>
 <body class="min-h-screen">
   <div class="transporter-dashboard-container">
@@ -40,11 +24,11 @@
       <!-- Menu -->
       <nav class="menu">
         <ul>
-          <li><a href="transporter-dashboard.html" class="active"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
-                              <li><a href="transporter-dashboard-trips.html"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
+          <li><a href="transporter-dashboard.html"><i class="fa-solid fa-chart-pie"></i> <span class="menu-label">Dashboard</span></a></li>
+          <li><a href="transporter-dashboard-trips.html"><i class="fa-solid fa-route"></i> <span class="menu-label">Trajets</span></a></li>
           <li><a href="#"><i class="fa-solid fa-box"></i> <span class="menu-label">Colis</span></a></li>
           <li><a href="#"><i class="fa-solid fa-users"></i> <span class="menu-label">Clients</span></a></li>
-          <li><a href="transporter-dashboard-reservations.html"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Réservations</span></a></li>
+          <li><a href="transporter-dashboard-reservations.html" class="active"><i class="fa-solid fa-file-invoice"></i> <span class="menu-label">Réservations</span></a></li>
           <li><a href="#"><i class="fa-solid fa-chart-line"></i> <span class="menu-label">Statistiques</span></a></li>
           <li><a href="#"><i class="fa-solid fa-cog"></i> <span class="menu-label">Paramètres</span></a></li>
           <li><a href="../index.html" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-sign-out-alt"></i> <span class="menu-label">Déconnexion</span></a></li>
@@ -55,7 +39,7 @@
     <main class="transporter-dashboard-main">
       <div class="transporter-main-wrapper">
         <div class="transporter-title-bar">
-          <h1>Tableau de bord transporteur</h1>
+          <h1>Gestion des Réservations</h1>
           <!-- Section profil -->
           <div class="profile-dropdown-wrapper">
             <button id="profileBtn" onclick="toggleProfileMenu()">
@@ -91,56 +75,58 @@
           </div>
         </div>
         <div class="transporter-main-content">
-          <!-- Divs qui occupent 80% de la largeur du wrapper -->
-          <div class="dashboard-content-section">
-            <div class="dashboard-card" onclick="window.location.href='transporter-dashboard.html'" style="cursor: pointer;">
-              <h3><i class="fa-solid fa-chart-line"></i> Statistiques</h3>
-              <p>Vos statistiques de transport</p>
+          <!-- Section historique des réservations -->
+          <section class="user-reservations-section">
+            <div id="reservationsTableContainer">
+              <table class="dashboard-table" id="reservationsTable">
+                <thead>
+                  <tr>
+                    <th>Date de réservation</th>
+                    <th>Numéro de réservation</th>
+                    <th>Trajet</th>
+                    <th>Client</th>
+                    <th>Date de départ</th>
+                    <th>Statut</th>
+                    <th>Montant</th>
+                    <th>Places</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Les réservations seront injectées ici dynamiquement -->
+                </tbody>
+              </table>
+              <div id="noReservationsMsg" style="display:none; text-align:center; margin-top:2rem; color:#888;">
+                Aucune réservation trouvée pour vos trajets.
+              </div>
             </div>
-            
-            <div class="dashboard-card" onclick="window.location.href='transporter-dashboard-trips.html'" style="cursor: pointer;">
-              <h3><i class="fa-solid fa-route"></i> Trajets actifs</h3>
-              <p>Gérez vos trajets en cours</p>
-            </div>
-            
-            <div class="dashboard-card" onclick="window.location.href='transporter-dashboard-reservations.html'" style="cursor: pointer;">
-              <h3><i class="fa-solid fa-file-invoice"></i> Réservations</h3>
-              <p>Gérez vos réservations</p>
-            </div>
-            
-            <div class="dashboard-card" onclick="window.location.href='#'" style="cursor: pointer;">
-              <h3><i class="fa-solid fa-box"></i> Colis en transit</h3>
-              <p>Suivez vos colis</p>
-            </div>
-            
-            <div class="dashboard-card" onclick="window.location.href='#'" style="cursor: pointer;">
-              <h3><i class="fa-solid fa-users"></i> Clients</h3>
-              <p>Gérez vos clients</p>
-            </div>
-          </div>
+          </section>
         </div>
       </div>
     </main>
     </div>
   </div>
 
+  <!-- Protection d'authentification -->
+  <script src="../src/js/login-redirect-utils.js"></script>
+  <script src="../src/js/auth-protection.js"></script>
+  <!-- Déconnexion sécurisée -->
+  <script src="../src/js/secure-logout.js"></script>
+  <!-- Affichage personnalisé du profil -->
+  <script src="../src/js/profile-display.js"></script>
+  <!-- Scripts JavaScript -->
+  <script src="../src/js/profile.js"></script>
+  <script src="../src/js/profile-menu.js"></script>
+  <!-- <script src="../src/js/transporter-reservations.js"></script> -->
+  <script type="module" src="../src/js/transporter-reservations.js"></script>
+
+  
   <script>
     // Activer la protection d'authentification
     AuthProtection.protect();
     
     // Initialiser l'affichage personnalisé du profil
     ProfileDisplay.init();
-    
-    // Initialiser les statistiques dynamiques transporteur
-    (async function() {
-      if (window.TransporterStatsManager) {
-        console.log('🚛 Initialisation des statistiques transporteur dynamiques...');
-        window.transporterStatsManager = new TransporterStatsManager();
-        await window.transporterStatsManager.init();
-      } else {
-        console.warn('⚠️ Gestionnaire de statistiques transporteur non disponible, valeurs statiques conservées');
-      }
-    })();
 
     function toggleProfileMenu() {
       const dropdown = document.getElementById('profileDropdown');
@@ -157,19 +143,7 @@
       }
     });
 
-    // Récupérer tous les spans
-    const spans = profileBtn.querySelectorAll('span');
-    let profileSpan = null;
-
-    // Filtrer pour trouver le span qui n'est pas une icône FontAwesome
-    for (const span of spans) {
-        const classes = span.className;
-        if (!classes.includes('fa-') && !classes.includes('fas ') && 
-            !classes.includes('far ') && !classes.includes('fab ')) {
-            profileSpan = span;
-            break;
-        }
-    }
+    // Page simplifiée - pas de filtres pour l'instant
   </script>
 </body>
 </html> 

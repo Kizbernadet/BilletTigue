@@ -69,6 +69,42 @@ function reinitialiserFormulaire() {
   console.log('✅ Formulaire réinitialisé');
 }
 
+// === PAGINATION TRAJETS ===
+let currentTrajetsPage = 1;
+const TRAJETS_PER_PAGE = 10;
+let trajetsPaginationData = [];
+
+function afficherPaginationTrajets(totalTrajets) {
+  const trajetsList = document.querySelector('.trajets-list');
+  if (!trajetsList) return;
+  const totalPages = Math.ceil(totalTrajets / TRAJETS_PER_PAGE);
+  if (totalPages <= 1) {
+    const oldNav = document.getElementById('trajets-pagination-nav');
+    if (oldNav) oldNav.remove();
+    return;
+  }
+  let navHtml = `<div id="trajets-pagination-nav" class="trajets-pagination-nav">`;
+  navHtml += `<button class="btn-pagination" id="btnTrajetsPrev" ${currentTrajetsPage === 1 ? 'disabled' : ''}>Précédent</button>`;
+  navHtml += `<span class="pagination-info">Page ${currentTrajetsPage} / ${totalPages}</span>`;
+  navHtml += `<button class="btn-pagination" id="btnTrajetsNext" ${currentTrajetsPage === totalPages ? 'disabled' : ''}>Suivant</button>`;
+  navHtml += `</div>`;
+  // Supprimer l'ancienne nav si présente
+  const oldNav = document.getElementById('trajets-pagination-nav');
+  if (oldNav) oldNav.remove();
+  trajetsList.insertAdjacentHTML('afterend', navHtml);
+  // Ajouter les listeners
+  document.getElementById('btnTrajetsPrev').onclick = () => changerPageTrajets(currentTrajetsPage - 1);
+  document.getElementById('btnTrajetsNext').onclick = () => changerPageTrajets(currentTrajetsPage + 1);
+}
+
+function changerPageTrajets(page) {
+  const totalPages = Math.ceil(trajetsPaginationData.length / TRAJETS_PER_PAGE);
+  if (page < 1 || page > totalPages) return;
+  currentTrajetsPage = page;
+  afficherTrajetsListe(trajetsPaginationData);
+  afficherPaginationTrajets(trajetsPaginationData.length);
+}
+
 /**
  * Recharger et afficher les trajets du transporteur
  */
@@ -86,17 +122,24 @@ async function rechargeTrajets() {
     
     if (result.success && result.data) {
       console.log('✅ Trajets rechargés:', result.data.length, 'trajets');
-      
-      // Afficher les trajets (ils sont déjà dans l'ordre décroissant depuis le backend)
-      afficherTrajetsListe(result.data);
+      trajetsPaginationData = result.data;
+      currentTrajetsPage = 1;
+      afficherTrajetsListe(trajetsPaginationData);
+      afficherPaginationTrajets(trajetsPaginationData.length);
     } else {
       console.warn('⚠️ Aucun trajet trouvé ou erreur API');
+      trajetsPaginationData = [];
+      currentTrajetsPage = 1;
       afficherTrajetsListe([]);
+      afficherPaginationTrajets(0);
     }
     
   } catch (error) {
     console.error('❌ Erreur lors du rechargement des trajets:', error);
+    trajetsPaginationData = [];
+    currentTrajetsPage = 1;
     afficherTrajetsListe([]);
+    afficherPaginationTrajets(0);
   }
 }
 
@@ -110,8 +153,15 @@ function afficherTrajetsListe(trajets) {
     return;
   }
 
+  // Pagination locale
+  const totalTrajets = trajets.length;
+  const totalPages = Math.ceil(totalTrajets / TRAJETS_PER_PAGE);
+  const startIdx = (currentTrajetsPage - 1) * TRAJETS_PER_PAGE;
+  const endIdx = startIdx + TRAJETS_PER_PAGE;
+  const trajetsPage = trajets.slice(startIdx, endIdx);
+
   // Si aucun trajet, afficher le message
-  if (!trajets || trajets.length === 0) {
+  if (!trajetsPage || trajetsPage.length === 0) {
     trajetsList.innerHTML = `
       <div class="trajet-item-mini trajet-message-empty">
         <p class="size-10 capitalize border-black">Aucun trajet disponible</p>
@@ -122,7 +172,7 @@ function afficherTrajetsListe(trajets) {
   }
 
   // Afficher les trajets (ordre décroissant déjà fourni par le backend)
-  trajetsList.innerHTML = trajets.map(trajet => {
+  trajetsList.innerHTML = trajetsPage.map(trajet => {
     // Formater les données pour l'affichage
     const dateDepart = new Date(trajet.departure_time);
     const dateFormatee = dateDepart.toLocaleDateString('fr-FR');
@@ -160,7 +210,9 @@ function afficherTrajetsListe(trajets) {
     `;
   }).join('');
   
-  console.log(`✅ ${trajets.length} trajets affichés (ordre décroissant: du plus récent au plus ancien)`);
+  // Afficher la pagination si besoin
+  afficherPaginationTrajets(totalTrajets);
+  console.log(`✅ ${trajetsPage.length} trajets affichés (page ${currentTrajetsPage}/${totalPages})`);
 }
 
 /**

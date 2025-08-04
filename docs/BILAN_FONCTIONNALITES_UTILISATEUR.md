@@ -5,7 +5,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 🔐 **1. AUTHENTIFICATION & INSCRIPTION**
+## 🔐 **1. AUTHENTIFICATION & INSCRIPTION** (implementé et testé)
 
 ### **Inscription Utilisateur**
 - ✅ **Formulaire d'inscription standard** avec champs obligatoires :
@@ -24,7 +24,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 🏠 **2. DASHBOARD & INTERFACE**
+## 🏠 **2. DASHBOARD & INTERFACE** (implementé et testé)
 
 ### **Dashboard Principal** (`user-dashboard.html`)
 - ✅ **Vue d'ensemble** avec informations du compte
@@ -51,7 +51,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 🔍 **3. RECHERCHE DE TRAJETS**
+## 🔍 **3. RECHERCHE DE TRAJETS** (implementé et testé)
 
 ### **Page de Recherche** (`search-trajets.html`)
 - ✅ **Formulaire de recherche complet** :
@@ -79,7 +79,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 🎫 **4. SYSTÈME DE RÉSERVATION**
+## 🎫 **4. SYSTÈME DE RÉSERVATION** (implementé et testé)
 
 ### **Page de Réservation** (`reservation.html`)
 - ✅ **Interface de réservation complète** :
@@ -104,7 +104,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 👤 **5. GESTION DU PROFIL**
+## 👤 **5. GESTION DU PROFIL** (implementé et testé)
 
 ### **Profil Utilisateur**
 - ✅ **Affichage personnalisé** selon le rôle
@@ -126,7 +126,7 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 
 ---
 
-## 📱 **6. INTERFACE UTILISATEUR**
+## 📱 **6. INTERFACE UTILISATEUR** (implementé et testé mais pas totalement testé sur le coté responsive)
 
 ### **Design & UX**
 - ✅ **Interface moderne** et responsive
@@ -241,16 +241,16 @@ L'acteur **Utilisateur** (ou Passager) est un client de la plateforme Billettigu
 | **🔴 CRITIQUE** | **Réservation** | Processus de réservation | ✅ **TERMINÉ** | Formulaire complet |
 | **🔴 CRITIQUE** | **Profil Utilisateur** | Gestion du profil | ✅ **TERMINÉ** | CRUD complet |
 | **🟡 ÉLEVÉE** | **API REST** | Endpoints backend | ✅ **TERMINÉ** | Routes sécurisées |
-| **🟡 ÉLEVÉE** | **Interface Responsive** | Adaptation mobile/tablette | ✅ **TERMINÉ** | Design moderne |
+| **🟡 ÉLEVÉE** | **Interface Responsive** | Adaptation mobile/tablette | ❌ **À FAIRE** | Design moderne |
 | **🟡 ÉLEVÉE** | **Validation Données** | Sécurité et validation | ✅ **TERMINÉ** | Client + serveur |
 | **🟡 ÉLEVÉE** | **Navigation** | Menu et breadcrumbs | ✅ **TERMINÉ** | UX optimisée |
 | **🟢 MOYENNE** | **Filtres Recherche** | Filtres avancés | ✅ **TERMINÉ** | Prix, dates |
 | **🟢 MOYENNE** | **Suggestions Villes** | Autocomplétion | ✅ **TERMINÉ** | Recherche intelligente |
 | **🟢 MOYENNE** | **Gestion Sessions** | Persistance JWT | ✅ **TERMINÉ** | Sécurité |
-| **🔵 FAIBLE** | **Notifications** | Messages système | ✅ **TERMINÉ** | Feedback utilisateur |
+| **🔵 FAIBLE** | **Notifications** | Messages système | ❌ **À FAIRE** | Feedback utilisateur |
 | **🔵 FAIBLE** | **Animations UI** | Transitions fluides | ✅ **TERMINÉ** | Expérience utilisateur |
-| **⚪ FUTUR** | **Historique Réservations** | Mes réservations | ❌ **À FAIRE** | Développement futur |
-| **⚪ FUTUR** | **Paiement Intégré** | Système de paiement | ❌ **À FAIRE** | Développement futur |
+| **⚪ FUTUR** | **Historique Réservations** | Mes réservations | ✅ **TERMINÉ** | Développement futur |
+| **⚪ FUTUR** | **Paiement Intégré** | Système de paiement | ✅ **TERMINÉ** avec une simulation sans API externe | Développement futur |
 | **⚪ FUTUR** | **Notifications Push** | Notifications temps réel | ❌ **À FAIRE** | Développement futur |
 | **⚪ FUTUR** | **Gestion Colis** | Envoi de colis | ❌ **À FAIRE** | Développement futur |
 | **⚪ FUTUR** | **Évaluations** | Système de notation | ❌ **À FAIRE** | Développement futur |
