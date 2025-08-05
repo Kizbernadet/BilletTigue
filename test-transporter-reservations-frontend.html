@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Réservations Transporteur</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover { background-color: #0056b3; }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Réservations Transporteur</h1>
+    
+    <div class="test-section info">
+        <h3>Configuration</h3>
+        <p>URL API: <span id="apiUrl">Chargement...</span></p>
+        <p>Token: <span id="tokenStatus">Non connecté</span></p>
+    </div>
+    
+    <div class="test-section">
+        <h3>Authentification</h3>
+        <button onclick="testLogin()">Test Login Transporteur</button>
+        <div id="loginResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Réservations</h3>
+        <button onclick="testReservations()">Charger Réservations</button>
+        <div id="reservationsResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Logs</h3>
+        <pre id="logs"></pre>
+    </div>
+
+    <script type="module">
+        import { API_CONFIG, getAuthHeaders, apiRequest } from './web/src/js/api/config.js';
+        
+        window.API_CONFIG = API_CONFIG;
+        window.getAuthHeaders = getAuthHeaders;
+        window.apiRequest = apiRequest;
+        
+        // Afficher la configuration
+        document.getElementById('apiUrl').textContent = API_CONFIG.BASE_URL;
+        
+        // Fonction pour logger
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.textContent += `[${timestamp}] ${message}\n`;
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+        
+        // Test de login
+        window.testLogin = async function() {
+            const resultDiv = document.getElementById('loginResult');
+            resultDiv.innerHTML = '<p>Connexion en cours...</p>';
+            
+            try {
+                log('🔐 Tentative de login transporteur...');
+                
+                const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'transporteur@test.com',
+                        mot_de_passe: 'password123'
+                    })
+                });
+                
+                if (response.ok && data.success) {
+                    sessionStorage.setItem('authToken', data.token);
+                    document.getElementById('tokenStatus').textContent = 'Connecté';
+                    resultDiv.innerHTML = '<p class="success">✅ Login réussi!</p>';
+                    log('✅ Login réussi');
+                } else {
+                    resultDiv.innerHTML = `<p class="error">❌ Erreur: ${data.message}</p>`;
+                    log(`❌ Erreur login: ${data.message}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Erreur: ${error.message}</p>`;
+                log(`❌ Erreur: ${error.message}`);
+            }
+        };
+        
+        // Test des réservations
+        window.testReservations = async function() {
+            const resultDiv = document.getElementById('reservationsResult');
+            resultDiv.innerHTML = '<p>Chargement des réservations...</p>';
+            
+            try {
+                log('📋 Chargement des réservations transporteur...');
+                
+                const { response, data } = await apiRequest(`${API_CONFIG.BASE_URL}/transporter/reservations`, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Réservations chargées!</p>
+                        <p>Nombre de réservations: ${data.data?.length || 0}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    log(`✅ ${data.data?.length || 0} réservations chargées`);
+                } else {
+                    resultDiv.innerHTML = `<p class="error">❌ Erreur: ${data.message}</p>`;
+                    log(`❌ Erreur réservations: ${data.message}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Erreur: ${error.message}</p>`;
+                log(`❌ Erreur: ${error.message}`);
+            }
+        };
+        
+        log('🚀 Page de test initialisée');
+    </script>
+</body>
+</html> 

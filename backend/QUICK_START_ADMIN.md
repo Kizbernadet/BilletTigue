@@ -24,7 +24,7 @@ ADMIN_NOM=Dupont
 ADMIN_PRENOM=Jean
 
 # Configuration du serveur
-PORT=5000
+PORT=3000
 NODE_ENV=development
 ```
 

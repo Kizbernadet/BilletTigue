@@ -529,7 +529,7 @@ class ReservationManager {
         
         console.log('📤 Envoi des données de réservation:', formData);
         
-        const response = await fetch('http://localhost:5000/api/reservations', {
+        const response = await fetch('http://localhost:3000/api/reservations', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -697,7 +697,7 @@ class ReservationManager {
     async createGuestReservation(formData) {
         console.log('📤 Envoi réservation invité:', formData);
         
-        const response = await fetch('http://localhost:5000/api/reservations/guest', {
+        const response = await fetch('http://localhost:3000/api/reservations/guest', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -911,7 +911,7 @@ class ReservationManager {
             console.log('🔐 Tentative de connexion pour la réservation');
             
             // Appel API de connexion
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

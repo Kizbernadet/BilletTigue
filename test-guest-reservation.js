@@ -16,7 +16,7 @@ const testGuestReservation = async () => {
         console.log('🧪 Test de réservation invité...');
         console.log('📤 Données envoyées:', testData);
 
-        const response = await fetch('http://localhost:5000/api/reservations/guest', {
+        const response = await fetch('http://localhost:3000/api/reservations/guest', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

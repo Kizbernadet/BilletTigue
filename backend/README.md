@@ -47,7 +47,7 @@ DB_NAME=billettigue_db
 DB_USER=your_username
 DB_PASS=your_password
 JWT_SECRET=your_jwt_secret_key_here
-PORT=5000
+PORT=3000
 NODE_ENV=development
 ```
 
@@ -153,7 +153,7 @@ backend/
 
 ```bash
 # Tests d'authentification
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@billettigue.com","password":"Admin123!"}'
 ```
@@ -177,7 +177,7 @@ curl -X POST http://localhost:5000/api/auth/login \
 | `DB_USER` | Utilisateur DB | - |
 | `DB_PASS` | Mot de passe DB | - |
 | `JWT_SECRET` | Clé secrète JWT | - |
-| `PORT` | Port du serveur | 5000 |
+| `PORT` | Port du serveur | 3000 |
 | `NODE_ENV` | Environnement | development |
 
 ## 🔐 Sécurité

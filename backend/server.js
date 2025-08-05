@@ -75,6 +75,10 @@ app.use('/api/profile', require('./routes/profileRoutes'));
 // Routes pour la gestion des réservations de trajets (PROTÉGÉ)
 app.use('/api/reservations', require('./routes/reservationRoutes'));
 
+// ========== Intégration des routes de réservations transporteur ========== 
+// Routes pour la gestion des réservations côté transporteur (PROTÉGÉ)
+app.use('/api/transporter/reservations', require('./routes/transporterReservationRoutes'));
+
 // ========== Intégration des routes administrateur ========== 
 // Routes pour la gestion administrative (transporteurs, utilisateurs, stats)
 app.use('/api/admin', require('./routes/adminRoutes'));
@@ -102,7 +106,7 @@ app.use((err, req, res, next) => {
 });
 
 // Port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // ========== Fonction de nettoyage des tokens expirés ==========
 // Nettoie automatiquement les tokens expirés toutes les heures

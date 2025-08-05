@@ -289,7 +289,7 @@ class TransporterStatsManager {
         try {
             console.log('🌐 Requête API: /api/stats/transporter/own');
             const token = sessionStorage.getItem('authToken');
-            const response = await fetch(`http://localhost:5000/api/stats/transporter/own`, {
+            const response = await fetch(`http://localhost:3000/api/stats/transporter/own`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -328,7 +328,7 @@ class TransporterStatsManager {
                 throw new Error('Token d\'authentification manquant');
             }
 
-            const response = await fetch(`http://localhost:5000${endpoint}`, {
+            const response = await fetch(`http://localhost:3000${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

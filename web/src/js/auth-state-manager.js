@@ -142,9 +142,7 @@ class AuthStateManager {
         dropdownMenu.style.display = 'none';
         dropdownMenu.innerHTML = `
             <li><a href="/pages/profile.html" class="profile-dropdown-link"><i class="ri-user-settings-line"></i> Mon profil</a></li>
-            <li><a href="/pages/profile.html" class="profile-dropdown-link"><i class="ri-user-edit-line"></i> Modifier le profil</a></li>
-            <li><a href="/pages/profile.html" class="profile-dropdown-link"><i class="ri-lock-password-line"></i> Changer le mot de passe</a></li>
-            <li><a href="/web/pages/reservation.html" class="profile-dropdown-link"><i class="ri-ticket-line"></i> Mes réservations</a></li>
+            <li><a href="/pages/reservation-history.html" class="profile-dropdown-link"><i class="ri-ticket-line"></i> Mes réservations</a></li>
             <li><button class="profile-dropdown-link logout-link" onclick="logout()"><i class="ri-logout-box-r-line"></i> Déconnexion</button></li>
         `;
         

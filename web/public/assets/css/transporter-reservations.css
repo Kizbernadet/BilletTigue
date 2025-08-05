@@ -23,7 +23,7 @@
    ===================== */
 
 .user-reservations-section {
-  width: 100%;
+  /* width: 100%; */
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(24,60,74,0.08);
 }
@@ -31,11 +31,9 @@
 .dashboard-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-top: 1rem;
 }
 
 .dashboard-table thead {
@@ -49,8 +47,22 @@
   padding-left: 0.7rem;
   padding-right: 0.7rem;
   font-size: 0.97rem;
+  min-width: 90px;
+  max-width: 220px;
+  word-break: break-word;
+  text-align: left;
 }
 
+/* Largeur spécifique pour chaque colonne (optionnel, ajustable) */
+.dashboard-table th:nth-child(1), .dashboard-table td:nth-child(1) { width: 120px; }
+.dashboard-table th:nth-child(2), .dashboard-table td:nth-child(2) { width: 140px; }
+.dashboard-table th:nth-child(3), .dashboard-table td:nth-child(3) { width: 180px; }
+.dashboard-table th:nth-child(4), .dashboard-table td:nth-child(4) { width: 160px; }
+.dashboard-table th:nth-child(5), .dashboard-table td:nth-child(5) { width: 120px; }
+.dashboard-table th:nth-child(6), .dashboard-table td:nth-child(6) { width: 110px; }
+.dashboard-table th:nth-child(7), .dashboard-table td:nth-child(7) { width: 110px; }
+.dashboard-table th:nth-child(8), .dashboard-table td:nth-child(8) { width: 90px; }
+.dashboard-table th:nth-child(9), .dashboard-table td:nth-child(9) { width: 120px; text-align: center; }
 .dashboard-table th {
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -63,11 +75,13 @@
 }
 
 .dashboard-table tbody tr:hover {
-  background: #f8f9fa;
+  background: #f8f9fa;;
+  cursor: pointer;
 }
 
 .dashboard-table td {
   color: #374151;
+  border-bottom: solid 1px #f0f0f0;
 }
 
 .dashboard-table td:last-child {
@@ -124,6 +138,12 @@
    BOUTONS D'ACTION POUR LES RÉSERVATIONS
    ===================== */
 
+.dashboard-table td:last-child{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn-action {
   background: none;
   border: none;
@@ -137,7 +157,7 @@
 }
 
 .btn-action:hover {
-  background-color: #f3f4f6;
+  background-color: #EF9846;
   color: #374151;
   transform: translateY(-1px);
 }

@@ -486,7 +486,7 @@ class AdminStatsManager {
 
             console.log(`🔗 Requête API: ${endpoint}`);
 
-            const response = await fetch(`http://localhost:5000${endpoint}`, {
+            const response = await fetch(`http://localhost:3000${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

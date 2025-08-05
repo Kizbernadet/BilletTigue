@@ -51,19 +51,19 @@ node server.js
 
 #### Test de récupération des transporteurs avec pagination
 ```bash
-curl -X GET "http://localhost:5000/api/admin/transporters?page=1&limit=10" \
+curl -X GET "http://localhost:3000/api/admin/transporters?page=1&limit=10" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
 ```
 
 #### Test de récupération d'un transporteur par ID
 ```bash
-curl -X GET "http://localhost:5000/api/admin/transporters/1" \
+curl -X GET "http://localhost:3000/api/admin/transporters/1" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN"
 ```
 
 #### Test de mise à jour d'un transporteur
 ```bash
-curl -X PUT "http://localhost:5000/api/admin/transporters/1" \
+curl -X PUT "http://localhost:3000/api/admin/transporters/1" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{
@@ -75,7 +75,7 @@ curl -X PUT "http://localhost:5000/api/admin/transporters/1" \
 
 #### Test de suppression/désactivation
 ```bash
-curl -X DELETE "http://localhost:5000/api/admin/transporters/1" \
+curl -X DELETE "http://localhost:3000/api/admin/transporters/1" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{

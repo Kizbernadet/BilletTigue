@@ -4,7 +4,7 @@
  */
 
 // Configuration de l'API
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'http://localhost:3000/api';
 let currentStats = {};
 
 // Initialisation

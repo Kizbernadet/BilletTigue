@@ -499,7 +499,7 @@ GET    /api/admin/stats
 ┌─────────────────┬─────────────────┬─────────────────┐
 │   DEVELOPMENT   │    STAGING      │   PRODUCTION    │
 ├─────────────────┼─────────────────┼─────────────────┤
-│ localhost:5000  │ staging-api.com │ api.billet.com  │
+│ localhost:3000  │ staging-api.com │ api.billet.com  │
 │ localhost:3000  │ staging-web.com │ www.billet.com  │
 │ localhost:8080  │ staging-mob.com │ app.billet.com  │
 └─────────────────┴─────────────────┴─────────────────┘
@@ -521,7 +521,7 @@ JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=24h
 
 # Server
-PORT=5000
+PORT=3000
 NODE_ENV=development
 
 # Admin Setup

@@ -2,7 +2,7 @@
  * Test simple de connectivité au serveur backend
  */
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'http://localhost:3000/api';
 
 async function testConnectivity() {
     console.log('🔍 Test de connectivité au serveur backend...');
@@ -36,7 +36,7 @@ async function testConnectivity() {
     try {
         // Test 2: Endpoint de santé
         console.log('\n2. Test endpoint de santé...');
-        const response2 = await fetch('http://localhost:5000/');
+        const response2 = await fetch('http://localhost:3000/');
         console.log(`Status: ${response2.status}`);
         console.log(`OK: ${response2.ok}`);
         

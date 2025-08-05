@@ -47,7 +47,7 @@ node server.js
 ### **Étape 3 : Vérification**
 ```bash
 # Tester la nouvelle route invité
-curl -X POST http://localhost:5000/api/reservations/guest \
+curl -X POST http://localhost:3000/api/reservations/guest \
   -H "Content-Type: application/json" \
   -d '{
     "trajet_id": 1,

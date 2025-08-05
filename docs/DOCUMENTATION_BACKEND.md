@@ -93,7 +93,7 @@ JWT_SECRET=billettigue_secret_key_2024
 JWT_EXPIRE=24h
 
 # Serveur
-PORT=5000
+PORT=3000
 NODE_ENV=development
 
 # Admin (pour les scripts de setup)
@@ -443,8 +443,8 @@ app.use(cors({
         'http://127.0.0.1:5500',
         'http://localhost:8080',
         'http://127.0.0.1:8080',
-        'http://localhost:5000',
-        'http://127.0.0.1:5000'
+        'http://localhost:3000',
+'http://127.0.0.1:3000'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -505,7 +505,7 @@ app.use(morgan('dev'));
 
 ```javascript
 console.log('✅ Connexion à la base de données établie');
-console.log('🚀 Serveur en cours d\'exécution sur http://0.0.0.0:5000');
+console.log('🚀 Serveur en cours d\'exécution sur http://0.0.0.0:3000');
 console.log('🧹 Nettoyage automatique des tokens configuré');
 ```
 
@@ -552,7 +552,7 @@ npm run dev:debug
 
 ```env
 NODE_ENV=production
-PORT=5000
+PORT=3000
 JWT_SECRET=your_secure_secret_key
 DB_HOST=your_production_db_host
 DB_PASSWORD=your_production_db_password

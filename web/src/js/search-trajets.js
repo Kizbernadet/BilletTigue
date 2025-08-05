@@ -350,7 +350,7 @@ class PaginationManager {
     // Charger les détails d'un trajet pour la modale
     async loadTrajetDetailsForModal(trajetId) {
         try {
-            const API_BASE_URL = 'http://localhost:5000/api';
+            const API_BASE_URL = 'http://localhost:3000/api';
             const response = await fetch(`${API_BASE_URL}/trajets/${trajetId}`);
             const result = await response.json();
 

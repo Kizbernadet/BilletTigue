@@ -1,7 +1,7 @@
 // Configuration de développement pour l'API
 export const DEV_CONFIG = {
     // URL de base de l'API en développement
-    BASE_URL: 'http://localhost:5000/api',
+    BASE_URL: 'http://localhost:3000/api',
     
     // Mode debug
     DEBUG: true,

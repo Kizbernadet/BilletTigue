@@ -55,7 +55,7 @@
    - Solution : améliorer la gestion d’erreur côté frontend et s’assurer que le backend renvoie toujours un JSON.
 
 5. **Accès API impossible via Live Server (port 5500)**
-   - Cause : Live Server ne gère pas les routes API, il faut utiliser le port du backend Express (ex : 5000).
+   - Cause : Live Server ne gère pas les routes API, il faut utiliser le port du backend Express (ex : 3000).
 
 6. **Validation des champs de profil perfectible**
    - Améliorer les messages d’erreur et la robustesse des regex (email, téléphone, etc.).

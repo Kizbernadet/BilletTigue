@@ -2468,7 +2468,7 @@ function updateStatsDisplay(stats) {
  * Obtenir l'URL de base de l'API
  */
 function getApiBaseUrl() {
-  return 'http://localhost:5000/api';
+      return 'http://localhost:3000/api';
 }
 
 /**
