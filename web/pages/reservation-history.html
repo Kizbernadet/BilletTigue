@@ -40,7 +40,7 @@
         <div class="user-title-bar">
           <h1>Mes Réservations</h1>
         </div>
-        <div class="user-main-content flex flex-col gap-6" id="reservationHistoryContent">
+        <div class="flex flex-col gap-6 user-main-content" id="reservationHistoryContent">
           <!-- Section historique des réservations -->
           <section class="user-reservations-section">
             <div id="reservationsTableContainer">
@@ -64,6 +64,43 @@
               <div id="noReservationsMsg" style="display:none; text-align:center; margin-top:2rem; color:#888;">Aucune réservation trouvée.</div>
             </div>
           </section>
+          <!-- Modale détails réservation -->
+          <div id="reservation-details-modal" class="modal-overlay" style="display:none;z-index:2000;">
+            <div class="modal-container success-modal" style="max-width:600px;width:95vw;">
+              <div class="modal-header success-header">
+                <div class="success-icon"><i class="fas fa-ticket-alt"></i></div>
+                <h2 class="modal-title">Détails de la réservation</h2>
+                <button class="modal-close" id="close-details-modal" aria-label="Fermer"><i class="fas fa-times"></i></button>
+              </div>
+              <div class="modalbox-content">
+                <div class="success-message">
+                  <div class="details-section" style="align-items: flex-start;">
+                    <div class="reservation-details" style="background: #f8f9fa; min-width: 220px; border-radius: 15px; padding: 1.2rem 1.5rem; box-shadow: 0 4px 18px rgba(76,175,80,0.08);">
+                      <h3 style="color: #4CAF50; font-size: 1.15rem; margin-bottom: 1rem;">Informations</h3>
+                      <p><strong>Référence :</strong> <span id="details-reference">-</span></p>
+                      <p><strong>Trajet :</strong> <span id="details-route">-</span></p>
+                      <p><strong>Passager :</strong> <span id="details-passenger">-</span></p>
+                      <p><strong>Places :</strong> <span id="details-seats">-</span></p>
+                      <p><strong>Statut :</strong> <span id="details-status">-</span></p>
+                      <p><strong>Montant :</strong> <span id="details-total">-</span></p>
+                      <p><strong>Mode de paiement :</strong> <span id="details-payment">-</span></p>
+                      <div id="details-tickets-list" style="margin-top: 1.2rem;"></div>
+                    </div>
+                    <div class="qr-code-section" style="background: #f8f9fa; border: 2px dashed #4CAF50; border-radius: 15px; min-width: 180px; max-width: 220px; margin-top: 0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                      <h3 style="color: #333; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.7rem;">QR Code principal</h3>
+                      <div class="qr-code-container" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                        <div id="details-qr-code" class="qr-code-display" style="width: 90px; height: 90px; background: white; border: 2px solid #4CAF50; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(76,175,80,0.10);"></div>
+                        <p class="qr-instructions" style="color: #666; font-size: 0.92rem; font-weight: 500; margin: 0;">Présentez ce QR code à l'embarquement</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button class="btn-secondary" id="close-details-modal-btn"><i class="fas fa-times"></i><span>Fermer</span></button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>

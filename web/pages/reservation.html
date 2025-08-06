@@ -14,23 +14,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Login Redirect Utils -->
-    <script src="../src/js/login-redirect-utils.js"></script>
     <!-- Ajout du CDN Remix Icon dans le <head> si absent -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
-<body class="reservation-body min-h-screen">
+<body class="min-h-screen reservation-body">
     <!-- Header -->
     <header>
         <!-- Topbar uniformisée (extrait à placer dans le <body>) -->
-        <div class="w-full flex justify-center p-4">
+        <div class="flex justify-center w-full p-4">
             <div class="topbar-container">
-                <div class="logo-container w-3/12 h-full">
+                <div class="w-3/12 h-full logo-container">
                     <img src="../public/images/logo/logo.png" alt="BilletTigue Logo" class="logo-image">
                     <span class="logo-text">BilletTigue</span>
                 </div>
-                <nav class="nav-container w-5/12 h-full">
+                <nav class="w-5/12 h-full nav-container">
                     <ul class="nav-list">
                         <li><a href="../index.html" class="nav-link"><i class="ri-home-4-line"></i><span>Accueil</span></a></li>
                         <li><a href="search-trajets.html" class="nav-link"><i class="ri-bus-2-line"></i><span>Trajets</span></a></li>
@@ -39,15 +37,15 @@
                     </ul>
                 </nav>
                 <div class="action-container-wrapper">
-                    <div class="dropdown dropdown-end dropdown-hover lang-dropdown flex justify-center items-center">
+                    <div class="flex items-center justify-center dropdown dropdown-end dropdown-hover lang-dropdown">
                         <label tabindex="0" class="btn-lang">
                             <span id="current-lang-text" class="lang-text">Français</span>
-                            <i class="ri-arrow-down-s-line text-xs lang-arrow"></i>
+                            <i class="text-xs ri-arrow-down-s-line lang-arrow"></i>
                             <i class="ri-global-line lang-icon" style="display:none;"></i>
                         </label>
                         <ul id="lang-options" tabindex="0" class="lang-options-list">
-                            <li><a class="lang-option text-sm" data-lang-name="Anglais">Anglais</a></li>
-                            <li><a class="lang-option text-sm" data-lang-name="Français">Français</a></li>
+                            <li><a class="text-sm lang-option" data-lang-name="Anglais">Anglais</a></li>
+                            <li><a class="text-sm lang-option" data-lang-name="Français">Français</a></li>
                         </ul>
                     </div>
                     <div id="auth-section" class="flex items-center">
@@ -214,7 +212,7 @@
                                     <label for="seats-reserved">Nombre de places <span class="required">*</span></label>
                                     <div class="number-input-container">
                                         <button type="button" class="control-btn" id="decrement-seats" aria-label="Diminuer">
-                                            <i class="fas fa-minus text-red-500"></i>
+                                            <i class="text-red-500 fas fa-minus"></i>
                                         </button>
                                         <input type="number" id="seats-reserved" name="seats_reserved" value="1" min="1" required>
                                         <button type="button" class="control-btn" id="increment-seats" aria-label="Augmenter">
@@ -440,20 +438,33 @@
         <div id="success-modal" class="modal-overlay" style="display: none;">
             <div class="modal-container success-modal">
                 <div class="modal-header success-header">
-                    <div class="success-icon">
+                    <!-- <div class="success-icon">
                         <i class="fas fa-check-circle"></i>
-                    </div>
+                    </div> -->
                     <h2 class="modal-title">Réservation confirmée !</h2>
                 </div>
                 
-                <div class="modal-content">
+                <div class="modalbox-content">
                     <div class="success-message">
                         <p>Votre réservation a été enregistrée avec succès.</p>
-                        <div class="reservation-details">
-                            <p><strong>Référence :</strong> <span id="reservation-reference">REF123456</span></p>
-                            <p><strong>Trajet :</strong> <span id="success-route">Départ → Arrivée</span></p>
-                            <p><strong>Places réservées :</strong> <span id="success-seats">1</span></p>
-                            <p><strong>Total payé :</strong> <span id="success-total">0 FCFA</span></p>
+                        <div class="details-section">
+                            <div class="reservation-details reservation-details-modal">
+                                <h3>Détails de la réservation</h3>
+                                <p><strong>Référence :</strong> <span id="reservation-reference">REF123456</span></p>
+                                <p><strong>Trajet :</strong> <span id="success-route">Départ → Arrivée</span></p>
+                                <p><strong>Passager :</strong> <span id="success-passenger">Prénom Nom</span></p>
+                                <p><strong>Places réservées :</strong> <span id="success-seats">1</span></p>
+                                <p><strong>Mode de paiement :</strong> <span id="success-payment">Espèces</span></p>
+                                <p><strong>Total payé :</strong> <span id="success-total">0 FCFA</span></p>
+                                <div id="success-tickets-list"></div>
+                            </div>
+                            <div class="qr-code-section qr-code-section-modal">
+                                <h3>QR Code principal</h3>
+                                <div class="qr-code-container qr-code-container-modal">
+                                    <div id="reservation-qr-code" class="qr-code-display qr-code-display-modal"></div>
+                                    <p class="qr-instructions qr-instructions-modal">Présentez ce QR code à l'embarquement</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -466,6 +477,11 @@
                     <button class="btn-primary" id="dashboard-or-receipt-btn">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Mes réservations</span>
+                    </button>
+                    <!-- Ajout : bouton de téléchargement de la facture PDF (via JS) -->
+                    <button class="btn-primary download-invoice-btn" id="download-invoice-btn" style="display: none;">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Télécharger la facture PDF</span>
                     </button>
                 </div>
             </div>

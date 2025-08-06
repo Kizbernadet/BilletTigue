@@ -1,3 +1,54 @@
+// Dépendances pour la génération de QR code
+const QRCode = require('qrcode');
+
+/**
+ * Fonction utilitaire : Génère la facture électronique (e-facture) et les billets électroniques (e-billets)
+ * @param {object} reservation - Objet réservation (Sequelize)
+ * @param {object} trajet - Objet trajet associé
+ * @param {object} transporteur - Objet transporteur associé
+ * @returns { invoice: object, tickets: array }
+ */
+async function generateInvoiceAndTickets(reservation, trajet, transporteur) {
+    // Génération des billets (e-billets)
+    const tickets = [];
+    for (let i = 0; i < reservation.seats_reserved; i++) {
+        // Générer un identifiant unique pour chaque billet
+        const ticketId = `T${reservation.id.toString().padStart(6, '0')}-${(i+1).toString().padStart(2, '0')}`;
+        // Générer le QR code (base64)
+        const qrData = `${ticketId}|${reservation.booking_number}`;
+        const qrCode = await QRCode.toDataURL(qrData);
+        // Création du billet
+        tickets.push({
+            ticketId,
+            reservationId: reservation.booking_number,
+            customerName: `${reservation.passenger_first_name} ${reservation.passenger_last_name}`,
+            date: trajet.departure_time,
+            departure: trajet.departure_city,
+            arrival: trajet.arrival_city,
+            busNumber: transporteur.company_name || transporteur.id,
+            qrCode,
+            status: 'valide'
+        });
+    }
+    // Génération de la facture (e-facture)
+    const invoiceId = `F${reservation.id.toString().padStart(6, '0')}`;
+    const invoice = {
+        invoiceId,
+        reservationId: reservation.booking_number,
+        customerName: `${reservation.passenger_first_name} ${reservation.passenger_last_name}`,
+        date: reservation.reservation_date,
+        places: reservation.seats_reserved,
+        totalAmount: reservation.total_amount,
+        transporter: {
+            name: transporteur.company_name,
+            contact: transporteur.phone_number
+        },
+        status: 'payé', // À adapter selon le statut réel
+        tickets: tickets.map(t => t.ticketId),
+        legal: 'Mentions légales et conditions d’utilisation...'
+    };
+    return { invoice, tickets };
+}
 /**
  * Nom du fichier : reservationService.js
  * Description : Service métier pour la gestion des réservations de trajets
@@ -296,8 +347,14 @@ async function createReservation(data, userId) {
             ]
         });
 
+        // Ajout : Génération et stockage de la facture et des billets dans la réservation
+        // Récupérer le transporteur associé au trajet
+        const transporteur = reservationComplete.trajet.transporteur;
+        const { invoice, tickets } = await generateInvoiceAndTickets(reservationComplete, reservationComplete.trajet, transporteur);
+        await reservation.update({ invoice, tickets }, { transaction: null }); // transaction terminée
+
         return {
-            reservation: reservationComplete,
+            reservation: await Reservation.findByPk(reservation.id),
             next_step: 'payment',
             payment_info: {
                 amount: validatedData.total_amount,

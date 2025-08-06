@@ -75,6 +75,11 @@ app.use('/api/profile', require('./routes/profileRoutes'));
 // Routes pour la gestion des réservations de trajets (PROTÉGÉ)
 app.use('/api/reservations', require('./routes/reservationRoutes'));
 
+
+// ========== Intégration des routes de documents (factures/billets PDF) ========== 
+// Routes pour l'affichage ou le téléchargement des factures et billets électroniques (PROTÉGÉ)
+app.use('/api/documents', require('./routes/documentRoutes'));
+
 // ========== Intégration des routes de réservations transporteur ========== 
 // Routes pour la gestion des réservations côté transporteur (PROTÉGÉ)
 app.use('/api/transporter/reservations', require('./routes/transporterReservationRoutes'));

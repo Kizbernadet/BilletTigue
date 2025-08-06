@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <td>${statut}</td>
             <td>${montant}</td>
             <td>${places}</td>
-            <td><button class="btn-secondary" onclick="alert('Détail à venir')">Détail</button></td>
+            <td><button class="btn-secondary details-btn" data-reservation='${JSON.stringify(res).replace(/'/g, "&#39;")}' type="button">Détail</button></td>
           </tr>
         `;
       });
@@ -118,4 +118,68 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   fetchAndRenderReservations();
+
+  // Gestion de la modale détails (doit être en dehors de fetchAndRenderReservations)
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('details-btn')) {
+      const res = JSON.parse(e.target.getAttribute('data-reservation').replace(/&#39;/g, "'"));
+      // Remplir la modale
+      document.getElementById('details-reference').textContent = res.booking_number || res.id || '-';
+      document.getElementById('details-route').textContent = res.trajet ? `${res.trajet.departure_city || ''} → ${res.trajet.arrival_city || ''}` : '-';
+      document.getElementById('details-passenger').textContent = `${res.passenger_first_name || ''} ${res.passenger_last_name || ''}`.trim();
+      document.getElementById('details-seats').textContent = res.seats_reserved || '-';
+      document.getElementById('details-status').textContent = res.status || '-';
+      document.getElementById('details-total').textContent = res.total_amount ? `${res.total_amount} FCFA` : '-';
+      document.getElementById('details-payment').textContent = res.payment_method || '-';
+      // Tickets QR
+      const ticketsListDiv = document.getElementById('details-tickets-list');
+      ticketsListDiv.innerHTML = '';
+      const tickets = res.tickets || [];
+      if (tickets.length > 1) {
+        const title = document.createElement('div');
+        title.style = 'font-weight:600;color:#4CAF50;margin-bottom:0.5rem;font-size:1rem;';
+        title.textContent = 'Billets électroniques :';
+        ticketsListDiv.appendChild(title);
+        const list = document.createElement('div');
+        list.style = 'display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:flex-start;';
+        tickets.forEach((ticket, idx) => {
+          if(ticket.qrCode) {
+            const ticketDiv = document.createElement('div');
+            ticketDiv.style = 'display:flex;flex-direction:column;align-items:center;gap:0.2rem;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:0.4rem 0.6rem;min-width:70px;max-width:90px;';
+            const img = document.createElement('img');
+            img.src = ticket.qrCode;
+            img.alt = `QR Billet #${idx+1}`;
+            img.style.width = '55px';
+            img.style.height = '55px';
+            img.style.borderRadius = '5px';
+            img.style.boxShadow = '0 1px 4px rgba(76,175,80,0.10)';
+            ticketDiv.appendChild(img);
+            const ref = document.createElement('div');
+            ref.style = 'font-size:0.8rem;color:#666;word-break:break-all;';
+            ref.textContent = ticket.reference || `Billet #${idx+1}`;
+            ticketDiv.appendChild(ref);
+            list.appendChild(ticketDiv);
+          }
+        });
+        ticketsListDiv.appendChild(list);
+      }
+      // QR principal
+      const qrDiv = document.getElementById('details-qr-code');
+      qrDiv.innerHTML = '';
+      if (tickets.length > 0 && tickets[0].qrCode) {
+        const img = document.createElement('img');
+        img.src = tickets[0].qrCode;
+        img.alt = 'QR Code réservation';
+        img.style.width = '80px';
+        img.style.height = '80px';
+        img.style.borderRadius = '8px';
+        img.style.boxShadow = '0 2px 8px rgba(76,175,80,0.13)';
+        qrDiv.appendChild(img);
+      }
+      document.getElementById('reservation-details-modal').style.display = 'flex';
+    }
+    if (e.target.id === 'close-details-modal' || e.target.id === 'close-details-modal-btn' || e.target.id === 'reservation-details-modal') {
+      document.getElementById('reservation-details-modal').style.display = 'none';
+    }
+  });
 }); 

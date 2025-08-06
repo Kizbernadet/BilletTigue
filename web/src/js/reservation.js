@@ -558,62 +558,127 @@ class ReservationManager {
     }
 
     showSuccessModal(reservationData, fullResponse = null) {
+        // Affichage du QR code principal de la réservation (premier billet)
+        const qrDiv = document.getElementById('reservation-qr-code');
+        qrDiv.innerHTML = '';
+        // On récupère le QR code du premier billet si disponible
+        const tickets = reservationData.tickets || [];
+        if (tickets.length > 0 && tickets[0].qrCode) {
+            const img = document.createElement('img');
+            img.src = tickets[0].qrCode;
+            img.alt = 'QR Code réservation';
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.borderRadius = '8px';
+            img.style.boxShadow = '0 2px 8px rgba(76,175,80,0.13)';
+            qrDiv.appendChild(img);
+        }
         // Remplir les détails dans la modale avec les vraies données du backend
         const reservationId = reservationData.id || 'N/A';
         const seatsReserved = reservationData.seats_reserved || 1;
         const paymentInfo = fullResponse?.payment_info || {};
         const totalAmount = paymentInfo.amount || (seatsReserved * this.unitPrice);
-        
+        const passenger = `${reservationData.passenger_first_name || ''} ${reservationData.passenger_last_name || ''}`.trim();
+        const paymentMethod = reservationData.payment_method || paymentInfo.method || 'Espèces';
         document.getElementById('reservation-reference').textContent = reservationId;
         document.getElementById('success-route').textContent = 
             `${this.trajetData.departure_city} → ${this.trajetData.arrival_city}`;
         document.getElementById('success-seats').textContent = seatsReserved;
         document.getElementById('success-total').textContent = `${totalAmount} FCFA`;
-        
+        document.getElementById('success-passenger').textContent = passenger;
+        document.getElementById('success-payment').textContent = paymentMethod;
+        // Afficher la liste des billets QR si plusieurs
+        const ticketsListDiv = document.getElementById('success-tickets-list');
+        ticketsListDiv.innerHTML = '';
+        if (tickets.length > 1) {
+            const title = document.createElement('div');
+            title.style = 'font-weight:600;color:#4CAF50;margin-bottom:0.5rem;font-size:1rem;';
+            title.textContent = 'Billets électroniques :';
+            ticketsListDiv.appendChild(title);
+            const list = document.createElement('div');
+            list.style = 'display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:flex-start;';
+            tickets.forEach((ticket, idx) => {
+                if(ticket.qrCode) {
+                    const ticketDiv = document.createElement('div');
+                    ticketDiv.style = 'display:flex;flex-direction:column;align-items:center;gap:0.2rem;background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:0.4rem 0.6rem;min-width:70px;max-width:90px;';
+                    const img = document.createElement('img');
+                    img.src = ticket.qrCode;
+                    img.alt = `QR Billet #${idx+1}`;
+                    img.style.width = '55px';
+                    img.style.height = '55px';
+                    img.style.borderRadius = '5px';
+                    img.style.boxShadow = '0 1px 4px rgba(76,175,80,0.10)';
+                    ticketDiv.appendChild(img);
+                    const ref = document.createElement('div');
+                    ref.style = 'font-size:0.8rem;color:#666;word-break:break-all;';
+                    ref.textContent = ticket.reference || `Billet #${idx+1}`;
+                    ticketDiv.appendChild(ref);
+                    list.appendChild(ticketDiv);
+                }
+            });
+            ticketsListDiv.appendChild(list);
+        }
         // Adapter le message selon le type d'utilisateur
         const isLoggedIn = sessionStorage.getItem('authToken') !== null;
         const successMessage = document.querySelector('.success-message p');
-        
         if (isLoggedIn) {
             successMessage.textContent = 'Votre réservation a été enregistrée avec succès dans votre compte.';
-            console.log('✅ Réservation liée au compte utilisateur');
         } else {
             successMessage.textContent = 'Votre réservation a été créée avec succès. Conservez bien votre référence.';
-            console.log('✅ Réservation invité créée');
         }
-        
-        // Log des informations pour debug
-        console.log('📋 Informations de réservation:', {
-            id: reservationId,
-            seats: seatsReserved,
-            total: totalAmount,
-            type: isLoggedIn ? 'Compte utilisateur' : 'Invité',
-            nextStep: fullResponse?.next_step,
-            paymentInfo: paymentInfo
-        });
-        
         // Adapter le bouton d'action selon le type d'utilisateur
         const actionBtn = document.getElementById('dashboard-or-receipt-btn');
+        const downloadInvoiceBtn = document.getElementById('download-invoice-btn');
         if (isLoggedIn) {
             actionBtn.onclick = () => window.location.href = 'reservation-history.html';
             actionBtn.innerHTML = '<i class="fas fa-tachometer-alt"></i><span>Mes réservations</span>';
+            downloadInvoiceBtn.style.display = 'inline-block';
+            downloadInvoiceBtn.onclick = () => this.downloadInvoiceWithAuth(reservationId);
         } else {
             actionBtn.onclick = () => this.downloadGuestReceipt(reservationId);
             actionBtn.innerHTML = '<i class="fas fa-download"></i><span>Télécharger e-facture</span>';
+            downloadInvoiceBtn.style.display = 'none';
         }
-        
         // Afficher la modale
         document.getElementById('success-modal').style.display = 'flex';
     }
 
+    // Téléchargement sécurisé de la facture PDF avec le token d'authentification
+    downloadInvoiceWithAuth(reservationId) {
+        const token = sessionStorage.getItem('authToken');
+        if (!token) {
+            alert('Vous devez être connecté pour télécharger la facture.');
+            return;
+        }
+        fetch(`/api/documents/invoice/${reservationId}`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Erreur lors du téléchargement de la facture.');
+            return res.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `facture-${reservationId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            alert('Impossible de télécharger la facture : ' + err.message);
+        });
+    }
+
     downloadGuestReceipt(reservationId) {
-        // TODO: Implémenter le téléchargement de l'e-facture
-        console.log('📄 Téléchargement e-facture pour réservation:', reservationId);
-        
-        // Simuler le téléchargement
-        alert('Fonctionnalité de téléchargement e-facture en cours d\'implémentation.\n\n' + 
-              'Votre référence: ' + reservationId + '\n' +
-              'Conservez bien cette référence pour vos trajets.');
+        // Implémentation réelle : ouvrir le PDF dans un nouvel onglet
+        if (reservationId && reservationId !== 'N/A') {
+            window.open(`/api/documents/invoice/${reservationId}`, '_blank');
+        } else {
+            alert('Référence de réservation manquante.');
+        }
     }
 
     closeSuccessModal() {

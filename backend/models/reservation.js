@@ -72,6 +72,18 @@ const Reservation = sequelize.define('Reservation', {
             key: 'id'
         }
     },
+    // Ajout : Champ pour stocker la facture électronique liée à la réservation (e-facture)
+    invoice: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        comment: 'Facture électronique générée lors de la validation de la réservation'
+    },
+    // Ajout : Champ pour stocker la liste des billets électroniques générés pour la réservation (e-billets)
+    tickets: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        comment: 'Liste des billets électroniques (e-billets) générés pour chaque place réservée'
+    },
     compte_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
